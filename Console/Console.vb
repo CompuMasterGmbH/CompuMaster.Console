@@ -315,6 +315,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="text"></param>
         Public Shared Sub Warn(text As String)
+            HasWarnings = True
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = WarningForegroundColor
@@ -329,6 +330,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="text"></param>
         Public Shared Sub Warn(text As System.Text.StringBuilder)
+            HasWarnings = True
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = WarningForegroundColor
@@ -342,6 +344,7 @@ Namespace CompuMaster
         ''' Write with color setting for status warning messages
         ''' </summary>
         Public Shared Sub WarnLine()
+            HasWarnings = True
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
         End Sub
 
@@ -786,7 +789,7 @@ Namespace CompuMaster
         ''' Clear the content of console window (logs will append 3 line breaks)
         ''' </summary>
         Public Shared Sub Clear()
-            System.Console.Clear()
+            Clear(True, True, False, False)
             _Write(vbNewLine & vbNewLine & vbNewLine, False)
         End Sub
 
@@ -796,11 +799,18 @@ Namespace CompuMaster
         ''' <param name="consoleWindow"></param>
         ''' <param name="plainTextLog"></param>
         ''' <param name="htmlLog"></param>
-        Public Shared Sub Clear(consoleWindow As Boolean, plainTextLog As Boolean, htmlLog As Boolean)
+        Public Shared Sub Clear(warningStatus As Boolean, consoleWindow As Boolean, plainTextLog As Boolean, htmlLog As Boolean)
+            If warningStatus Then HasWarnings = False
             If consoleWindow Then System.Console.Clear()
             If plainTextLog Then _PlainTextLog.Clear()
             If htmlLog Then _HtmlLog.Clear()
         End Sub
+
+        ''' <summary>
+        ''' Indicate if at least 1 warning has been written
+        ''' </summary>
+        ''' <returns></returns>
+        Public Shared Property HasWarnings As Boolean
 
     End Class
 
