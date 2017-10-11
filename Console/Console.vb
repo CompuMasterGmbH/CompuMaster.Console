@@ -23,6 +23,7 @@ Namespace CompuMaster
                 System.Console.ForegroundColor = value
             End Set
         End Property
+
         Public Shared Property BackgroundColor As System.ConsoleColor
             Get
                 Return System.Console.BackgroundColor
@@ -32,7 +33,20 @@ Namespace CompuMaster
             End Set
         End Property
 
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
         Public Shared Sub Write(text As String)
+            Write(text, True)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="showConsoleOutput"></param>
+        Private Shared Sub Write(text As String, showConsoleOutput As Boolean)
             If IsControlCKeyPressed AndAlso ThrowControlCKeyPressedExceptionOnNextConsoleCommand Then
                 Dim innerEx As ControlCKeyPressedException = ControlCKeyPressed
                 _ControlCKeyPressed = Nothing 'don't raise for a 2nd time!
@@ -73,15 +87,40 @@ Namespace CompuMaster
                 _HtmlLog.Append("</span>")
             End If
         End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="arg0"></param>
         Public Shared Sub Write(text As String, arg0 As Object)
             Write(String.Format(text, arg0))
         End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="args"></param>
         Public Shared Sub Write(text As String, ParamArray args As Object())
             Write(String.Format(text, args))
         End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
         Public Shared Sub Write(text As String, colorForeground As System.ConsoleColor)
             Write(text, colorForeground, BackgroundColor)
         End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
         Public Shared Sub Write(text As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
@@ -91,24 +130,63 @@ Namespace CompuMaster
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
         Public Shared Sub WriteLine()
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
         End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
         Public Shared Sub WriteLine(text As String)
             Write(text & vbNewLine)
         End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="arg0"></param>
         Public Shared Sub WriteLine(text As String, arg0 As Object)
             WriteLine(String.Format(text, arg0))
         End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="args"></param>
         Public Shared Sub WriteLine(text As String, ParamArray args As Object())
             WriteLine(String.Format(text, args))
         End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
         Public Shared Sub WriteLine(text As String, colorForeground As System.ConsoleColor)
             Write(text & vbNewLine, colorForeground)
         End Sub
+
+        ''' <summary>
+        ''' Write message with specified color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
         Public Shared Sub WriteLine(text As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
             Write(text & vbNewLine, colorForeground, colorBackground)
         End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
+        ''' <param name="text"></param>
         Public Shared Sub Warn(text As String)
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
@@ -119,13 +197,25 @@ Namespace CompuMaster
             BackgroundColor = CurrentBackColor
         End Sub
 
+        ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
         Public Shared Sub WarnLine()
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
         End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
+        ''' <param name="text"></param>
         Public Shared Sub WarnLine(text As String)
             Warn(text & vbNewLine)
         End Sub
 
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
+        ''' <param name="text"></param>
         Public Shared Sub Okay(text As String)
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
@@ -136,9 +226,17 @@ Namespace CompuMaster
             BackgroundColor = CurrentBackColor
         End Sub
 
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
         Public Shared Sub OkayLine()
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
         End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
+        ''' <param name="text"></param>
         Public Shared Sub OkayLine(text As String)
             Okay(text & vbNewLine)
         End Sub
@@ -279,6 +377,7 @@ Namespace CompuMaster
             BackgroundColor = SystemConsoleDefaultBackgroundColor
         End Sub
 
+#Region "Catch Control-C"
         ''' <summary>
         ''' Raise the exception for ControlC KeyPressed 
         ''' </summary>
@@ -329,6 +428,165 @@ Namespace CompuMaster
                 End If
             End Set
         End Property
+#End Region
+
+        Public Shared Function ReadKey() As System.ConsoleKeyInfo
+            Return System.Console.ReadKey
+        End Function
+
+        Public Shared Function ReadLine() As String
+
+            Return System.Console.ReadLine()
+        End Function
+
+        Public Shared Property TreatControlCAsInput As Boolean
+            Get
+                Return System.Console.TreatControlCAsInput
+            End Get
+            Set(value As Boolean)
+                System.Console.TreatControlCAsInput = value
+            End Set
+        End Property
+
+        Public Shared Property Title As String
+            Get
+                Return System.Console.Title
+            End Get
+            Set(value As String)
+                System.Console.Title = value
+            End Set
+        End Property
+
+        Public Shared Property WindowTop As Integer
+            Get
+                Return System.Console.WindowTop
+            End Get
+            Set(value As Integer)
+                System.Console.WindowTop = value
+            End Set
+        End Property
+        Public Shared Property WindowLeft As Integer
+            Get
+                Return System.Console.WindowLeft
+            End Get
+            Set(value As Integer)
+                System.Console.WindowLeft = value
+            End Set
+        End Property
+        Public Shared Property WindowHeight As Integer
+            Get
+                Return System.Console.WindowHeight
+            End Get
+            Set(value As Integer)
+                System.Console.WindowHeight = value
+            End Set
+        End Property
+        Public Shared Property WindowWidth As Integer
+            Get
+                Return System.Console.WindowWidth
+            End Get
+            Set(value As Integer)
+                System.Console.WindowWidth = value
+            End Set
+        End Property
+        Public Shared Property BufferWidth As Integer
+            Get
+                Return System.Console.BufferWidth
+            End Get
+            Set(value As Integer)
+                System.Console.BufferWidth = value
+            End Set
+        End Property
+        Public Shared Property BufferHeight As Integer
+            Get
+                Return System.Console.BufferHeight
+            End Get
+            Set(value As Integer)
+                System.Console.BufferHeight = value
+            End Set
+        End Property
+        Public Shared ReadOnly Property CursorLeft As Integer
+            Get
+                Return System.Console.CursorLeft
+            End Get
+        End Property
+        Public Shared Property CursorSize As Integer
+            Get
+                Return System.Console.CursorSize
+            End Get
+            Set(value As Integer)
+                System.Console.CursorSize = value
+            End Set
+        End Property
+        Public Shared ReadOnly Property CursorTop As Integer
+            Get
+                Return System.Console.CursorTop
+            End Get
+        End Property
+        Public Shared ReadOnly Property CapsLock As Boolean
+            Get
+                Return System.Console.CapsLock
+            End Get
+        End Property
+        Public Shared ReadOnly Property KeyAvailable As Boolean
+            Get
+                Return System.Console.KeyAvailable
+            End Get
+        End Property
+        Public Shared Property CursorVisible As Boolean
+            Get
+                Return System.Console.CursorVisible
+            End Get
+            Set(value As Boolean)
+                System.Console.CursorVisible = value
+            End Set
+        End Property
+        Public Shared ReadOnly Property LargestWindowHeight As Integer
+            Get
+                Return System.Console.LargestWindowHeight
+            End Get
+        End Property
+        Public Shared ReadOnly Property LargestWindowWidth As Integer
+            Get
+                Return System.Console.LargestWindowWidth
+            End Get
+        End Property
+        Public Shared ReadOnly Property NumberLock As Boolean
+            Get
+                Return System.Console.NumberLock
+            End Get
+        End Property
+        Public Shared Sub SetWindowsSize(width As Integer, height As Integer)
+            System.Console.SetWindowSize(width, height)
+        End Sub
+        Public Shared Sub SetWindowPosition(left As Integer, top As Integer)
+            System.Console.SetWindowPosition(left, top)
+        End Sub
+
+        Public Shared Sub SetBufferSize(width As Integer, height As Integer)
+            System.Console.SetBufferSize(width, height)
+            System.Console.Clear()
+        End Sub
+
+        ''' <summary>
+        ''' Clear the content of console window (logs will append 3 line breaks)
+        ''' </summary>
+        Public Shared Sub Clear()
+            System.Console.Clear()
+            Write(vbNewLine & vbNewLine & vbNewLine, False)
+        End Sub
+
+        ''' <summary>
+        ''' Clear the content of console window and/or logs
+        ''' </summary>
+        ''' <param name="consoleWindow"></param>
+        ''' <param name="plainTextLog"></param>
+        ''' <param name="htmlLog"></param>
+        Public Shared Sub Clear(consoleWindow As Boolean, plainTextLog As Boolean, htmlLog As Boolean)
+            If consoleWindow Then System.Console.Clear()
+            If plainTextLog Then _PlainTextLog.Clear()
+            If htmlLog Then _HtmlLog.Clear()
+        End Sub
 
     End Class
 
