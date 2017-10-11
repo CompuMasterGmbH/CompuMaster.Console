@@ -152,8 +152,10 @@ Namespace CompuMaster
             Dim Colors As Array = [Enum].GetValues(GetType(System.ConsoleColor))
             For Each Color In Colors
                 Dim ColorName As String = ConsoleColorSystemName(CType(Color, System.ConsoleColor))
-                FileContent.Replace("</BACKCOLOR:" & ColorName & "><BACKCOLOR:" & ColorName & ">", "")
-                FileContent.Replace("</FORECOLOR:" & ColorName & "><FORECOLOR:" & ColorName & ">", "")
+                FileContent.Replace("<BACKCOLOR:" & ColorName & ">", "")
+                FileContent.Replace("</BACKCOLOR:" & ColorName & ">", "")
+                FileContent.Replace("<FORECOLOR:" & ColorName & ">", "")
+                FileContent.Replace("</FORECOLOR:" & ColorName & ">", "")
             Next
             Return FileContent
         End Function
@@ -256,7 +258,12 @@ Namespace CompuMaster
             Return [Enum].GetName(GetType(System.ConsoleColor), color)
         End Function
         Private Shared Function ConsoleColorCssName(color As System.ConsoleColor) As String
-            Return [Enum].GetName(GetType(System.ConsoleColor), color).Replace("Gray", "LightGray").Replace("DarkGray", "DarkGray")
+            Dim SystemColorName As String = ConsoleColorSystemName(color)
+            If SystemColorName.ToLowerInvariant.StartsWith("dark") Then
+                Return SystemColorName
+            Else
+                Return SystemColorName.Replace("Gray", "LightGray")
+            End If
         End Function
 
         Public Shared Sub Beep()
