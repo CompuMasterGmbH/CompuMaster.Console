@@ -471,6 +471,21 @@ Namespace CompuMaster
         ''' <summary>
         ''' Add tags HTML + HEAD incl. TITLE + BODY around the log data
         ''' </summary>
+        ''' <param name="headContent"></param>
+        ''' <param name="bodyPreContent"></param>
+        ''' <param name="bodyPostContent"></param>
+        ''' <returns></returns>
+        Public Shared Function HtmlLog(headContent As String, bodyPreContent As String, bodyPostContent As String) As System.Text.StringBuilder
+            If headContent <> Nothing OrElse bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
+                Return HtmlLog(True, headContent, bodyPreContent, bodyPostContent)
+            Else
+                Return HtmlLog(False, "", "", "")
+            End If
+        End Function
+
+        ''' <summary>
+        ''' Add tags HTML + HEAD incl. TITLE + BODY around the log data
+        ''' </summary>
         ''' <param name="wrapAroundHtmlAndBodyTags"></param>
         ''' <param name="headContent"></param>
         ''' <param name="bodyPreContent"></param>
