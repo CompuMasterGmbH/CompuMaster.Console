@@ -57,34 +57,98 @@ Namespace CompuMaster
             System.Console.Write(text)
 
             'Plain text log
-            If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
-                _PlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
-            End If
-            If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
-                _PlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
-            End If
-            _PlainTextLog.Append(text)
-            If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
-                _PlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
-            End If
-            If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
-                _PlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+            If text = vbNewLine Then
+                _PlainTextLog.Append(vbNewLine)
+            Else
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    _PlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                End If
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    _PlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                End If
+                _PlainTextLog.Append(text)
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    _PlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                End If
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    _PlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                End If
             End If
 
             'Html log
-            Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text).Replace(vbNewLine, "<br />")
-            If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
-                _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
+            If text = vbNewLine Then
+                _HtmlLog.Append("<br />")
+            Else
+                Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text).Replace(vbNewLine, "<br />")
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
+                End If
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
+                End If
+                _HtmlLog.Append(TextAsHtml)
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    _HtmlLog.Append("</span>")
+                End If
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    _HtmlLog.Append("</span>")
+                End If
             End If
-            If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
-                _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="showConsoleOutput"></param>
+        Private Shared Sub Write(text As System.Text.StringBuilder, showConsoleOutput As Boolean)
+            If IsControlCKeyPressed AndAlso ThrowControlCKeyPressedExceptionOnNextConsoleCommand Then
+                Dim innerEx As ControlCKeyPressedException = ControlCKeyPressed
+                _ControlCKeyPressed = Nothing 'don't raise for a 2nd time!
+                Throw New ControlCKeyPressedException(innerEx)
             End If
-            _HtmlLog.Append(TextAsHtml)
-            If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
-                _HtmlLog.Append("</span>")
+            If text Is Nothing OrElse text.Length = 0 Then Return 'Empty content - nothing to do
+
+            'System console
+            System.Console.Write(text)
+
+            'Plain text log
+            If text.Length < 3 AndAlso text.ToString = vbNewLine Then
+                _PlainTextLog.Append(vbNewLine)
+            Else
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    _PlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                End If
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    _PlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                End If
+                _PlainTextLog.Append(text)
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    _PlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                End If
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    _PlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                End If
             End If
-            If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
-                _HtmlLog.Append("</span>")
+
+            'Html log
+            If text.Length < 3 AndAlso text.ToString = vbNewLine Then
+                _HtmlLog.Append("<br />")
+            Else
+                Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(vbNewLine, "<br />")
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
+                End If
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
+                End If
+                _HtmlLog.Append(TextAsHtml)
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    _HtmlLog.Append("</span>")
+                End If
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    _HtmlLog.Append("</span>")
+                End If
             End If
         End Sub
 
@@ -119,6 +183,38 @@ Namespace CompuMaster
         ''' Write message with current color settings
         ''' </summary>
         ''' <param name="text"></param>
+        Public Shared Sub Write(text As System.Text.StringBuilder)
+            Write(text, ForegroundColor, BackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub Write(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor)
+            Write(text, colorForeground, BackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Public Shared Sub Write(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = colorForeground
+            BackgroundColor = colorBackground
+            Write(text, True)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
         ''' <param name="colorForeground"></param>
         ''' <param name="colorBackground"></param>
         Public Shared Sub Write(text As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
@@ -144,6 +240,37 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         Public Shared Sub WriteLine(text As String)
             Write(text & vbNewLine)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteLine(text As System.Text.StringBuilder)
+            WriteLine(text, ForegroundColor, BackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteLine(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor)
+            WriteLine(text, colorForeground, BackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteLine(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = colorForeground
+            BackgroundColor = colorBackground
+            Write(text)
+            Write(vbNewLine)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
         End Sub
 
         ''' <summary>
@@ -200,6 +327,20 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub Warn(text As System.Text.StringBuilder)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = WarningForegroundColor
+            BackgroundColor = WarningBackgroundColor
+            Write(text)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
         Public Shared Sub WarnLine()
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
         End Sub
@@ -213,6 +354,15 @@ Namespace CompuMaster
         End Sub
 
         ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WarnLine(text As System.Text.StringBuilder)
+            Warn(text)
+            Warn(vbNewLine)
+        End Sub
+
+        ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
         ''' <param name="text"></param>
@@ -221,7 +371,21 @@ Namespace CompuMaster
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = OkayMessageForegroundColor
             BackgroundColor = OkayMessageBackgroundColor
-            Write(text & vbNewLine)
+            Write(text)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub Okay(text As System.Text.StringBuilder)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = OkayMessageForegroundColor
+            BackgroundColor = OkayMessageBackgroundColor
+            Write(text)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -239,6 +403,15 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         Public Shared Sub OkayLine(text As String)
             Okay(text & vbNewLine)
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub OkayLine(text As System.Text.StringBuilder)
+            Okay(text)
+            Okay(vbNewLine)
         End Sub
 
         ''' <summary>
@@ -434,9 +607,26 @@ Namespace CompuMaster
             Return System.Console.ReadKey
         End Function
 
+        ''' <summary>
+        ''' Ask for user input confirmed with a Enter key
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Function ReadLine() As String
+            Return ReadLine(True)
+        End Function
 
-            Return System.Console.ReadLine()
+        ''' <summary>
+        ''' Ask for user input confirmed with a Enter key
+        ''' </summary>
+        ''' <param name="showInputInLogs">For sensitive data, you might want to hide input text in logs</param>
+        ''' <returns></returns>
+        Public Shared Function ReadLine(showInputInLogs As Boolean) As String
+            Dim Result As String = System.Console.ReadLine()
+            If showInputInLogs = True Then
+                Write(Result, False)
+                Write(vbNewLine, False)
+            End If
+            Return Result
         End Function
 
         Public Shared Property TreatControlCAsInput As Boolean
