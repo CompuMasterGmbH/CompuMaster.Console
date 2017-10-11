@@ -12,6 +12,8 @@ Namespace CompuMaster
 
         Public Shared Property WarningForegroundColor As System.ConsoleColor = ConsoleColor.Red
         Public Shared Property WarningBackgroundColor As System.ConsoleColor = BackgroundColor
+        Public Shared Property OkayMessageForegroundColor As System.ConsoleColor = ConsoleColor.Green
+        Public Shared Property OkayMessageBackgroundColor As System.ConsoleColor = BackgroundColor
 
         Public Shared Property ForegroundColor As System.ConsoleColor
             Get
@@ -90,7 +92,7 @@ Namespace CompuMaster
             BackgroundColor = CurrentBackColor
         End Sub
         Public Shared Sub WriteLine()
-            WriteLine("")
+            WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
         End Sub
         Public Shared Sub WriteLine(text As String)
             Write(text & vbNewLine)
@@ -118,10 +120,27 @@ Namespace CompuMaster
         End Sub
 
         Public Shared Sub WarnLine()
-            WarnLine("")
+            WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
         End Sub
         Public Shared Sub WarnLine(text As String)
             Warn(text & vbNewLine)
+        End Sub
+
+        Public Shared Sub Okay(text As String)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = OkayMessageForegroundColor
+            BackgroundColor = OkayMessageBackgroundColor
+            Write(text & vbNewLine)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        Public Shared Sub OkayLine()
+            WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
+        End Sub
+        Public Shared Sub OkayLine(text As String)
+            Okay(text & vbNewLine)
         End Sub
 
         ''' <summary>
