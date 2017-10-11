@@ -38,7 +38,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="text"></param>
         Public Shared Sub Write(text As String)
-            Write(text, True)
+            _Write(text, True)
         End Sub
 
         ''' <summary>
@@ -46,7 +46,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="text"></param>
         ''' <param name="showConsoleOutput"></param>
-        Private Shared Sub Write(text As String, showConsoleOutput As Boolean)
+        Private Shared Sub _Write(text As String, showConsoleOutput As Boolean)
             If IsControlCKeyPressed AndAlso ThrowControlCKeyPressedExceptionOnNextConsoleCommand Then
                 Dim innerEx As ControlCKeyPressedException = ControlCKeyPressed
                 _ControlCKeyPressed = Nothing 'don't raise for a 2nd time!
@@ -101,7 +101,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="text"></param>
         ''' <param name="showConsoleOutput"></param>
-        Private Shared Sub Write(text As System.Text.StringBuilder, showConsoleOutput As Boolean)
+        Private Shared Sub _Write(text As System.Text.StringBuilder, showConsoleOutput As Boolean)
             If IsControlCKeyPressed AndAlso ThrowControlCKeyPressedExceptionOnNextConsoleCommand Then
                 Dim innerEx As ControlCKeyPressedException = ControlCKeyPressed
                 _ControlCKeyPressed = Nothing 'don't raise for a 2nd time!
@@ -206,7 +206,7 @@ Namespace CompuMaster
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = colorForeground
             BackgroundColor = colorBackground
-            Write(text, True)
+            _Write(text, True)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -623,8 +623,8 @@ Namespace CompuMaster
         Public Shared Function ReadLine(showInputInLogs As Boolean) As String
             Dim Result As String = System.Console.ReadLine()
             If showInputInLogs = True Then
-                Write(Result, False)
-                Write(vbNewLine, False)
+                _Write(Result, False)
+                _Write(vbNewLine, False)
             End If
             Return Result
         End Function
@@ -763,7 +763,7 @@ Namespace CompuMaster
         ''' </summary>
         Public Shared Sub Clear()
             System.Console.Clear()
-            Write(vbNewLine & vbNewLine & vbNewLine, False)
+            _Write(vbNewLine & vbNewLine & vbNewLine, False)
         End Sub
 
         ''' <summary>
