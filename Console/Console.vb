@@ -453,39 +453,48 @@ Namespace CompuMaster
         ''' <param name="wrapAroundHtmlAndBodyTags"></param>
         ''' <returns></returns>
         Public Shared Function HtmlLog(wrapAroundHtmlAndBodyTags As Boolean) As System.Text.StringBuilder
-            Return _HtmlLog
+            Return HtmlLog(wrapAroundHtmlAndBodyTags, "", "", "")
         End Function
 
         ''' <summary>
         ''' Add tags HTML + HEAD incl. TITLE + BODY around the log data
         ''' </summary>
-        ''' <param name="pageTitle"></param>
+        ''' <param name="pageTitle">A page title (will be HTML encoded)</param>
         ''' <returns></returns>
         Public Shared Function HtmlLog(pageTitle As String) As System.Text.StringBuilder
-            Return _HtmlLog
+            Return HtmlLog(True, "<title>" & System.Net.WebUtility.HtmlEncode(pageTitle) & "</title>", "", "")
         End Function
 
         ''' <summary>
         ''' Add tags HTML + HEAD incl. TITLE + BODY around the log data
         ''' </summary>
         ''' <param name="wrapAroundHtmlAndBodyTags"></param>
-        ''' <param name="pageTitle"></param>
+        ''' <param name="headContent"></param>
+        ''' <param name="bodyPreContent"></param>
+        ''' <param name="bodyPostContent"></param>
         ''' <returns></returns>
-        Private Shared Function HtmlLog(wrapAroundHtmlAndBodyTags As Boolean, pageTitle As String) As System.Text.StringBuilder
-            If wrapAroundHtmlAndBodyTags = False And pageTitle <> Nothing Then
+        Private Shared Function HtmlLog(wrapAroundHtmlAndBodyTags As Boolean, headContent As String, bodyPreContent As String, bodyPostContent As String) As System.Text.StringBuilder
+            If wrapAroundHtmlAndBodyTags = False And headContent <> Nothing Then
                 Throw New ArgumentException("wrapAroundHtmlAndBodyTags must be true if pageTitle has got a value")
             End If
             Dim BackColorname As String = ConsoleColorCssName(SystemConsoleDefaultBackgroundColor)
             Dim ForeColorname As String = ConsoleColorCssName(SystemConsoleDefaultForegroundColor)
+            Dim FileContent As New System.Text.StringBuilder
             If wrapAroundHtmlAndBodyTags Then
-                Dim FileContent As New System.Text.StringBuilder
                 FileContent.Append("<html>" & vbNewLine)
-                If pageTitle <> Nothing Then
-                    FileContent.Append("<head><title>" & pageTitle & "</title></head>" & vbNewLine)
+                If headContent <> Nothing Then
+                    FileContent.Append("<head>" & System.Net.WebUtility.HtmlEncode(headContent) & "</head>" & vbNewLine)
                 End If
                 FileContent.Append("<body style=""background-color: " & BackColorname & ";"">" & vbNewLine)
+                FileContent.Append(bodyPreContent)
                 FileContent.Append("<span style=""color: " & ForeColorname & ";"">" + _HtmlLog.ToString + "</span>" & vbNewLine)
+                FileContent.Append(bodyPostContent)
                 FileContent.Append("</body></html>")
+                Return FileContent
+            ElseIf bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
+                FileContent.Append(bodyPreContent)
+                FileContent.Append(_HtmlLog)
+                FileContent.Append(bodyPostContent)
                 Return FileContent
             Else
                 Return _HtmlLog
@@ -523,6 +532,21 @@ Namespace CompuMaster
         ''' <param name="pageTitle"></param>
         Public Shared Sub SaveHtmlLog(path As String, pageTitle As String)
             System.IO.File.WriteAllText(path, HtmlLog(pageTitle).ToString)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as HTML text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        ''' <param name="headContent">Content for the head area</param>
+        ''' <param name="bodyPreContent">Content for the body area before the log data</param>
+        ''' <param name="bodyPostContent">Content for the body area after the log data</param>
+        Public Shared Sub SaveHtmlLog(path As String, headContent As String, bodyPreContent As String, bodyPostContent As String)
+            If headContent <> Nothing OrElse bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
+                System.IO.File.WriteAllText(path, HtmlLog(True, headContent, bodyPreContent, bodyPostContent).ToString)
+            Else
+                System.IO.File.WriteAllText(path, HtmlLog(False).ToString)
+            End If
         End Sub
 
         Private Shared Function ConsoleColorSystemName(color As System.ConsoleColor) As String
