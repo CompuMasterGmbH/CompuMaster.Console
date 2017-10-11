@@ -87,7 +87,7 @@ Namespace CompuMaster
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = colorForeground
             BackgroundColor = colorBackground
-            Write(text & vbNewLine)
+            Write(text)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -114,7 +114,7 @@ Namespace CompuMaster
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = WarningForegroundColor
             BackgroundColor = WarningBackgroundColor
-            Write(text & vbNewLine)
+            Write(text)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -256,7 +256,7 @@ Namespace CompuMaster
             Return [Enum].GetName(GetType(System.ConsoleColor), color)
         End Function
         Private Shared Function ConsoleColorCssName(color As System.ConsoleColor) As String
-            Return [Enum].GetName(GetType(System.ConsoleColor), color).Replace("Gray", "LightGray")
+            Return [Enum].GetName(GetType(System.ConsoleColor), color).Replace("Gray", "LightGray").Replace("DarkGray", "DarkGray")
         End Function
 
         Public Shared Sub Beep()
