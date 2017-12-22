@@ -1,2 +1,4 @@
-NDoc/* linguist-documentation
-*.ps1 linguist-vendored
+*/_CreateNewNuGetPackage/* linguist-vendored
+NDoc/* linguist-vendored
+*.cmd  linguist-vendored
+*.ps1  linguist-vendored
