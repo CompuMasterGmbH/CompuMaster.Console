@@ -1,12 +1,12 @@
 language: csharp
-solution: CompuMaster.Console
+solution: CompuMaster.Console.sln
 
 #before_install:
 #  - nuget install NUnit.Runners -Version 3.10.0 -OutputDirectory testrunner
 
 install:
-  - nuget restore CompuMaster.Console
+  - nuget restore CompuMaster.Console.sln
 
 script:
-  - msbuild /p:Configuration=Release /p:Platform="Any CPU" /p:PostBuildEvent="" CompuMaster.Console
+  - msbuild /p:Configuration=Release /p:Platform="Any CPU" /p:PostBuildEvent="" CompuMaster.Console.sln
 #  - mono ./testrunner/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./CompuMaster.Test.xxxxx/bin/CompuMaster.Test.xxxxx.dll
