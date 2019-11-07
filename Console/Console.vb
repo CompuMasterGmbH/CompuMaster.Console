@@ -471,9 +471,9 @@ Namespace CompuMaster
         ''' <summary>
         ''' Add tags HTML + HEAD incl. TITLE + BODY around the log data
         ''' </summary>
-        ''' <param name="headContent"></param>
-        ''' <param name="bodyPreContent"></param>
-        ''' <param name="bodyPostContent"></param>
+        ''' <param name="headContent">HTML code for inside HEAD tag</param>
+        ''' <param name="bodyPreContent">HTML code for inside BODY tag before the log data</param>
+        ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
         ''' <returns></returns>
         Public Shared Function HtmlLog(headContent As String, bodyPreContent As String, bodyPostContent As String) As System.Text.StringBuilder
             If headContent <> Nothing OrElse bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
@@ -487,9 +487,9 @@ Namespace CompuMaster
         ''' Add tags HTML + HEAD incl. TITLE + BODY around the log data
         ''' </summary>
         ''' <param name="wrapAroundHtmlAndBodyTags"></param>
-        ''' <param name="headContent"></param>
-        ''' <param name="bodyPreContent"></param>
-        ''' <param name="bodyPostContent"></param>
+        ''' <param name="headContent">HTML code for inside HEAD tag</param>
+        ''' <param name="bodyPreContent">HTML code for inside BODY tag before the log data</param>
+        ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
         ''' <returns></returns>
         Private Shared Function HtmlLog(wrapAroundHtmlAndBodyTags As Boolean, headContent As String, bodyPreContent As String, bodyPostContent As String) As System.Text.StringBuilder
             If wrapAroundHtmlAndBodyTags = False And headContent <> Nothing Then
@@ -501,7 +501,7 @@ Namespace CompuMaster
             If wrapAroundHtmlAndBodyTags Then
                 FileContent.Append("<html>" & vbNewLine)
                 If headContent <> Nothing Then
-                    FileContent.Append("<head>" & System.Net.WebUtility.HtmlEncode(headContent) & "</head>" & vbNewLine)
+                    FileContent.Append("<head>" & headContent & "</head>" & vbNewLine)
                 End If
                 FileContent.Append("<body style=""background-color: " & BackColorname & ";"">" & vbNewLine)
                 FileContent.Append(bodyPreContent)
@@ -556,9 +556,9 @@ Namespace CompuMaster
         ''' Save the log data as HTML text to a file
         ''' </summary>
         ''' <param name="path"></param>
-        ''' <param name="headContent">Content for the head area</param>
-        ''' <param name="bodyPreContent">Content for the body area before the log data</param>
-        ''' <param name="bodyPostContent">Content for the body area after the log data</param>
+        ''' <param name="headContent">HTML code for inside HEAD tag</param>
+        ''' <param name="bodyPreContent">HTML code for inside BODY tag before the log data</param>
+        ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
         Public Shared Sub SaveHtmlLog(path As String, headContent As String, bodyPreContent As String, bodyPostContent As String)
             If headContent <> Nothing OrElse bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
                 System.IO.File.WriteAllText(path, HtmlLog(True, headContent, bodyPreContent, bodyPostContent).ToString)
