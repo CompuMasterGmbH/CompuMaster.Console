@@ -7,28 +7,82 @@ Namespace CompuMaster
 
         Private Shared _PlainTextLog As New System.Text.StringBuilder
         Private Shared _HtmlLog As New System.Text.StringBuilder
-        Private Shared ReadOnly SystemConsoleDefaultForegroundColor As System.ConsoleColor = System.Console.ForegroundColor
+        Private Shared ReadOnly SystemConsoleDefaultForegroundColor As System.ConsoleColor = InitialForegroundColor()
         Private Shared ReadOnly SystemConsoleDefaultBackgroundColor As System.ConsoleColor = System.Console.BackgroundColor
 
+        ''' <summary>
+        ''' Indicates if System.Console has been redirected or by other reason not able to initialize valid ConsoleColors
+        ''' </summary>
+        ''' <remarks>Especially on Linux/Unix platforms when calling from X11 File Manager (e.g. Nautilus), the Console App is started with a redirected Console Output. In this case, no color assignments to System.Color.Fore/BackColor are stored. In this case, the HTML log output is the only output format that maintains colored output. But since every Color setup is initially and remainingly at 0 (black), the HTML log appears in browser with colors black font on black background. This situation must be prevented, so the fore/background colors are stored in this very condition in local variables instead of System.Console properties.</remarks>
+        Private Shared ReadOnly _NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself As Boolean = (System.Console.IsOutputRedirected OrElse (System.Console.ForegroundColor = 0 AndAlso System.Console.BackgroundColor = 0))
+
+        ''' <summary>
+        ''' Depending on a connected/redirected System.Console Output, the system default for ForegroundColor must be assigned differently
+        ''' </summary>
+        ''' <returns></returns>
+        Private Shared Function InitialForegroundColor() As System.ConsoleColor
+            If _NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
+                Return ConsoleColor.White
+            Else
+                Return System.Console.ForegroundColor
+            End If
+        End Function
+
+        ''' <summary>
+        ''' Warnings will always be displayed with this ForegroundColor
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Property WarningForegroundColor As System.ConsoleColor = ConsoleColor.Red
+        ''' <summary>
+        ''' Warnings will always be displayed with this BackgroundColor
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Property WarningBackgroundColor As System.ConsoleColor = BackgroundColor
+        ''' <summary>
+        ''' Info/Okay messages will always be displayed with this ForegroundColor
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Property OkayMessageForegroundColor As System.ConsoleColor = ConsoleColor.Green
+        ''' <summary>
+        ''' Info/Okay messages will always be displayed with this BackgroundColor
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Property OkayMessageBackgroundColor As System.ConsoleColor = BackgroundColor
 
+        Private Shared _ForegroundColor As System.ConsoleColor = ConsoleColor.White
+        ''' <summary>
+        ''' Regular console output will always be displayed with this ForegroundColor
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Property ForegroundColor As System.ConsoleColor
             Get
-                Return System.Console.ForegroundColor
+                If _NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
+                    Return _ForegroundColor
+                Else
+                    Return System.Console.ForegroundColor
+                End If
             End Get
             Set(value As System.ConsoleColor)
+                _ForegroundColor = value
                 System.Console.ForegroundColor = value
             End Set
         End Property
 
+        Private Shared _BackgroundColor As System.ConsoleColor = ConsoleColor.Black
+        ''' <summary>
+        ''' Regular console output will always be displayed with this BackgroundColor
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Property BackgroundColor As System.ConsoleColor
             Get
-                Return System.Console.BackgroundColor
+                If _NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
+                    Return _BackgroundColor
+                Else
+                    Return System.Console.BackgroundColor
+                End If
             End Get
             Set(value As System.ConsoleColor)
+                _BackgroundColor = value
                 System.Console.BackgroundColor = value
             End Set
         End Property
@@ -567,9 +621,20 @@ Namespace CompuMaster
             End If
         End Sub
 
+        ''' <summary>
+        ''' The color name as used in .NET
+        ''' </summary>
+        ''' <param name="color"></param>
+        ''' <returns></returns>
         Private Shared Function ConsoleColorSystemName(color As System.ConsoleColor) As String
             Return [Enum].GetName(GetType(System.ConsoleColor), color)
         End Function
+
+        ''' <summary>
+        ''' The color name as used in CSS styles
+        ''' </summary>
+        ''' <param name="color"></param>
+        ''' <returns></returns>
         Private Shared Function ConsoleColorCssName(color As System.ConsoleColor) As String
             Dim SystemColorName As String = ConsoleColorSystemName(color)
             If SystemColorName.ToLowerInvariant.StartsWith("dark") Then
@@ -579,6 +644,9 @@ Namespace CompuMaster
             End If
         End Function
 
+        ''' <summary>
+        ''' Involves the system speaker or system audio system to make a beep sound
+        ''' </summary>
         Public Shared Sub Beep()
             System.Console.Beep()
         End Sub
@@ -613,12 +681,20 @@ Namespace CompuMaster
         End Sub
 
         Public Shared _ControlCKeyPressed As ControlCKeyPressedException
+        ''' <summary>
+        ''' When Control-C keyboard shortcut has been used, this exception provides details
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared ReadOnly Property ControlCKeyPressed As ControlCKeyPressedException
             Get
                 Return _ControlCKeyPressed
             End Get
         End Property
 
+        ''' <summary>
+        ''' Indicates if Control-C keyboard shortcut has been used
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared ReadOnly Property IsControlCKeyPressed As Boolean
             Get
                 If ControlCKeyPressed Is Nothing Then
@@ -628,9 +704,21 @@ Namespace CompuMaster
                 End If
             End Get
         End Property
+
+        ''' <summary>
+        ''' If enabled, the next call to CompuMaster.Console.Write/Warn/Okay(Line) will throw the catched ControlCKeyPressedException (defaults to true)
+        ''' </summary>
+        ''' <remarks>
+        ''' If set to false, the application must check regularly by itself for IsControlCKeyPressed to handle the Control-C input from user
+        ''' </remarks>
+        ''' <returns></returns>
         Public Shared Property ThrowControlCKeyPressedExceptionOnNextConsoleCommand As Boolean = True
 
         Private Shared _CatchControlC As Boolean = False
+        ''' <summary>
+        ''' Shall keyboard shortcut Control-C be catched so that the application can continue running (e.g. until it's able to write log entries and shutdown safely)
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Property CatchControlC As Boolean
             Get
                 Return _CatchControlC
@@ -645,6 +733,10 @@ Namespace CompuMaster
         End Property
 #End Region
 
+        ''' <summary>
+        ''' Obtains the next character or function key press by the user. The pressed key is displayed at console only (not in logs).
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Function ReadKey() As System.ConsoleKeyInfo
             Return System.Console.ReadKey
         End Function
@@ -680,6 +772,10 @@ Namespace CompuMaster
             End Set
         End Property
 
+        ''' <summary>
+        ''' The console window title bar
+        ''' </summary>
+        ''' <returns></returns>
         Public Shared Property Title As String
             Get
                 Return System.Console.Title
