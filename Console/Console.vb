@@ -5,7 +5,9 @@ Namespace CompuMaster
 
     Partial Public Class Console
 
-        Private Shared _PlainTextLog As New System.Text.StringBuilder
+        Private Shared _PlainTextWarningsLog As New System.Text.StringBuilder
+        Private Shared _HtmlWarningsLog As New System.Text.StringBuilder
+        Private Shared _RawPlainTextLog As New System.Text.StringBuilder
         Private Shared _HtmlLog As New System.Text.StringBuilder
         Private Shared ReadOnly SystemConsoleDefaultForegroundColor As System.ConsoleColor = InitialForegroundColor()
         Private Shared ReadOnly SystemConsoleDefaultBackgroundColor As System.ConsoleColor = System.Console.BackgroundColor
@@ -111,29 +113,29 @@ Namespace CompuMaster
             System.Console.Write(text)
 
             'Plain text log
-            If text = vbNewLine Then
-                _PlainTextLog.Append(vbNewLine)
+            If text = System.Environment.NewLine Then
+                _RawPlainTextLog.Append(System.Environment.NewLine)
             Else
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
-                    _PlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                    _RawPlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
                 End If
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
-                    _PlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                    _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
-                _PlainTextLog.Append(text)
+                _RawPlainTextLog.Append(text)
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
-                    _PlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                    _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
-                    _PlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                    _RawPlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
                 End If
             End If
 
             'Html log
-            If text = vbNewLine Then
+            If text = System.Environment.NewLine Then
                 _HtmlLog.Append("<br />")
             Else
-                Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text).Replace(vbNewLine, "<br />")
+                Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text).Replace(System.Environment.NewLine, "<br />")
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                 End If
@@ -167,29 +169,29 @@ Namespace CompuMaster
             System.Console.Write(text)
 
             'Plain text log
-            If text.Length < 3 AndAlso text.ToString = vbNewLine Then
-                _PlainTextLog.Append(vbNewLine)
+            If text.Length < 3 AndAlso text.ToString = System.Environment.NewLine Then
+                _RawPlainTextLog.Append(System.Environment.NewLine)
             Else
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
-                    _PlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                    _RawPlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
                 End If
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
-                    _PlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                    _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
-                _PlainTextLog.Append(text)
+                _RawPlainTextLog.Append(text)
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
-                    _PlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                    _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
-                    _PlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                    _RawPlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
                 End If
             End If
 
             'Html log
-            If text.Length < 3 AndAlso text.ToString = vbNewLine Then
+            If text.Length < 3 AndAlso text.ToString = System.Environment.NewLine Then
                 _HtmlLog.Append("<br />")
             Else
-                Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(vbNewLine, "<br />")
+                Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(System.Environment.NewLine, "<br />")
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                 End If
@@ -204,6 +206,26 @@ Namespace CompuMaster
                     _HtmlLog.Append("</span>")
                 End If
             End If
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Private Shared Sub _WriteWarning(text As String)
+            _PlainTextWarningsLog.Append(text)
+            Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(vbNewLine, "<br />")
+            _HtmlWarningsLog.Append(TextAsHtml)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Private Shared Sub _WriteWarning(text As System.Text.StringBuilder)
+            _PlainTextWarningsLog.Append(text)
+            Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(vbNewLine, "<br />")
+            _HtmlWarningsLog.Append(TextAsHtml)
         End Sub
 
         ''' <summary>
@@ -375,6 +397,7 @@ Namespace CompuMaster
             ForegroundColor = WarningForegroundColor
             BackgroundColor = WarningBackgroundColor
             Write(text)
+            _WriteWarning(text)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -390,6 +413,7 @@ Namespace CompuMaster
             ForegroundColor = WarningForegroundColor
             BackgroundColor = WarningBackgroundColor
             Write(text)
+            _WriteWarning(text)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -400,6 +424,7 @@ Namespace CompuMaster
         Public Shared Sub WarnLine()
             HasWarnings = True
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
+            _WriteWarning(vbNewLine)
         End Sub
 
         ''' <summary>
@@ -476,7 +501,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <returns></returns>
         Public Shared Function PlainTextLog() As System.Text.StringBuilder
-            Dim FileContent As New System.Text.StringBuilder(_PlainTextLog.ToString)
+            Dim FileContent As New System.Text.StringBuilder(_RawPlainTextLog.ToString)
             Dim Colors As Array = [Enum].GetValues(GetType(System.ConsoleColor))
             For Each Color In Colors
                 Dim ColorName As String = ConsoleColorSystemName(CType(Color, System.ConsoleColor))
@@ -493,7 +518,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <returns></returns>
         Public Shared Function RawPlainTextLog() As System.Text.StringBuilder
-            Return _PlainTextLog
+            Return _RawPlainTextLog
         End Function
 
         ''' <summary>
@@ -505,12 +530,37 @@ Namespace CompuMaster
         End Function
 
         ''' <summary>
+        ''' The log data as raw text content incl. some tags for style of output
+        ''' </summary>
+        ''' <returns></returns>
+        Public Shared Function WarningsPlainTextLog() As System.Text.StringBuilder
+            Return _PlainTextWarningsLog
+        End Function
+
+        ''' <summary>
+        ''' The log data as HTML content
+        ''' </summary>
+        ''' <returns></returns>
+        Public Shared Function WarningsHtmlLog() As System.Text.StringBuilder
+            Return _HtmlWarningsLog
+        End Function
+
+        ''' <summary>
         ''' Add tags HTML + BODY around the log data
         ''' </summary>
         ''' <param name="wrapAroundHtmlAndBodyTags"></param>
         ''' <returns></returns>
         Public Shared Function HtmlLog(wrapAroundHtmlAndBodyTags As Boolean) As System.Text.StringBuilder
-            Return HtmlLog(wrapAroundHtmlAndBodyTags, "", "", "")
+            Return HtmlLog(_HtmlLog, wrapAroundHtmlAndBodyTags, "", "", "")
+        End Function
+
+        ''' <summary>
+        ''' Add tags HTML + BODY around the log data
+        ''' </summary>
+        ''' <param name="wrapAroundHtmlAndBodyTags"></param>
+        ''' <returns></returns>
+        Private Shared Function HtmlLog(log As System.Text.StringBuilder, wrapAroundHtmlAndBodyTags As Boolean) As System.Text.StringBuilder
+            Return HtmlLog(log, wrapAroundHtmlAndBodyTags, "", "", "")
         End Function
 
         ''' <summary>
@@ -519,7 +569,16 @@ Namespace CompuMaster
         ''' <param name="pageTitle">A page title (will be HTML encoded)</param>
         ''' <returns></returns>
         Public Shared Function HtmlLog(pageTitle As String) As System.Text.StringBuilder
-            Return HtmlLog(True, "<title>" & System.Net.WebUtility.HtmlEncode(pageTitle) & "</title>", "", "")
+            Return HtmlLog(_HtmlLog, True, "<title>" & System.Net.WebUtility.HtmlEncode(pageTitle) & "</title>", "", "")
+        End Function
+
+        ''' <summary>
+        ''' Add tags HTML + HEAD incl. TITLE + BODY around the log data
+        ''' </summary>
+        ''' <param name="pageTitle">A page title (will be HTML encoded)</param>
+        ''' <returns></returns>
+        Private Shared Function HtmlLog(log As System.Text.StringBuilder, pageTitle As String) As System.Text.StringBuilder
+            Return HtmlLog(log, True, "<title>" & System.Net.WebUtility.HtmlEncode(pageTitle) & "</title>", "", "")
         End Function
 
         ''' <summary>
@@ -531,9 +590,9 @@ Namespace CompuMaster
         ''' <returns></returns>
         Public Shared Function HtmlLog(headContent As String, bodyPreContent As String, bodyPostContent As String) As System.Text.StringBuilder
             If headContent <> Nothing OrElse bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
-                Return HtmlLog(True, headContent, bodyPreContent, bodyPostContent)
+                Return HtmlLog(_HtmlLog, True, headContent, bodyPreContent, bodyPostContent)
             Else
-                Return HtmlLog(False, "", "", "")
+                Return HtmlLog(_HtmlLog, False, "", "", "")
             End If
         End Function
 
@@ -545,7 +604,7 @@ Namespace CompuMaster
         ''' <param name="bodyPreContent">HTML code for inside BODY tag before the log data</param>
         ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
         ''' <returns></returns>
-        Private Shared Function HtmlLog(wrapAroundHtmlAndBodyTags As Boolean, headContent As String, bodyPreContent As String, bodyPostContent As String) As System.Text.StringBuilder
+        Private Shared Function HtmlLog(log As System.Text.StringBuilder, wrapAroundHtmlAndBodyTags As Boolean, headContent As String, bodyPreContent As String, bodyPostContent As String) As System.Text.StringBuilder
             If wrapAroundHtmlAndBodyTags = False And headContent <> Nothing Then
                 Throw New ArgumentException("wrapAroundHtmlAndBodyTags must be true if pageTitle has got a value")
             End If
@@ -559,17 +618,17 @@ Namespace CompuMaster
                 End If
                 FileContent.Append("<body style=""background-color: " & BackColorname & ";"">" & vbNewLine)
                 FileContent.Append(bodyPreContent)
-                FileContent.Append("<span style=""color: " & ForeColorname & ";"">" + _HtmlLog.ToString + "</span>" & vbNewLine)
+                FileContent.Append("<span style=""color: " & ForeColorname & ";"">" + log.ToString + "</span>" & vbNewLine)
                 FileContent.Append(bodyPostContent)
                 FileContent.Append("</body></html>")
                 Return FileContent
             ElseIf bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
                 FileContent.Append(bodyPreContent)
-                FileContent.Append(_HtmlLog)
+                FileContent.Append(log)
                 FileContent.Append(bodyPostContent)
                 Return FileContent
             Else
-                Return _HtmlLog
+                Return log
             End If
         End Function
 
@@ -615,9 +674,49 @@ Namespace CompuMaster
         ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
         Public Shared Sub SaveHtmlLog(path As String, headContent As String, bodyPreContent As String, bodyPostContent As String)
             If headContent <> Nothing OrElse bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
-                System.IO.File.WriteAllText(path, HtmlLog(True, headContent, bodyPreContent, bodyPostContent).ToString)
+                System.IO.File.WriteAllText(path, HtmlLog(_HtmlLog, True, headContent, bodyPreContent, bodyPostContent).ToString)
             Else
-                System.IO.File.WriteAllText(path, HtmlLog(False).ToString)
+                System.IO.File.WriteAllText(path, HtmlLog(_HtmlLog, False).ToString)
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as plain text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        Public Shared Sub SaveWarningsPlainTextLog(path As String)
+            System.IO.File.WriteAllText(path, WarningsPlainTextLog.ToString)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as HTML text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        Public Shared Sub SaveWarningsHtmlLog(path As String)
+            SaveWarningsHtmlLog(path, "Log: " & Now.ToString("yyyy-MM-dd HH:mm:ss"))
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as HTML text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        ''' <param name="pageTitle"></param>
+        Public Shared Sub SaveWarningsHtmlLog(path As String, pageTitle As String)
+            System.IO.File.WriteAllText(path, HtmlLog(_HtmlWarningsLog, pageTitle).ToString)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as HTML text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        ''' <param name="headContent">HTML code for inside HEAD tag</param>
+        ''' <param name="bodyPreContent">HTML code for inside BODY tag before the log data</param>
+        ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
+        Public Shared Sub SaveWarningsHtmlLog(path As String, headContent As String, bodyPreContent As String, bodyPostContent As String)
+            If headContent <> Nothing OrElse bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
+                System.IO.File.WriteAllText(path, HtmlLog(WarningsHtmlLog, True, headContent, bodyPreContent, bodyPostContent).ToString)
+            Else
+                System.IO.File.WriteAllText(path, HtmlLog(WarningsHtmlLog, False).ToString)
             End If
         End Sub
 
@@ -911,9 +1010,13 @@ Namespace CompuMaster
         ''' <param name="plainTextLog"></param>
         ''' <param name="htmlLog"></param>
         Public Shared Sub Clear(warningStatus As Boolean, consoleWindow As Boolean, plainTextLog As Boolean, htmlLog As Boolean)
-            If warningStatus Then HasWarnings = False
+            If warningStatus Then
+                HasWarnings = False
+                _HtmlWarningsLog.Clear()
+                _PlainTextWarningsLog.Clear()
+            End If
             If consoleWindow Then System.Console.Clear()
-            If plainTextLog Then _PlainTextLog.Clear()
+            If plainTextLog Then _RawPlainTextLog.Clear()
             If htmlLog Then _HtmlLog.Clear()
         End Sub
 

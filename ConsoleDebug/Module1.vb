@@ -17,6 +17,8 @@
         'Write log to disk
         CompuMaster.Console.SavePlainTextLog("sample-log.txt")
         CompuMaster.Console.SaveHtmlLog("sample-log.html")
+        CompuMaster.Console.SaveWarningsPlainTextLog("sample-warnings.txt")
+        CompuMaster.Console.SaveWarningsHtmlLog("sample-warnings.html")
     End Sub
 
 End Module
