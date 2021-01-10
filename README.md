@@ -13,6 +13,8 @@ Install-Package CompuMaster.Console
 ## Simple use
 * Just use CompuMaster.Console instead of System.Console
 * At any time when required, write a full log into a variable or file on disk
+* Supports text indentation with multiple indentation levels
+
 ```vb.net
 'Create some wonderful output to the console
 CompuMaster.Console.Write("Hello ")
