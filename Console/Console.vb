@@ -276,7 +276,7 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         Private Shared Sub _WriteWarning(text As String)
             _PlainTextWarningsLog.Append(text)
-            Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(vbNewLine, "<br />")
+            Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(System.Environment.NewLine, "<br />")
             _HtmlWarningsLog.Append(TextAsHtml)
         End Sub
 
@@ -286,7 +286,7 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         Private Shared Sub _WriteWarning(text As System.Text.StringBuilder)
             _PlainTextWarningsLog.Append(text)
-            Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(vbNewLine, "<br />")
+            Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(System.Environment.NewLine, "<br />")
             _HtmlWarningsLog.Append(TextAsHtml)
         End Sub
 
@@ -377,7 +377,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="text"></param>
         Public Shared Sub WriteLine(text As String)
-            Write(text & vbNewLine)
+            Write(text & System.Environment.NewLine)
         End Sub
 
         ''' <summary>
@@ -406,7 +406,7 @@ Namespace CompuMaster
             ForegroundColor = colorForeground
             BackgroundColor = colorBackground
             Write(text)
-            Write(vbNewLine)
+            Write(System.Environment.NewLine)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -435,7 +435,7 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         ''' <param name="colorForeground"></param>
         Public Shared Sub WriteLine(text As String, colorForeground As System.ConsoleColor)
-            Write(text & vbNewLine, colorForeground)
+            Write(text & System.Environment.NewLine, colorForeground)
         End Sub
 
         ''' <summary>
@@ -445,7 +445,7 @@ Namespace CompuMaster
         ''' <param name="colorForeground"></param>
         ''' <param name="colorBackground"></param>
         Public Shared Sub WriteLine(text As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
-            Write(text & vbNewLine, colorForeground, colorBackground)
+            Write(text & System.Environment.NewLine, colorForeground, colorBackground)
         End Sub
 
         ''' <summary>
@@ -486,7 +486,7 @@ Namespace CompuMaster
         Public Shared Sub WarnLine()
             HasWarnings = True
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
-            _WriteWarning(vbNewLine)
+            _WriteWarning(System.Environment.NewLine)
         End Sub
 
         ''' <summary>
@@ -494,7 +494,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="text"></param>
         Public Shared Sub WarnLine(text As String)
-            Warn(text & vbNewLine)
+            Warn(text & System.Environment.NewLine)
         End Sub
 
         ''' <summary>
@@ -503,7 +503,7 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         Public Shared Sub WarnLine(text As System.Text.StringBuilder)
             Warn(text)
-            Warn(vbNewLine)
+            Warn(System.Environment.NewLine)
         End Sub
 
         ''' <summary>
@@ -546,7 +546,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="text"></param>
         Public Shared Sub OkayLine(text As String)
-            Okay(text & vbNewLine)
+            Okay(text & System.Environment.NewLine)
         End Sub
 
         ''' <summary>
@@ -555,7 +555,7 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         Public Shared Sub OkayLine(text As System.Text.StringBuilder)
             Okay(text)
-            Okay(vbNewLine)
+            Okay(System.Environment.NewLine)
         End Sub
 
         ''' <summary>
@@ -674,13 +674,13 @@ Namespace CompuMaster
             Dim ForeColorname As String = ConsoleColorCssName(SystemConsoleDefaultForegroundColor)
             Dim FileContent As New System.Text.StringBuilder
             If wrapAroundHtmlAndBodyTags Then
-                FileContent.Append("<html>" & vbNewLine)
+                FileContent.Append("<html>" & System.Environment.NewLine)
                 If headContent <> Nothing Then
-                    FileContent.Append("<head>" & headContent & "</head>" & vbNewLine)
+                    FileContent.Append("<head>" & headContent & "</head>" & System.Environment.NewLine)
                 End If
-                FileContent.Append("<body style=""background-color: " & BackColorname & ";"">" & vbNewLine)
+                FileContent.Append("<body style=""background-color: " & BackColorname & ";"">" & System.Environment.NewLine)
                 FileContent.Append(bodyPreContent)
-                FileContent.Append("<span style=""color: " & ForeColorname & ";"">" + log.ToString + "</span>" & vbNewLine)
+                FileContent.Append("<span style=""color: " & ForeColorname & ";"">" + log.ToString + "</span>" & System.Environment.NewLine)
                 FileContent.Append(bodyPostContent)
                 FileContent.Append("</body></html>")
                 Return FileContent
@@ -919,7 +919,7 @@ Namespace CompuMaster
             Dim Result As String = System.Console.ReadLine()
             If showInputInLogs = True Then
                 _Write(Result, False)
-                _Write(vbNewLine, False)
+                _Write(System.Environment.NewLine, False)
             End If
             Return Result
         End Function
@@ -1062,7 +1062,7 @@ Namespace CompuMaster
         ''' </summary>
         Public Shared Sub Clear()
             Clear(True, True, False, False)
-            _Write(vbNewLine & vbNewLine & vbNewLine, False)
+            _Write(System.Environment.NewLine & System.Environment.NewLine & System.Environment.NewLine, False)
         End Sub
 
         ''' <summary>
