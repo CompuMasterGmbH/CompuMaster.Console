@@ -98,6 +98,25 @@ Namespace CompuMaster
         End Sub
 
         ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub Log(text As String)
+            _Write(text, False)
+        End Sub
+
+        ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub LogLine(text As String)
+            _Write(text & System.Environment.NewLine, False)
+        End Sub
+
+        Private Shared IsNewOutputLineAtConsole As Boolean = True
+        Private Shared IsNewOutputLineAtLog As Boolean = True
+
+        ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
         ''' <param name="text"></param>
@@ -108,9 +127,12 @@ Namespace CompuMaster
                 _ControlCKeyPressed = Nothing 'don't raise for a 2nd time!
                 Throw New ControlCKeyPressedException(innerEx)
             End If
+            If text = Nothing Then Return 'Empty content - nothing to do
 
-            'System console
-            System.Console.Write(text)
+            If showConsoleOutput Then
+                'System console
+                System.Console.Write(IndentText(text, Not IsNewOutputLineAtConsole))
+            End If
 
             'Plain text log
             If text = System.Environment.NewLine Then
@@ -122,7 +144,7 @@ Namespace CompuMaster
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
                     _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
-                _RawPlainTextLog.Append(text)
+                _RawPlainTextLog.Append(IndentText(text, Not IsNewOutputLineAtLog))
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
                     _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
@@ -135,7 +157,7 @@ Namespace CompuMaster
             If text = System.Environment.NewLine Then
                 _HtmlLog.Append("<br />")
             Else
-                Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text).Replace(System.Environment.NewLine, "<br />")
+                Dim TextAsHtml As String = IndentText(System.Net.WebUtility.HtmlEncode(text), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />")
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                 End If
@@ -148,6 +170,25 @@ Namespace CompuMaster
                 End If
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("</span>")
+                End If
+            End If
+
+            'Remember state of completed line for correct indentation on next line
+            If text.EndsWith(ControlChars.Cr) OrElse text.EndsWith(ControlChars.Lf) Then
+                'Line has been completed
+                If showConsoleOutput Then
+                    IsNewOutputLineAtConsole = True
+                    IsNewOutputLineAtLog = True
+                Else
+                    IsNewOutputLineAtLog = True
+                End If
+            Else
+                'Line is to be continued
+                If showConsoleOutput Then
+                    IsNewOutputLineAtConsole = False
+                    IsNewOutputLineAtLog = False
+                Else
+                    IsNewOutputLineAtLog = False
                 End If
             End If
         End Sub
@@ -165,8 +206,10 @@ Namespace CompuMaster
             End If
             If text Is Nothing OrElse text.Length = 0 Then Return 'Empty content - nothing to do
 
-            'System console
-            System.Console.Write(text)
+            If showConsoleOutput Then
+                'System console
+                System.Console.Write(IndentText(text.ToString, Not IsNewOutputLineAtConsole))
+            End If
 
             'Plain text log
             If text.Length < 3 AndAlso text.ToString = System.Environment.NewLine Then
@@ -178,7 +221,7 @@ Namespace CompuMaster
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
                     _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
-                _RawPlainTextLog.Append(text)
+                _RawPlainTextLog.Append(IndentText(text.ToString, Not IsNewOutputLineAtLog))
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
                     _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
@@ -191,7 +234,7 @@ Namespace CompuMaster
             If text.Length < 3 AndAlso text.ToString = System.Environment.NewLine Then
                 _HtmlLog.Append("<br />")
             Else
-                Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(System.Environment.NewLine, "<br />")
+                Dim TextAsHtml As String = IndentText(System.Net.WebUtility.HtmlEncode(text.ToString), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />")
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                 End If
@@ -204,6 +247,25 @@ Namespace CompuMaster
                 End If
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("</span>")
+                End If
+            End If
+
+            'Remember state of completed line for correct indentation on next line
+            If text.Chars(text.Length - 1) = ControlChars.Cr OrElse text.Chars(text.Length - 1) = ControlChars.Lf Then
+                'Line has been completed
+                If showConsoleOutput Then
+                    IsNewOutputLineAtConsole = True
+                    IsNewOutputLineAtLog = True
+                Else
+                    IsNewOutputLineAtLog = True
+                End If
+            Else
+                'Line is to be continued
+                If showConsoleOutput Then
+                    IsNewOutputLineAtConsole = False
+                    IsNewOutputLineAtLog = False
+                Else
+                    IsNewOutputLineAtLog = False
                 End If
             End If
         End Sub
@@ -1025,6 +1087,66 @@ Namespace CompuMaster
         ''' </summary>
         ''' <returns></returns>
         Public Shared Property HasWarnings As Boolean
+
+        ''' <summary>
+        ''' Use this string for each additional indentation level
+        ''' </summary>
+        ''' <returns></returns>
+        Public Shared Property IndentationStringPerIndentLevel As String = Space(4)
+
+        Private Shared _CurrentIndentationLevel As Integer = 0
+        ''' <summary>
+        ''' The number of indentations for every text output 
+        ''' </summary>
+        ''' <returns></returns>
+        Public Shared Property CurrentIndentationLevel As Integer
+            Get
+                Return _CurrentIndentationLevel
+            End Get
+            Set(value As Integer)
+                If value < 0 Then Throw New ArgumentOutOfRangeException(NameOf(value), "Value must be > 0")
+                _CurrentIndentationLevel = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' Indent text based on the current number of indentation levels
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        Public Shared Function IndentText(text As String, continueStartedLine As Boolean) As String
+            Return IndentText(text, _CurrentIndentationLevel, continueStartedLine)
+        End Function
+
+        ''' <summary>
+        ''' Indent text based on the current number of indentation levels
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="indentLevel"></param>
+        ''' <returns></returns>
+        Public Shared Function IndentText(text As String, indentLevel As Integer, continueStartedLine As Boolean) As String
+            Dim FullIndentationPrefix As String = IndentationStringForCurrentIndentLevel(CurrentIndentationLevel)
+            Dim Result As String
+            Result = System.Text.RegularExpressions.Regex.Replace(text, "(?:\r\n|\r|\n)", System.Environment.NewLine & FullIndentationPrefix)
+            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape(System.Environment.NewLine & FullIndentationPrefix) & "$", System.Environment.NewLine)
+            If continueStartedLine = False Then
+                Result = FullIndentationPrefix & Result
+            End If
+            Return Result
+            'Return Replace(text, System.Environment.NewLine, System.Environment.NewLine & FullIndentationPrefix )
+        End Function
+
+        ''' <summary>
+        ''' The full indentation string for the current indentation level 
+        ''' </summary>
+        ''' <returns></returns>
+        Private Shared Function IndentationStringForCurrentIndentLevel(indentLevel As Integer) As String
+            Dim Result As String = ""
+            For MyCounter As Integer = 0 To indentLevel - 1
+                Result &= IndentationStringPerIndentLevel
+            Next
+            Return Result
+        End Function
 
     End Class
 
