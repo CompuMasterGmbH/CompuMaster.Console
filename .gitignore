@@ -286,4 +286,4 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-CompuMaster.Console_v2/nuget.exe
+CompuMaster.Console/nuget.exe
