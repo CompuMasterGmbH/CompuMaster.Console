@@ -106,7 +106,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CompuMaster.Console_v2\CompuMaster.Console.vbproj">
+    <ProjectReference Include="..\CompuMaster.Console\CompuMaster.Console.vbproj">
       <Project>{59c6f37b-4487-49d0-9b64-c8b9e772272c}</Project>
       <Name>CompuMaster.Console</Name>
     </ProjectReference>

@@ -72,7 +72,4 @@
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
 	</ItemGroup>
-	<Target Name="PostPackNugetDeploy" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
-	  <Exec Command="nuget.exe&quot; push &quot;$(OutputPath)$(PackageId).$(PackageVersion).nupkg&quot; -Source &quot;$(NuGetSourceRelease)&quot; -Verbosity Detailed" ></Exec>
-	</Target>
 </Project>
