@@ -7,8 +7,8 @@
 		<Product>CompuMaster.Console</Product>
 		<Copyright>2016-2017,2019,2021 CompuMaster GmbH</Copyright>	
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<AssemblyVersion>2021.01.10.100</AssemblyVersion>
-		<Version>2021.03.04.100</Version>
+		<AssemblyVersion>2021.04.16.100</AssemblyVersion>
+		<Version>2021.04.16.101</Version>
 		<VBRuntime>Embed</VBRuntime>
 		<IsPackable>true</IsPackable>
 	</PropertyGroup>
