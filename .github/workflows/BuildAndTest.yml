@@ -85,7 +85,7 @@ jobs:
         #if: success() || failure()
 
         env:
-          RESULTS_PATH: TestResult.JUnit.xml
+          RESULTS_PATH: TestResults.xml
 
         steps:
             - name: Checkout
@@ -112,8 +112,7 @@ jobs:
               run: dotnet restore
 
             - name: Run Unit Tests
-#              run: ${{ matrix.runNetExe }} dotnet test --configuration=${{env.BUILD_CONFIGURATION}} --no-restore --verbosity normal --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
-              run: dotnet test --framework net5.0 --results-directory test-results --logger "junit;LogFileName=TestResult.JUnit.xml" --configuration=${{env.BUILD_CONFIGURATION}}
+              run: dotnet test --framework net5.0 --results-directory test-results --logger junit --configuration=${{env.BUILD_CONFIGURATION}}
   
             - name: Dir Listing (Win)
               if: startsWith(matrix.os, 'windows')
@@ -137,7 +136,7 @@ jobs:
               if: always() && startsWith(matrix.os, 'ubuntu') && github.event_name != 'pull_request'
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
-                files: "test-results/TestResult.JUnit.xml"
+                files: "test-results/TestResults.xml"
                 check_run_annotations: all tests
                 comment_title: Unit Test Statistics
                 check_name: Unit Test Results
@@ -148,5 +147,5 @@ jobs:
               if: always()
               with:
                 name: NUnit Test Results ${{ matrix.os }}
-                path: test-results/TestResult.JUnit.xml
+                path: test-results/TestResults.xml
 
