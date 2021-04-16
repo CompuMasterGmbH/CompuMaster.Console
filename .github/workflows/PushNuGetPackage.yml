@@ -18,7 +18,7 @@ env:
    SOLUTION_FILE_PATH: .
 
    # Configuration type to build
-   BUILD_CONFIGURATION: Release
+   BUILD_CONFIGURATION: CI_CD
 
    BUILD_OUTPUT: Console/bin/Debug
    BUILD_OUTPUT_TEST: ConsoleTest/bin/Debug
@@ -44,7 +44,6 @@ jobs:
                   dotnet --version
                   dotnet --list-sdks
                   dotnet --list-runtimes
-                  dotnet --info
             - name: Install dependencies
               run: dotnet restore
             - name: Build
@@ -52,6 +51,6 @@ jobs:
             - name: Test
               run: dotnet test --no-restore --verbosity normal
             - name: Pack
-              run: dotnet pack --no-build --configuration Release Console/CompuMaster.Console.vbproj --output .
+              run: dotnet pack --no-build --configuration=${{env.BUILD_CONFIGURATION}} Console/CompuMaster.Console.vbproj --output .
             # - name: PushNuget
             #  run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
