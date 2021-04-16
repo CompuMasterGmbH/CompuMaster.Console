@@ -52,6 +52,6 @@ jobs:
             - name: Test
               run: dotnet test --no-restore --verbosity normal
             - name: Pack
-              run: dotnet pack --no-build --configuration Release CompuMaster.Console/Console/CompuMaster.Console.vbproj --output .
-           # - name: PushNuget
-           #  run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+              run: dotnet pack --no-build --configuration Release Console/CompuMaster.Console.vbproj --output .
+            # - name: PushNuget
+            #  run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
