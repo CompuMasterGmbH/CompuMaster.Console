@@ -20,6 +20,9 @@ env:
   # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
   BUILD_CONFIGURATION: CI_CD
 
+  BUILD_OUTPUT: Console\bin\Debug
+  BUILD_OUTPUT_TEST: ConsoleTest\bin\Debug
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
@@ -70,13 +73,13 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                 name: Build Artifacts
-                path: CompuMaster.Calendar/artifact
+                path: ${{env.BUILD_OUTPUT}}
 
             - name: Publish NUnit Test Artifacts
               uses: actions/upload-artifact@v2
               with:
                 name: NUnit Tests
-                path: CompuMaster.Test.Calendar/artifact
+                path: ${{env.BUILD_OUTPUT_TEST}}
 
     test:
         needs: build
@@ -114,25 +117,26 @@ jobs:
 #              name: NUnit Tests
 
           - name: Run Unit Tests
-            run: ${{ matrix.runNetExe }} dotnet test --no-restore --verbosity normal CompuMaster.Test.Calendar.dll --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
+#            run: ${{ matrix.runNetExe }} dotnet test --no-restore --verbosity normal --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
+            run: dotnet test --results-directory test-results --logger "junit;LogFileName=TestResult.JUnit.xml"
 
-#          - name: Unit Test Results
-#            uses: EnricoMi/publish-unit-test-result-action@v1
-#            # the action is useless on pull_request events
-#            # (it can not create check runs or pull request comments)
-#            if: always() && startsWith(matrix.os, 'ubuntu') && github.event_name != 'pull_request'
-#            with:
-#              github_token: ${{ secrets.GITHUB_TOKEN }}
-#              files: "TestResult.JUnit.xml"
-#              check_run_annotations: all tests
-#              comment_title: Unit Test Statistics
-#              check_name: Unit Test Results
-#              report_individual_runs: true
-#      
-#          - name: Publish Unit Test Results
-#            uses: actions/upload-artifact@v2
-#            if: always()
-#            with:
-#              name: NUnit Test Results ${{ matrix.os }}
-#              path: TestResult.JUnit.xml
+          - name: Unit Test Results
+            uses: EnricoMi/publish-unit-test-result-action@v1
+            # the action is useless on pull_request events
+            # (it can not create check runs or pull request comments)
+            if: always() && startsWith(matrix.os, 'ubuntu') && github.event_name != 'pull_request'
+            with:
+              github_token: ${{ secrets.GITHUB_TOKEN }}
+              files: "test-results/TestResult.JUnit.xml"
+              check_run_annotations: all tests
+              comment_title: Unit Test Statistics
+              check_name: Unit Test Results
+              report_individual_runs: true
+      
+          - name: Publish Unit Test Results
+            uses: actions/upload-artifact@v2
+            if: always()
+            with:
+              name: NUnit Test Results ${{ matrix.os }}
+              path: test-results/TestResult.JUnit.xml
 
