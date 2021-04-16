@@ -18,7 +18,7 @@ env:
    SOLUTION_FILE_PATH: .
 
    # Configuration type to build
-   BUILD_CONFIGURATION: CI_CD
+   BUILD_CONFIGURATION: Release
 
    BUILD_OUTPUT: Console/bin/Debug
    BUILD_OUTPUT_TEST: ConsoleTest/bin/Debug
