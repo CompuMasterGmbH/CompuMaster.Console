@@ -12,12 +12,10 @@ on:
     workflow_dispatch:
 
 env:
-  # Path to the solution file relative to the root of the project.
+  # Path to the solution file relative to the root of the project
   SOLUTION_FILE_PATH: .
 
-  # Configuration type to build.
-  # You can convert this to a build matrix if you need coverage of multiple configuration types.
-  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+  # Configuration type to build
   BUILD_CONFIGURATION: CI_CD
 
   BUILD_OUTPUT: Console\bin\Debug
@@ -27,7 +25,7 @@ env:
 jobs:
 
     build:
-        runs-on: windows-latest
+        runs-on: ubuntu-latest
         #if: false # always skip job
 
         steps:
@@ -58,16 +56,6 @@ jobs:
 #              run: dotnet build --configuration Release --no-restore
 #            - name: Test
 #              run: dotnet test --no-restore --verbosity normal
-#            - name: Pack
-#              run: dotnet pack --no-build --configuration Release CompuMaster.Console/Console/CompuMaster.Console.vbproj --output .
-#            - name: PushNuget
-#              run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
-
-#            - name: Build
-#              working-directory: ${{env.GITHUB_WORKSPACE}}
-#              # Add additional options to the MSBuild command line here (like platform or verbosity level).
-#              # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-#              run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}} "/p:OutputPath=artifact"
 
             - name: Publish Artifacts
               uses: actions/upload-artifact@v2
@@ -78,7 +66,7 @@ jobs:
             - name: Publish NUnit Test Artifacts
               uses: actions/upload-artifact@v2
               with:
-                name: NUnit Tests
+                name: Unit Tests
                 path: ${{env.BUILD_OUTPUT_TEST}}
 
     test:
@@ -100,21 +88,19 @@ jobs:
           RESULTS_PATH: TestResult.JUnit.xml
 
         steps:
+          - name: Setup .NET Core
+            uses: actions/setup-dotnet@v1
+            with:
+                dotnet-version: 5.0.x
+
 #          - name: JIT-Install MS.VisualBasic
 #            if: startsWith(matrix.os, 'ubuntu')
 #            run: sudo apt-get install libmono-microsoft-visualbasic10.0-cil
 #     
-#          - name: Install NUnit.ConsoleRunner
-#            shell: pwsh
-#            run: nuget install NUnit.ConsoleRunner -Version 3.12.0
-#     
-#          - name: Download JUnit Xslt
-#            run: curl https://raw.githubusercontent.com/jochenwezel/nunit-transforms-to-junit-gitlab-compatible/master/nunit3-junit/nunit3-junit.xslt > nunit3-junit.xslt
-#     
-#          - name: Download Artifacts
-#            uses: actions/download-artifact@v2
-#            with:
-#              name: NUnit Tests
+          - name: Download Artifacts
+            uses: actions/download-artifact@v2
+            with:
+              name: Unit Tests
 
           - name: Run Unit Tests
 #            run: ${{ matrix.runNetExe }} dotnet test --no-restore --verbosity normal --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
