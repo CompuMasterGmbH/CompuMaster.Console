@@ -113,7 +113,7 @@ jobs:
 
             - name: Run Unit Tests
 #              run: ${{ matrix.runNetExe }} dotnet test --configuration=${{env.BUILD_CONFIGURATION}} --no-restore --verbosity normal --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
-              run: dotnet test --results-directory test-results --logger "junit;LogFileName=TestResult.JUnit.xml" --configuration=${{env.BUILD_CONFIGURATION}}
+              run: dotnet test --framework net5.0 --results-directory test-results --logger "junit;LogFileName=TestResult.JUnit.xml" --configuration=${{env.BUILD_CONFIGURATION}}
   
             - name: Dir Listing (Win)
               if: startsWith(matrix.os, 'windows')
