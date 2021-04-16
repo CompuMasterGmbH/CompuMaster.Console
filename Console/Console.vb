@@ -1,4 +1,4 @@
-﻿Option Explicit On
+Option Explicit On
 Option Strict On
 
 Namespace CompuMaster
@@ -174,7 +174,7 @@ Namespace CompuMaster
             End If
 
             'Remember state of completed line for correct indentation on next line
-            If text.EndsWith(ControlChars.Cr) OrElse text.EndsWith(ControlChars.Lf) Then
+            If text.EndsWith("\r") OrElse text.EndsWith("\n") Then
                 'Line has been completed
                 If showConsoleOutput Then
                     IsNewOutputLineAtConsole = True
@@ -251,7 +251,7 @@ Namespace CompuMaster
             End If
 
             'Remember state of completed line for correct indentation on next line
-            If text.Chars(text.Length - 1) = ControlChars.Cr OrElse text.Chars(text.Length - 1) = ControlChars.Lf Then
+            If text.Chars(text.Length - 1) = "\r" OrElse text.Chars(text.Length - 1) = "\n" Then
                 'Line has been completed
                 If showConsoleOutput Then
                     IsNewOutputLineAtConsole = True
@@ -715,7 +715,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="path"></param>
         Public Shared Sub SaveHtmlLog(path As String)
-            SaveHtmlLog(path, "Log: " & Now.ToString("yyyy-MM-dd HH:mm:ss"))
+            SaveHtmlLog(path, "Log: " & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
         End Sub
 
         ''' <summary>
@@ -755,7 +755,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="path"></param>
         Public Shared Sub SaveWarningsHtmlLog(path As String)
-            SaveWarningsHtmlLog(path, "Log: " & Now.ToString("yyyy-MM-dd HH:mm:ss"))
+            SaveWarningsHtmlLog(path, "Log: " & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
         End Sub
 
         ''' <summary>
@@ -932,7 +932,6 @@ Namespace CompuMaster
                 System.Console.TreatControlCAsInput = value
             End Set
         End Property
-
         ''' <summary>
         ''' The console window title bar
         ''' </summary>
@@ -945,7 +944,6 @@ Namespace CompuMaster
                 System.Console.Title = value
             End Set
         End Property
-
         Public Shared Property WindowTop As Integer
             Get
                 Return System.Console.WindowTop
@@ -1092,7 +1090,7 @@ Namespace CompuMaster
         ''' Use this string for each additional indentation level
         ''' </summary>
         ''' <returns></returns>
-        Public Shared Property IndentationStringPerIndentLevel As String = Space(4)
+        Public Shared Property IndentationStringPerIndentLevel As String = "".PadLeft(4)
 
         Private Shared _CurrentIndentationLevel As Integer = 0
         ''' <summary>
