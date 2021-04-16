@@ -96,19 +96,15 @@ jobs:
               with:
                  dotnet-version: 3.1.x
 
-#            - name: JIT-Install MS.VisualBasic
-#              if: startsWith(matrix.os, 'ubuntu')
-#              run: sudo apt-get install libmono-microsoft-visualbasic10.0-cil
-#     
 #            - name: Download Artifacts
 #              uses: actions/download-artifact@v2
 #              with:
 #               name: Unit Tests
 
-            - name: Dir Listing
+            - name: Dir Listing (Win)
               if: startsWith(matrix.os, 'windows')
               run: dir
-            - name: Dir Listing
+            - name: Dir Listing (Linux/Mac)
               if: (!startsWith(matrix.os, 'windows'))
               run: ls -la
 
@@ -116,9 +112,24 @@ jobs:
               run: dotnet restore
 
             - name: Run Unit Tests
-#              run: ${{ matrix.runNetExe }} dotnet test --no-restore --verbosity normal --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
-              run: dotnet test --results-directory test-results --logger "junit;LogFileName=TestResult.JUnit.xml"
+#              run: ${{ matrix.runNetExe }} dotnet test --configuration=${{env.BUILD_CONFIGURATION}} --no-restore --verbosity normal --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
+              run: dotnet test --results-directory test-results --logger "junit;LogFileName=TestResult.JUnit.xml" --configuration=${{env.BUILD_CONFIGURATION}}
   
+            - name: Dir Listing (Win)
+              if: startsWith(matrix.os, 'windows')
+              run: dir
+            - name: Dir Listing (Linux/Mac)
+              if: (!startsWith(matrix.os, 'windows'))
+              run: ls -la
+
+            - name: Dir Listing (Win)
+              if: startsWith(matrix.os, 'windows')
+              run: dir test-results
+            - name: Dir Listing (Linux/Mac)
+              if: (!startsWith(matrix.os, 'windows'))
+              run: ls -la test-results
+
+
             - name: Unit Test Results
               uses: EnricoMi/publish-unit-test-result-action@v1
               # the action is useless on pull_request events
