@@ -13,6 +13,15 @@ Namespace ConsoleTest
             Assert.Fail("This is a demo test failure")
         End Sub
 
+        '<Test>
+        'Public Sub ConsoleColorToCssColor()
+        '    Assert.AreEqual("rgb(0,0,0)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Black))
+        '    Assert.AreEqual("rgb(255,255,255)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.White))
+        '    Assert.AreEqual("rgb(255,0,0)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Red))
+        '    Assert.AreEqual("rgb(0,255,0)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Green))
+        '    Assert.AreEqual("rgb(0,0,255)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Blue))
+        'End Sub
+
         <Test>
         Public Sub LogAndWarningsOutput()
             'Create some wonderful output to the console

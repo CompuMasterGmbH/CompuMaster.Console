@@ -798,11 +798,26 @@ Namespace CompuMaster
         ''' <returns></returns>
         Private Shared Function ConsoleColorCssName(color As System.ConsoleColor) As String
             Dim SystemColorName As String = ConsoleColorSystemName(color)
-            If SystemColorName.ToLowerInvariant.StartsWith("dark") Then
+            If SystemColorName = Nothing Then
+                Return Nothing 'ConsoleColorToCssColor(color)
+            ElseIf SystemColorName.ToLowerInvariant.StartsWith("dark") Then
                 Return SystemColorName
             Else
                 Return SystemColorName.Replace("Gray", "LightGray")
             End If
+        End Function
+
+        ''' <summary>
+        ''' Convert a ConsoleColor to a CSS representation of rgb(xx,xx,xx)
+        ''' </summary>
+        ''' <param name="color"></param>
+        ''' <returns></returns>
+        Private Shared Function ConsoleColorToCssColor(color As System.ConsoleColor) As String
+            Dim Hex As String = color.ToString("x")
+            Dim Red As Integer = Convert.ToInt32(Hex.Substring(2, 2), 16)
+            Dim Green As Integer = Convert.ToInt32(Hex.Substring(4, 2), 16)
+            Dim Blue As Integer = Convert.ToInt32(Hex.Substring(6, 2), 16)
+            Return "rgb(" & Red & "," & Green & "," & Blue & ")"
         End Function
 
         ''' <summary>
