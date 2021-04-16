@@ -1075,7 +1075,13 @@ Namespace CompuMaster
                 _HtmlWarningsLog.Clear()
                 _PlainTextWarningsLog.Clear()
             End If
-            If consoleWindow Then System.Console.Clear()
+            If consoleWindow Then
+                Try
+                    System.Console.Clear()
+                Catch ex As System.IO.IOException 'Das Handle ist ungültig
+                    'ignore if console handle is invalid
+                End Try
+            End If
             If plainTextLog Then _RawPlainTextLog.Clear()
             If htmlLog Then _HtmlLog.Clear()
         End Sub
