@@ -72,43 +72,43 @@ jobs:
             - name: Build
               run: dotnet build --configuration Debug --no-restore
 
-    - name: Build
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}} "/p:OutputPath=artifact"
+#          - name: Build
+#            working-directory: ${{env.GITHUB_WORKSPACE}}
+#            # Add additional options to the MSBuild command line here (like platform or verbosity level).
+#            # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+#            run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}} "/p:OutputPath=artifact"
 
-    - name: Publish Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: Build Artifacts
-        path: CompuMaster.Calendar/artifact
+            - name: Publish Artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                name: Build Artifacts
+                path: CompuMaster.Calendar/artifact
 
-    - name: Publish NUnit Test Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: NUnit Tests
-        path: CompuMaster.Test.Calendar/artifact
+            - name: Publish NUnit Test Artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                name: NUnit Tests
+                path: CompuMaster.Test.Calendar/artifact
 
-  test:
-    needs: build
-    runs-on: ${{ matrix.os }}
+    test:
+        needs: build
+        runs-on: ${{ matrix.os }}
 
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
-        include: 
-          - os: macos-latest
-            runNetExe: mono
+        strategy:
+          fail-fast: false
+          matrix:
+            os: [windows-latest, ubuntu-latest, macos-latest]
+            include: 
+              - os: macos-latest
+                runNetExe: mono
 
-    # the build-and-test job might be skipped, we don't need to run this job then
-    #if: success() || failure()
+        # the build-and-test job might be skipped, we don't need to run this job then
+        #if: success() || failure()
 
-    env:
-      RESULTS_PATH: TestResult.JUnit.xml
+        env:
+          RESULTS_PATH: TestResult.JUnit.xml
 
-    steps:
+        steps:
 #      - name: JIT-Install MS.VisualBasic
 #        if: startsWith(matrix.os, 'ubuntu')
 #        run: sudo apt-get install libmono-microsoft-visualbasic10.0-cil
@@ -125,8 +125,8 @@ jobs:
 #        with:
 #          name: NUnit Tests
 
-      - name: Run Unit Tests
-        run: ${{ matrix.runNetExe }} dotnet test --no-restore --verbosity normal CompuMaster.Test.Calendar.dll --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
+          - name: Run Unit Tests
+            run: ${{ matrix.runNetExe }} dotnet test --no-restore --verbosity normal CompuMaster.Test.Calendar.dll --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
 
 #      - name: Unit Test Results
 #        uses: EnricoMi/publish-unit-test-result-action@v1
