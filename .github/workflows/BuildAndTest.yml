@@ -94,7 +94,7 @@ jobs:
             - name: Setup .NET Core
               uses: actions/setup-dotnet@v1
               with:
-                 dotnet-version: 5.0.x
+                 dotnet-version: 3.1.x
 
 #            - name: JIT-Install MS.VisualBasic
 #              if: startsWith(matrix.os, 'ubuntu')
@@ -106,7 +106,11 @@ jobs:
 #               name: Unit Tests
 
             - name: Dir Listing
+              if: startsWith(matrix.os, 'windows')
               run: dir
+            - name: Dir Listing
+              if: !startsWith(matrix.os, 'windows')
+              run: ls -la
 
             - name: Install dependencies
               run: dotnet restore
