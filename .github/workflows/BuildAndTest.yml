@@ -109,7 +109,7 @@ jobs:
               if: startsWith(matrix.os, 'windows')
               run: dir
             - name: Dir Listing
-              if: !startsWith(matrix.os, 'windows')
+              if: (!startsWith(matrix.os, 'windows'))
               run: ls -la
 
             - name: Install dependencies
