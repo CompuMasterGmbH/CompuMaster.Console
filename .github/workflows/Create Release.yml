@@ -22,28 +22,36 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-#    # This workflow contains a single job called "build"
-#    build:
-#        # The type of runner that the job will run on
-#        runs-on: windows-latest
-#
-#        # Steps represent a sequence of tasks that will be executed as part of the job
-#        steps:
-#            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-#            - name: Checkout
-#              uses: actions/checkout@v2
-#
-#            - name: Setup .NET Core
-#              uses: actions/setup-dotnet@v1
-#
-#            - name: .Net version info
-#              run: |
-#                  dotnet --version
-#                  dotnet --list-sdks
-#                  dotnet --list-runtimes
-#            - name: Install dependencies
-#              run: dotnet restore
-#            - name: Build
+
+    build:
+        runs-on: windows-latest
+        #if: false # always skip job
+
+        steps:
+            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Setup .NET Core
+              uses: actions/setup-dotnet@v1
+              with:
+                dotnet-version: 5.0.x
+
+            - name: .Net version info
+              run: |
+                  dotnet --version
+                  dotnet --list-sdks
+                  dotnet --list-runtimes
+
+            - name: Dir Listing
+              run: dir
+
+            - name: Install dependencies
+              run: dotnet restore
+
+            - name: Build
+              run: dotnet build --configuration Debug --no-restore
+
 #              run: dotnet build --configuration Release --no-restore
 #            - name: Test
 #              run: dotnet test --no-restore --verbosity normal
@@ -52,31 +60,11 @@ jobs:
 #            - name: PushNuget
 #              run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
 
-    build:
-        runs-on: windows-latest
-        #if: false # always skip job
-
-        steps:
-            - uses: actions/checkout@v2
-
-            - name: Setup .NET Core
-              uses: actions/setup-dotnet@v1
-
-            - name: .Net version info
-              run: |
-                  dotnet --version
-                  dotnet --list-sdks
-                  dotnet --list-runtimes
-            - name: Install dependencies
-              run: dotnet restore
-            - name: Build
-              run: dotnet build --configuration Debug --no-restore
-
-#          - name: Build
-#            working-directory: ${{env.GITHUB_WORKSPACE}}
-#            # Add additional options to the MSBuild command line here (like platform or verbosity level).
-#            # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-#            run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}} "/p:OutputPath=artifact"
+#            - name: Build
+#              working-directory: ${{env.GITHUB_WORKSPACE}}
+#              # Add additional options to the MSBuild command line here (like platform or verbosity level).
+#              # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+#              run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}} "/p:OutputPath=artifact"
 
             - name: Publish Artifacts
               uses: actions/upload-artifact@v2
@@ -109,42 +97,42 @@ jobs:
           RESULTS_PATH: TestResult.JUnit.xml
 
         steps:
-#      - name: JIT-Install MS.VisualBasic
-#        if: startsWith(matrix.os, 'ubuntu')
-#        run: sudo apt-get install libmono-microsoft-visualbasic10.0-cil
-#
-#      - name: Install NUnit.ConsoleRunner
-#        shell: pwsh
-#        run: nuget install NUnit.ConsoleRunner -Version 3.12.0
-#
-#      - name: Download JUnit Xslt
-#        run: curl https://raw.githubusercontent.com/jochenwezel/nunit-transforms-to-junit-gitlab-compatible/master/nunit3-junit/nunit3-junit.xslt > nunit3-junit.xslt
-#
-#      - name: Download Artifacts
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: NUnit Tests
+#          - name: JIT-Install MS.VisualBasic
+#            if: startsWith(matrix.os, 'ubuntu')
+#            run: sudo apt-get install libmono-microsoft-visualbasic10.0-cil
+#     
+#          - name: Install NUnit.ConsoleRunner
+#            shell: pwsh
+#            run: nuget install NUnit.ConsoleRunner -Version 3.12.0
+#     
+#          - name: Download JUnit Xslt
+#            run: curl https://raw.githubusercontent.com/jochenwezel/nunit-transforms-to-junit-gitlab-compatible/master/nunit3-junit/nunit3-junit.xslt > nunit3-junit.xslt
+#     
+#          - name: Download Artifacts
+#            uses: actions/download-artifact@v2
+#            with:
+#              name: NUnit Tests
 
           - name: Run Unit Tests
             run: ${{ matrix.runNetExe }} dotnet test --no-restore --verbosity normal CompuMaster.Test.Calendar.dll --result=TestResult.xml "--result=TestResult.JUnit.xml;transform=nunit3-junit.xslt"
 
-#      - name: Unit Test Results
-#        uses: EnricoMi/publish-unit-test-result-action@v1
-#        # the action is useless on pull_request events
-#        # (it can not create check runs or pull request comments)
-#        if: always() && startsWith(matrix.os, 'ubuntu') && github.event_name != 'pull_request'
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          files: "TestResult.JUnit.xml"
-#          check_run_annotations: all tests
-#          comment_title: Unit Test Statistics
-#          check_name: Unit Test Results
-#          report_individual_runs: true
-#
-#      - name: Publish Unit Test Results
-#        uses: actions/upload-artifact@v2
-#        if: always()
-#        with:
-#          name: NUnit Test Results ${{ matrix.os }}
-#          path: TestResult.JUnit.xml
+#          - name: Unit Test Results
+#            uses: EnricoMi/publish-unit-test-result-action@v1
+#            # the action is useless on pull_request events
+#            # (it can not create check runs or pull request comments)
+#            if: always() && startsWith(matrix.os, 'ubuntu') && github.event_name != 'pull_request'
+#            with:
+#              github_token: ${{ secrets.GITHUB_TOKEN }}
+#              files: "TestResult.JUnit.xml"
+#              check_run_annotations: all tests
+#              comment_title: Unit Test Statistics
+#              check_name: Unit Test Results
+#              report_individual_runs: true
+#      
+#          - name: Publish Unit Test Results
+#            uses: actions/upload-artifact@v2
+#            if: always()
+#            with:
+#              name: NUnit Test Results ${{ matrix.os }}
+#              path: TestResult.JUnit.xml
 
