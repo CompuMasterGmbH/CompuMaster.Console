@@ -11,9 +11,9 @@ env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .
   BUILD_CONFIGURATION: CI_CD
+  BUILD_PROJECT: Console/CompuMaster.Console.vbproj
+  BUILD_OUTPUT_BASEDIR: Console/bin
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
 
     publish:
         runs-on: ubuntu-latest
@@ -35,12 +35,22 @@ jobs:
             - name: Build
               run: dotnet build --configuration=${{env.BUILD_CONFIGURATION}} --no-restore
 
+            - name: Pack binaries
+              run: |
+                (cd ${{env.BUILD_OUTPUT_BASEDIR}}/${{env.BUILD_CONFIGURATION}} && zip $OLDPWD/bin.zip -r .)
+
+            - name: Publish binaries
+              uses: softprops/action-gh-release@v1
+              with:
+                files: "bin.zip"
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
             - name: Pack
-              run: dotnet pack --no-build --configuration=${{env.BUILD_CONFIGURATION}} Console/CompuMaster.Console.vbproj --output .
+              run: dotnet pack --no-build --configuration=${{env.BUILD_CONFIGURATION}} ${{env.BUILD_PROJECT}} --output .
 
             - name: PushNuget
               run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
-              #run: dotnet nuget push <my project>/bin/Release/*.nupkg
 
             - name: Publish Package Artifacts
               uses: actions/upload-artifact@v2
