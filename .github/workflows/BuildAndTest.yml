@@ -24,50 +24,50 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-    build:
-        runs-on: windows-latest
-        if: false # always skip job
-
-        steps:
-            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-            - name: Checkout
-              uses: actions/checkout@v2
-
-            - name: Setup .NET Core
-              uses: actions/setup-dotnet@v1
-              with:
-                dotnet-version: 5.0.x
-
-            - name: .Net version info
-              run: |
-                  dotnet --version
-                  dotnet --list-sdks
-                  dotnet --list-runtimes
-
-            - name: Dir Listing
-              run: dir
-
-            - name: Install dependencies
-              run: dotnet restore
-
-            - name: Build
-              run: dotnet build --configuration=${{env.BUILD_CONFIGURATION}} --no-restore
-
-#              run: dotnet build --configuration Release --no-restore
-#            - name: Test
-#              run: dotnet test --no-restore --verbosity normal
-
-            - name: Publish Artifacts
-              uses: actions/upload-artifact@v2
-              with:
-                name: Build Artifacts
-                path: ${{env.BUILD_OUTPUT}}
-
-            - name: Publish NUnit Test Artifacts
-              uses: actions/upload-artifact@v2
-              with:
-                name: Unit Tests
-                path: ${{env.BUILD_OUTPUT_TEST}}
+#    build:
+#        runs-on: windows-latest
+#        if: false # always skip job
+#
+#        steps:
+#            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#            - name: Checkout
+#              uses: actions/checkout@v2
+#
+#            - name: Setup .NET Core
+#              uses: actions/setup-dotnet@v1
+#              with:
+#                dotnet-version: 5.0.x
+#
+#            - name: .Net version info
+#              run: |
+#                  dotnet --version
+#                  dotnet --list-sdks
+#                  dotnet --list-runtimes
+#
+#            - name: Dir Listing
+#              run: dir
+#
+#            - name: Install dependencies
+#              run: dotnet restore
+#
+#            - name: Build
+#              run: dotnet build --configuration=${{env.BUILD_CONFIGURATION}} --no-restore
+##              run: dotnet build --configuration Release --no-restore
+#
+##            - name: Test
+##              run: dotnet test --no-restore --verbosity normal
+#
+#            - name: Publish Artifacts
+#              uses: actions/upload-artifact@v2
+#              with:
+#                name: Build Artifacts
+#                path: ${{env.BUILD_OUTPUT}}
+#
+#            - name: Publish NUnit Test Artifacts
+#              uses: actions/upload-artifact@v2
+#              with:
+#                name: Unit Tests
+#                path: ${{env.BUILD_OUTPUT_TEST}}
 
     test:
         #needs: build
@@ -111,8 +111,11 @@ jobs:
             - name: Install dependencies
               run: dotnet restore
 
+            - name: Build
+              run: dotnet build --configuration=${{env.BUILD_CONFIGURATION}} --no-restore
+
             - name: Run Unit Tests
-              run: dotnet test --framework net5.0 --results-directory test-results --logger junit --configuration=${{env.BUILD_CONFIGURATION}}
+              run: dotnet test --framework net5.0 --results-directory test-results --logger junit --configuration=${{env.BUILD_CONFIGURATION}} --no-restore
 
             - name: Dir Listing (Win) test-results
               if: startsWith(matrix.os, 'windows')
