@@ -15,7 +15,7 @@ env:
   BUILD_OUTPUT_BASEDIR: Console/bin
 
 
-    publish:
+publish:
         runs-on: ubuntu-latest
         #if: false # always skip job
 
