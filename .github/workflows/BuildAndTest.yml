@@ -126,9 +126,9 @@ jobs:
             #  # (it can not create check runs or pull request comments)
             #  if: always() #&& startsWith(matrix.os, 'ubuntu') #&& github.event_name != 'pull_request'
 
-            - name: Unit Test Results (Ubuntu)
+            - name: Unit Test Results (Linux)
               uses: EnricoMi/publish-unit-test-result-action@v1
-              if: always() #&& startsWith(matrix.os, 'ubuntu')
+              if: always() && startsWith(matrix.os, 'ubuntu')
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 files: "test-results/TestResults.xml"
@@ -137,14 +137,14 @@ jobs:
                 check_name: Unit Test Results (${{matrix.os}})
                 report_individual_runs: true
       
-            - name: Unit Test Results (Win+Mac)
+            - name: Unit Test Results (Win/Mac)
               uses: EnricoMi/publish-unit-test-result-action/composite@v1
               if: always() && (!(startsWith(matrix.os, 'ubuntu'))) 
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 files: "test-results/TestResults.xml"
                 check_run_annotations: all tests
-                comment_title: Unit Test Statistics
+                comment_title: Unit Test Statistics (${{matrix.os}})
                 check_name: Unit Test Results (${{matrix.os}})
                 report_individual_runs: true
       
