@@ -125,7 +125,7 @@ jobs:
               uses: EnricoMi/publish-unit-test-result-action@v1
               # the action is useless on pull_request events
               # (it can not create check runs or pull request comments)
-              if: always() && startsWith(matrix.os, 'ubuntu') && github.event_name != 'pull_request'
+              if: always() && startsWith(matrix.os, 'ubuntu') #&& github.event_name != 'pull_request'
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 #files: "test-results/TestResults.xml"
