@@ -9,9 +9,9 @@ Namespace ConsoleTest
             CompuMaster.Console.Clear(True, True, True, True)
         End Sub
 
-        <Test> Public Sub TestMustFailForTestingGitHubWorkflowsTestDisplay()
-            Assert.Fail("This is a demo test failure")
-        End Sub
+        '<Test> Public Sub TestMustFailForTestingGitHubWorkflowsTestDisplay()
+        '    Assert.Fail("This is a demo test failure")
+        'End Sub
 
         '<Test>
         'Public Sub ConsoleColorToCssColor()
