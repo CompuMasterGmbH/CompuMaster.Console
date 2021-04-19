@@ -12,16 +12,6 @@ on:
 
     # Allows you to run this workflow manually from the Actions tab
     workflow_dispatch:
-    
-env:
-   # Path to the solution file relative to the root of the project
-   SOLUTION_FILE_PATH: .
-
-   # Configuration type to build
-   BUILD_CONFIGURATION: CI_CD
-
-   BUILD_OUTPUT: Console/bin/Debug
-   BUILD_OUTPUT_TEST: ConsoleTest/bin/Debug
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -47,10 +37,8 @@ jobs:
             - name: Install dependencies
               run: dotnet restore
             - name: Build
-              run: dotnet build --configuration=${{env.BUILD_CONFIGURATION}} --no-restore
-            - name: Test
-              run: dotnet test --no-restore --verbosity normal
+              run: dotnet build --configuration=Release --no-restore
             - name: Pack
-              run: dotnet pack --no-build --configuration=${{env.BUILD_CONFIGURATION}} Console/CompuMaster.Console.vbproj --output .
+              run: dotnet pack --no-build --configuration=Release Console/CompuMaster.Console.vbproj --output .
             # - name: PushNuget
             #  run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
