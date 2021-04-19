@@ -1,5 +1,12 @@
 name: Publish/Upload dotnet package on release
 
+# PLEASE NOTE: PUBLISHING/DEPLOYMENT
+# Release is to be created manually at GitHub releases management page
+# - release name usually contains "v1.2.3"
+# After creating a GitHub release, following actions will automatically run:
+# 1. NuGet package (version as defined in VS.Net project property "package version")
+# 2. Attaching of compiled binaries to GitHub release
+
 on:
   release:
     types: [created]
@@ -10,8 +17,12 @@ on:
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .
+
+  # Name of project configuration for build as well as name of the bin output subdirectory (both must match for "dotnet pack" to find compiled files!)
   BUILD_CONFIGURATION: CI_CD
+  # Name of build project which creates required output for packaging/deployment
   BUILD_PROJECT: Console/CompuMaster.Console.vbproj
+  # Name of directory (e.g. "bin") containing the subdirectory (e.g. "CI_CD") with all output files (*.dll)
   BUILD_OUTPUT_BASEDIR: Console/bin
 
 

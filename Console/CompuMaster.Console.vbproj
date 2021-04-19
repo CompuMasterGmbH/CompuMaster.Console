@@ -8,7 +8,7 @@
 		<Copyright>2016-2017,2019,2021 CompuMaster GmbH</Copyright>	
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<AssemblyVersion>2021.04.16.100</AssemblyVersion>
-		<Version>2021.04.16.103</Version>
+		<Version>2021.04.19</Version>
 		<VBRuntime>Embed</VBRuntime>
 		<IsPackable>true</IsPackable>
 		<Configurations>Debug;Release;CI_CD</Configurations>
