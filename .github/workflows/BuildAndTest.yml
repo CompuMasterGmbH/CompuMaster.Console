@@ -128,7 +128,8 @@ jobs:
               if: always() && startsWith(matrix.os, 'ubuntu') && github.event_name != 'pull_request'
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
-                files: "test-results/TestResults.xml"
+                #files: "test-results/TestResults.xml"
+                files: "junit.xml"
                 check_run_annotations: all tests
                 comment_title: Unit Test Statistics
                 check_name: Unit Test Results
