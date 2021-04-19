@@ -8,9 +8,10 @@
 		<Copyright>2016-2017,2019,2021 CompuMaster GmbH</Copyright>	
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<AssemblyVersion>2021.04.16.100</AssemblyVersion>
-		<Version>2021.04.16.101</Version>
+		<Version>2021.04.16.103</Version>
 		<VBRuntime>Embed</VBRuntime>
 		<IsPackable>true</IsPackable>
+		<Configurations>Debug;Release;CI_CD</Configurations>
 	</PropertyGroup>
 	<PropertyGroup>
 		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -27,6 +28,15 @@
 		<OutputPath>bin\Debug\</OutputPath>
 		<DocumentationFile>CompuMaster.Console.xml</DocumentationFile>
 		<NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CI_CD|AnyCPU'">
+	  <DebugSymbols>true</DebugSymbols>
+	  <DebugType>full</DebugType>
+	  <DefineDebug>true</DefineDebug>
+	  <DefineTrace>true</DefineTrace>
+	  <OutputPath>bin\CI_CD\</OutputPath>
+	  <DocumentationFile>CompuMaster.Console.xml</DocumentationFile>
+	  <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 		<DebugType>pdbonly</DebugType>
