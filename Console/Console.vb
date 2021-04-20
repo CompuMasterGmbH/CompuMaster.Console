@@ -16,23 +16,35 @@ Namespace CompuMaster
         Private Shared ReadOnly _RawPlainTextLog As New System.Text.StringBuilder
         Private Shared ReadOnly _HtmlLog As New System.Text.StringBuilder
         Private Shared ReadOnly SystemConsoleDefaultForegroundColor As System.ConsoleColor = InitialForegroundColor()
-        Private Shared ReadOnly SystemConsoleDefaultBackgroundColor As System.ConsoleColor = System.Console.BackgroundColor
+        Private Shared ReadOnly SystemConsoleDefaultBackgroundColor As System.ConsoleColor = InitialBackgroundColor()
 
         ''' <summary>
         ''' Indicates if System.Console has been redirected or by other reason not able to initialize valid ConsoleColors
         ''' </summary>
         ''' <remarks>Especially on Linux/Unix platforms when calling from X11 File Manager (e.g. Nautilus), the Console App is started with a redirected Console Output. In this case, no color assignments to System.Color.Fore/BackColor are stored. In this case, the HTML log output is the only output format that maintains colored output. But since every Color setup is initially and remainingly at 0 (black), the HTML log appears in browser with colors black font on black background. This situation must be prevented, so the fore/background colors are stored in this very condition in local variables instead of System.Console properties.</remarks>
-        Private Shared ReadOnly _NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself As Boolean = (System.Console.IsOutputRedirected OrElse (System.Console.ForegroundColor = 0 AndAlso System.Console.BackgroundColor = 0))
+        Friend Shared ReadOnly NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself As Boolean = (System.Console.IsOutputRedirected OrElse ((System.Console.ForegroundColor = 0 OrElse System.Console.ForegroundColor = -1) AndAlso (System.Console.BackgroundColor = 0 OrElse System.Console.BackgroundColor = -1)))
 
         ''' <summary>
         ''' Depending on a connected/redirected System.Console Output, the system default for ForegroundColor must be assigned differently
         ''' </summary>
         ''' <returns></returns>
         Private Shared Function InitialForegroundColor() As System.ConsoleColor
-            If _NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
+            If NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
                 Return ConsoleColor.White
             Else
                 Return System.Console.ForegroundColor
+            End If
+        End Function
+
+        ''' <summary>
+        ''' Depending on a connected/redirected System.Console Output, the system default for BackgroundColor must be assigned differently
+        ''' </summary>
+        ''' <returns></returns>
+        Private Shared Function InitialBackgroundColor() As System.ConsoleColor
+            If NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
+                Return ConsoleColor.Black
+            Else
+                Return System.Console.BackgroundColor
             End If
         End Function
 
@@ -64,7 +76,7 @@ Namespace CompuMaster
         ''' <returns></returns>
         Public Shared Property ForegroundColor As System.ConsoleColor
             Get
-                If _NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
+                If NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
                     Return _ForegroundColor
                 Else
                     Return System.Console.ForegroundColor
@@ -83,7 +95,7 @@ Namespace CompuMaster
         ''' <returns></returns>
         Public Shared Property BackgroundColor As System.ConsoleColor
             Get
-                If _NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
+                If NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
                     Return _BackgroundColor
                 Else
                     Return System.Console.BackgroundColor
@@ -805,7 +817,12 @@ Namespace CompuMaster
         Friend Shared Function ConsoleColorCssName(color As System.ConsoleColor) As String
             Dim SystemColorName As String = ConsoleColorSystemName(color)
             If SystemColorName = Nothing Then
-                Return Nothing 'ConsoleColorToCssColor(color)
+                If color.ToString("d") = "-1" Then
+                    'Linux/Mac environments: value for default differs from Windows platforms
+                    Return "Black"
+                Else
+                    Return "invalid-console-color(" & color.ToString("d") & ")"
+                End If
             ElseIf SystemColorName.ToLowerInvariant.StartsWith("dark") Then
                 Return SystemColorName
             Else
@@ -1151,7 +1168,7 @@ Namespace CompuMaster
         ''' <param name="indentLevel"></param>
         ''' <returns></returns>
         Public Shared Function IndentText(text As String, indentLevel As Integer, continueStartedLine As Boolean) As String
-            Dim FullIndentationPrefix As String = IndentationStringForCurrentIndentLevel(CurrentIndentationLevel)
+            Dim FullIndentationPrefix As String = IndentationStringForCurrentIndentLevel(indentLevel)
             Dim Result As String
             Result = System.Text.RegularExpressions.Regex.Replace(text, "(?:\r\n|\r|\n)", System.Environment.NewLine & FullIndentationPrefix)
             Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape(System.Environment.NewLine & FullIndentationPrefix) & "$", System.Environment.NewLine)

@@ -132,6 +132,40 @@ Namespace ConsoleTest
             Assert.Less(Expected.Length, Result.Length * 1.2)
         End Sub
 
+        <Test> Public Sub ConsoleColorsCurrentValues()
+            System.Console.WriteLine("System.Console.BackgroundColor=" & System.Console.BackgroundColor.ToString("d") & "=" & System.Console.BackgroundColor.ToString("g"))
+            System.Console.WriteLine("System.Console.ForegroundColor=" & System.Console.ForegroundColor.ToString("d") & "=" & System.Console.ForegroundColor.ToString("g"))
+            System.Console.WriteLine("CompuMaster.Console.BackgroundColor=" & CompuMaster.Console.BackgroundColor.ToString("d") & "=" & CompuMaster.Console.BackgroundColor.ToString("g"))
+            System.Console.WriteLine("CompuMaster.Console.ForegroundColor=" & CompuMaster.Console.ForegroundColor.ToString("d") & "=" & CompuMaster.Console.ForegroundColor.ToString("g"))
+
+            Assert.AreEqual("Black", System.Console.BackgroundColor.ToString("g"))
+            Assert.AreEqual("Black", CompuMaster.Console.BackgroundColor.ToString("g"))
+            Select Case System.Environment.OSVersion.Platform
+                Case PlatformID.Win32NT
+                    Assert.AreEqual("Gray", System.Console.ForegroundColor.ToString("g"))
+                    If CompuMaster.Console.NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
+                        Assert.AreEqual("White", CompuMaster.Console.ForegroundColor.ToString("g"))
+                    Else
+                        Assert.AreEqual("Gray", CompuMaster.Console.ForegroundColor.ToString("g"))
+                    End If
+                Case Else
+                    Assert.AreEqual("White", System.Console.ForegroundColor.ToString("g"))
+                    Assert.AreEqual("White", CompuMaster.Console.ForegroundColor.ToString("g"))
+            End Select
+
+            CompuMaster.Console.BackgroundColor = ConsoleColor.DarkGray
+            CompuMaster.Console.ForegroundColor = ConsoleColor.Yellow
+
+            System.Console.WriteLine("System.Console.BackgroundColor=" & System.Console.BackgroundColor.ToString("d") & "=" & System.Console.BackgroundColor.ToString("g"))
+            System.Console.WriteLine("System.Console.ForegroundColor=" & System.Console.ForegroundColor.ToString("d") & "=" & System.Console.ForegroundColor.ToString("g"))
+            System.Console.WriteLine("CompuMaster.Console.BackgroundColor=" & CompuMaster.Console.BackgroundColor.ToString("d") & "=" & CompuMaster.Console.BackgroundColor.ToString("g"))
+            System.Console.WriteLine("CompuMaster.Console.ForegroundColor=" & CompuMaster.Console.ForegroundColor.ToString("d") & "=" & CompuMaster.Console.ForegroundColor.ToString("g"))
+
+            Assert.AreEqual("DarkGray", CompuMaster.Console.BackgroundColor.ToString("g"))
+            Assert.AreEqual("Yellow", CompuMaster.Console.ForegroundColor.ToString("g"))
+
+        End Sub
+
         <Test> Public Sub ConsoleColorSystemName()
             Dim MyCounter As Integer = -1
             For Each Color As System.ConsoleColor In [Enum].GetValues(GetType(System.ConsoleColor))
