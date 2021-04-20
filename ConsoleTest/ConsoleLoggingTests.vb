@@ -132,6 +132,70 @@ Namespace ConsoleTest
             Assert.Less(Expected.Length, Result.Length * 1.2)
         End Sub
 
+        <Test> Public Sub ConsoleColorSystemName()
+            Dim MyCounter As Integer = -1
+            For Each Color As System.ConsoleColor In [Enum].GetValues(GetType(System.ConsoleColor))
+                MyCounter += 1
+                Dim ColorName As String = CompuMaster.Console.ConsoleColorSystemName(Color)
+                System.Console.WriteLine(Color.ToString("d") & "=" & ColorName & "=" & Color.ToString("g"))
+                Dim ExpectedColorName As String
+                Select Case MyCounter
+                    Case 0 : ExpectedColorName = "Black"
+                    Case 1 : ExpectedColorName = "DarkBlue"
+                    Case 2 : ExpectedColorName = "DarkGreen"
+                    Case 3 : ExpectedColorName = "DarkCyan"
+                    Case 4 : ExpectedColorName = "DarkRed"
+                    Case 5 : ExpectedColorName = "DarkMagenta"
+                    Case 6 : ExpectedColorName = "DarkYellow"
+                    Case 7 : ExpectedColorName = "Gray"
+                    Case 8 : ExpectedColorName = "DarkGray"
+                    Case 9 : ExpectedColorName = "Blue"
+                    Case 10 : ExpectedColorName = "Green"
+                    Case 11 : ExpectedColorName = "Cyan"
+                    Case 12 : ExpectedColorName = "Red"
+                    Case 13 : ExpectedColorName = "Magenta"
+                    Case 14 : ExpectedColorName = "Yellow"
+                    Case 15 : ExpectedColorName = "White"
+                    Case Else
+                        Throw New NotImplementedException
+                End Select
+                Assert.AreEqual(MyCounter.ToString, Color.ToString("d"))
+                Assert.AreEqual(ExpectedColorName, Color.ToString("g"))
+                Assert.AreEqual(ExpectedColorName, ColorName)
+            Next
+        End Sub
+
+        <Test> Public Sub ConsoleColorCssName()
+            Dim MyCounter As Integer = -1
+            For Each Color As System.ConsoleColor In [Enum].GetValues(GetType(System.ConsoleColor))
+                MyCounter += 1
+                Dim ColorName As String = CompuMaster.Console.ConsoleColorCssName(Color)
+                Dim ExpectedColorName As String
+                Select Case MyCounter
+                    Case 0 : ExpectedColorName = "Black"
+                    Case 1 : ExpectedColorName = "DarkBlue"
+                    Case 2 : ExpectedColorName = "DarkGreen"
+                    Case 3 : ExpectedColorName = "DarkCyan"
+                    Case 4 : ExpectedColorName = "DarkRed"
+                    Case 5 : ExpectedColorName = "DarkMagenta"
+                    Case 6 : ExpectedColorName = "DarkYellow"
+                    Case 7 : ExpectedColorName = "LightGray"
+                    Case 8 : ExpectedColorName = "DarkGray"
+                    Case 9 : ExpectedColorName = "Blue"
+                    Case 10 : ExpectedColorName = "Green"
+                    Case 11 : ExpectedColorName = "Cyan"
+                    Case 12 : ExpectedColorName = "Red"
+                    Case 13 : ExpectedColorName = "Magenta"
+                    Case 14 : ExpectedColorName = "Yellow"
+                    Case 15 : ExpectedColorName = "White"
+                    Case Else
+                        Throw New NotImplementedException
+                End Select
+                Assert.AreEqual(MyCounter.ToString, Color.ToString("d"))
+                Assert.AreEqual(ExpectedColorName, ColorName)
+            Next
+        End Sub
+
     End Class
 
 End Namespace

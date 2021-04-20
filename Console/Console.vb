@@ -3,6 +3,8 @@ Option Strict On
 
 Imports CompuMaster.VisualBasicCompatibility
 
+<Assembly: Runtime.CompilerServices.InternalsVisibleTo("ConsoleTest")>
+
 Namespace CompuMaster
 
     <CodeAnalysis.SuppressMessage("Style", "IDE1006:Benennungsstile", Justification:="<Ausstehend>")>
@@ -791,7 +793,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="color"></param>
         ''' <returns></returns>
-        Private Shared Function ConsoleColorSystemName(color As System.ConsoleColor) As String
+        Friend Shared Function ConsoleColorSystemName(color As System.ConsoleColor) As String
             Return [Enum].GetName(GetType(System.ConsoleColor), color)
         End Function
 
@@ -800,7 +802,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="color"></param>
         ''' <returns></returns>
-        Private Shared Function ConsoleColorCssName(color As System.ConsoleColor) As String
+        Friend Shared Function ConsoleColorCssName(color As System.ConsoleColor) As String
             Dim SystemColorName As String = ConsoleColorSystemName(color)
             If SystemColorName = Nothing Then
                 Return Nothing 'ConsoleColorToCssColor(color)
