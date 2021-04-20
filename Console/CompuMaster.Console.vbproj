@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<RootNamespace></RootNamespace>
-		<TargetFrameworks>netcoreapp3.1;net5.0;net48;net45</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0;net48;net45</TargetFrameworks>
 		<Description>Adds additional logging capabilities to the System.Console</Description>
 		<Company>CompuMaster GmbH</Company>
 		<Product>CompuMaster.Console</Product>
@@ -66,21 +66,38 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Authors>Jochen Wezel</Authors>
 	</PropertyGroup>
-	<!--ignor warning CA1416 (Validate platform compatibility) if OperatingSystem is Windows-->
-	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
-		<NoWarn>CA1416</NoWarn>
-	</PropertyGroup>
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net45'">
-		<Reference Include="Microsoft.VisualBasic" />
 		<Reference Include="System" />
-	</ItemGroup>
-	<ItemGroup>
-	  <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Include="..\logo_64x64.png">
 	    <Pack>True</Pack>
 	    <PackagePath></PackagePath>
 	  </None>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+	  <PackageReference Include="CompuMaster.VisualBasicCompatibility">
+	    <Version>1.0.2</Version>
+	  </PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+	  <PackageReference Include="CompuMaster.VisualBasicCompatibility">
+	    <Version>1.0.2</Version>
+	  </PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+	  <PackageReference Include="CompuMaster.VisualBasicCompatibility">
+	    <Version>1.0.2</Version>
+	  </PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+	  <PackageReference Include="CompuMaster.VisualBasicCompatibility">
+	    <Version>1.0.2</Version>
+	  </PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+	  <PackageReference Include="CompuMaster.VisualBasicCompatibility">
+	    <Version>1.0.2</Version>
+	  </PackageReference>
 	</ItemGroup>
 </Project>

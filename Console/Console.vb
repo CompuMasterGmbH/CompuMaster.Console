@@ -1,14 +1,18 @@
 Option Explicit On
 Option Strict On
 
+Imports CompuMaster.VisualBasicCompatibility
+
 Namespace CompuMaster
 
-    Partial Public Class Console
+    <CodeAnalysis.SuppressMessage("Style", "IDE1006:Benennungsstile", Justification:="<Ausstehend>")>
+    <CodeAnalysis.SuppressMessage("Style", "CA1416", Justification:="Non-Windows-Platforms might not support these properties/methods")>
+    Partial Public NotInheritable Class Console
 
-        Private Shared _PlainTextWarningsLog As New System.Text.StringBuilder
-        Private Shared _HtmlWarningsLog As New System.Text.StringBuilder
-        Private Shared _RawPlainTextLog As New System.Text.StringBuilder
-        Private Shared _HtmlLog As New System.Text.StringBuilder
+        Private Shared ReadOnly _PlainTextWarningsLog As New System.Text.StringBuilder
+        Private Shared ReadOnly _HtmlWarningsLog As New System.Text.StringBuilder
+        Private Shared ReadOnly _RawPlainTextLog As New System.Text.StringBuilder
+        Private Shared ReadOnly _HtmlLog As New System.Text.StringBuilder
         Private Shared ReadOnly SystemConsoleDefaultForegroundColor As System.ConsoleColor = InitialForegroundColor()
         Private Shared ReadOnly SystemConsoleDefaultBackgroundColor As System.ConsoleColor = System.Console.BackgroundColor
 
@@ -807,18 +811,18 @@ Namespace CompuMaster
             End If
         End Function
 
-        ''' <summary>
-        ''' Convert a ConsoleColor to a CSS representation of rgb(xx,xx,xx)
-        ''' </summary>
-        ''' <param name="color"></param>
-        ''' <returns></returns>
-        Private Shared Function ConsoleColorToCssColor(color As System.ConsoleColor) As String
-            Dim Hex As String = color.ToString("x")
-            Dim Red As Integer = Convert.ToInt32(Hex.Substring(2, 2), 16)
-            Dim Green As Integer = Convert.ToInt32(Hex.Substring(4, 2), 16)
-            Dim Blue As Integer = Convert.ToInt32(Hex.Substring(6, 2), 16)
-            Return "rgb(" & Red & "," & Green & "," & Blue & ")"
-        End Function
+        '''' <summary>
+        '''' Convert a ConsoleColor to a CSS representation of rgb(xx,xx,xx)
+        '''' </summary>
+        '''' <param name="color"></param>
+        '''' <returns></returns>
+        'Private Shared Function ConsoleColorToCssColor(color As System.ConsoleColor) As String
+        '    Dim Hex As String = color.ToString("x")
+        '    Dim Red As Integer = Convert.ToInt32(Hex.Substring(2, 2), 16)
+        '    Dim Green As Integer = Convert.ToInt32(Hex.Substring(4, 2), 16)
+        '    Dim Blue As Integer = Convert.ToInt32(Hex.Substring(6, 2), 16)
+        '    Return "rgb(" & Red & "," & Green & "," & Blue & ")"
+        'End Function
 
         ''' <summary>
         ''' Involves the system speaker or system audio system to make a beep sound
@@ -856,7 +860,7 @@ Namespace CompuMaster
             Console.RaiseControlCKeyPressedException(New Console.ControlCKeyPressedException)
         End Sub
 
-        Public Shared _ControlCKeyPressed As ControlCKeyPressedException
+        Private Shared _ControlCKeyPressed As ControlCKeyPressedException
         ''' <summary>
         ''' When Control-C keyboard shortcut has been used, this exception provides details
         ''' </summary>
@@ -905,6 +909,7 @@ Namespace CompuMaster
                 If value = True Then
                     AddHandler System.Console.CancelKeyPress, AddressOf ControlC_KeyPressed
                 End If
+                _CatchControlC = value
             End Set
         End Property
 #End Region
