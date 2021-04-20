@@ -38,6 +38,13 @@
         CompuMaster.Console.SaveWarningsHtmlLog("sample-warnings.html")
 
         System.Diagnostics.Process.Start("sample-log.html")
+
+        System.Console.WriteLine()
+        System.Console.WriteLine()
+        System.Console.WriteLine()
+        System.Console.WriteLine("## Review of logged PlainText output")
+        System.Console.WriteLine()
+        System.Console.WriteLine(CompuMaster.Console.PlainTextLog)
     End Sub
 
 End Module

@@ -292,7 +292,7 @@ Namespace CompuMaster
         ''' Write message with current color settings
         ''' </summary>
         ''' <param name="text"></param>
-        Private Shared Sub _WriteWarning(text As String)
+        Private Shared Sub WriteToWarningLog(text As String)
             _PlainTextWarningsLog.Append(text)
             Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(System.Environment.NewLine, "<br />")
             _HtmlWarningsLog.Append(TextAsHtml)
@@ -302,7 +302,7 @@ Namespace CompuMaster
         ''' Write message with current color settings
         ''' </summary>
         ''' <param name="text"></param>
-        Private Shared Sub _WriteWarning(text As System.Text.StringBuilder)
+        Private Shared Sub WriteToWarningLog(text As System.Text.StringBuilder)
             _PlainTextWarningsLog.Append(text)
             Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(System.Environment.NewLine, "<br />")
             _HtmlWarningsLog.Append(TextAsHtml)
@@ -477,7 +477,7 @@ Namespace CompuMaster
             ForegroundColor = WarningForegroundColor
             BackgroundColor = WarningBackgroundColor
             Write(text)
-            _WriteWarning(text)
+            WriteToWarningLog(text)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -493,7 +493,7 @@ Namespace CompuMaster
             ForegroundColor = WarningForegroundColor
             BackgroundColor = WarningBackgroundColor
             Write(text)
-            _WriteWarning(text)
+            WriteToWarningLog(text)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -504,7 +504,7 @@ Namespace CompuMaster
         Public Shared Sub WarnLine()
             HasWarnings = True
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
-            _WriteWarning(System.Environment.NewLine)
+            WriteToWarningLog(System.Environment.NewLine)
         End Sub
 
         ''' <summary>

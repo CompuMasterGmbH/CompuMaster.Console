@@ -138,7 +138,12 @@ Namespace ConsoleTest
             System.Console.WriteLine("CompuMaster.Console.BackgroundColor=" & CompuMaster.Console.BackgroundColor.ToString("d") & "=" & CompuMaster.Console.BackgroundColor.ToString("g"))
             System.Console.WriteLine("CompuMaster.Console.ForegroundColor=" & CompuMaster.Console.ForegroundColor.ToString("d") & "=" & CompuMaster.Console.ForegroundColor.ToString("g"))
 
-            Assert.AreEqual("Black", System.Console.BackgroundColor.ToString("g"))
+            Select Case System.Environment.OSVersion.Platform
+                Case PlatformID.Win32NT
+                    Assert.AreEqual("Black", System.Console.BackgroundColor.ToString("g"))
+                Case Else
+                    Assert.AreEqual("-1", System.Console.BackgroundColor.ToString("g"))
+            End Select
             Assert.AreEqual("Black", CompuMaster.Console.BackgroundColor.ToString("g"))
             Select Case System.Environment.OSVersion.Platform
                 Case PlatformID.Win32NT
@@ -149,7 +154,7 @@ Namespace ConsoleTest
                         Assert.AreEqual("Gray", CompuMaster.Console.ForegroundColor.ToString("g"))
                     End If
                 Case Else
-                    Assert.AreEqual("White", System.Console.ForegroundColor.ToString("g"))
+                    Assert.AreEqual("-1", System.Console.ForegroundColor.ToString("g"))
                     Assert.AreEqual("White", CompuMaster.Console.ForegroundColor.ToString("g"))
             End Select
 
