@@ -174,7 +174,7 @@ Namespace CompuMaster
             End If
 
             'Remember state of completed line for correct indentation on next line
-            If text.EndsWith("\r") OrElse text.EndsWith("\n") Then
+            If text.EndsWith(ControlChars.Cr) OrElse text.EndsWith(ControlChars.Lf) Then
                 'Line has been completed
                 If showConsoleOutput Then
                     IsNewOutputLineAtConsole = True
@@ -251,7 +251,7 @@ Namespace CompuMaster
             End If
 
             'Remember state of completed line for correct indentation on next line
-            If text.Chars(text.Length - 1) = "\r" OrElse text.Chars(text.Length - 1) = "\n" Then
+            If text.Chars(text.Length - 1) = ControlChars.Cr OrElse text.Chars(text.Length - 1) = ControlChars.Lf Then
                 'Line has been completed
                 If showConsoleOutput Then
                     IsNewOutputLineAtConsole = True
