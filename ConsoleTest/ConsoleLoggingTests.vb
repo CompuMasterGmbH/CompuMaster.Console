@@ -84,11 +84,11 @@ Namespace ConsoleTest
                 "This is another yellow text on gray background." & System.Environment.NewLine &
                 "" & System.Environment.NewLine &
                 "WARNING: Now, let's see the indentation feature" & System.Environment.NewLine &
-                "Okay, let's start indentation: This is a text with 1 levels of indentation" & System.Environment.NewLine &
-                "It's time to continue: This is a text with 2 levels of indentation" & System.Environment.NewLine &
-                "Please note: This line will only appear in log, but with 2 levels of indentation" & System.Environment.NewLine &
-                "Yeah, get some more indentation: This is a text with 3 levels of indentation" & System.Environment.NewLine &
-                "This is a multiline text, line 1" & System.Environment.NewLine &
+                "    Okay, let's start indentation: This is a text with 1 levels of indentation" & System.Environment.NewLine &
+                "        It's time to continue: This is a text with 2 levels of indentation" & System.Environment.NewLine &
+                "        Please note: This line will only appear in log, but with 2 levels of indentation" & System.Environment.NewLine &
+                "            Yeah, get some more indentation: This is a text with 3 levels of indentation" & System.Environment.NewLine &
+                "    This is a multiline text, line 1" & System.Environment.NewLine &
                 "    This is a multiline text, line 2" & System.Environment.NewLine &
                 "    This is a multiline text, line 3" & System.Environment.NewLine &
                 "    " & System.Environment.NewLine &
