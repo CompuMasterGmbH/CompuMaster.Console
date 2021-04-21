@@ -35,7 +35,7 @@ Namespace CompuMaster
             Else
                 Result = System.Console.ForegroundColor
             End If
-            If Result = InitialBackgroundColor() Then
+            If Result = -1 OrElse Result = InitialBackgroundColor() Then
                 'Background and foreground color are equal, but must be different
                 Select Case Result
                     Case ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.Gray, ConsoleColor.Magenta
@@ -52,11 +52,16 @@ Namespace CompuMaster
         ''' </summary>
         ''' <returns></returns>
         Private Shared Function InitialBackgroundColor() As System.ConsoleColor
+            Dim Result As ConsoleColor
             If NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
-                Return ConsoleColor.Black
+                Result = ConsoleColor.Black
             Else
-                Return System.Console.BackgroundColor
+                Result = System.Console.BackgroundColor
             End If
+            If Result = -1 Then
+                Result = ConsoleColor.Black
+            End If
+            Return Result
         End Function
 
         ''' <summary>
