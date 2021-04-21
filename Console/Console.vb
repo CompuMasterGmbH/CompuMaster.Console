@@ -29,11 +29,22 @@ Namespace CompuMaster
         ''' </summary>
         ''' <returns></returns>
         Private Shared Function InitialForegroundColor() As System.ConsoleColor
+            Dim Result As ConsoleColor
             If NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
-                Return ConsoleColor.White
+                Result = ConsoleColor.White
             Else
-                Return System.Console.ForegroundColor
+                Result = System.Console.ForegroundColor
             End If
+            If Result = InitialBackgroundColor() Then
+                'Background and foreground color are equal, but must be different
+                Select Case Result
+                    Case ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.Gray, ConsoleColor.Magenta
+                        Result = ConsoleColor.Black
+                    Case Else
+                        Result = ConsoleColor.Gray
+                End Select
+            End If
+            Return Result
         End Function
 
         ''' <summary>
