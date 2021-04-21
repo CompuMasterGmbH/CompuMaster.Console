@@ -188,8 +188,8 @@ Namespace ConsoleTest
                         Assert.AreEqual("Gray", CompuMaster.Console.ForegroundColor.ToString("g"))
                     End If
                 Case Else
-                    Assert.AreEqual("White", System.Console.ForegroundColor.ToString("g"))
-                    Assert.AreEqual("White", CompuMaster.Console.ForegroundColor.ToString("g"))
+                    Assert.AreEqual("Gray", System.Console.ForegroundColor.ToString("g"))
+                    Assert.AreEqual("Gray", CompuMaster.Console.ForegroundColor.ToString("g"))
             End Select
 
 
