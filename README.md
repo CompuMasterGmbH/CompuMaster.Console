@@ -2,7 +2,7 @@
 
 .NET library CompuMaster.Console which additionally provides logging as plain text and HTML
 
-[![Github Release](https://img.shields.io/github/release/CompuMasterGmbH/CompuMaster.Console.svg?maxAge=2592000&label=GitHub%20Release)](https://github.com/CompuMasterGmbH/CompuMaster.Console/releases) 
+[![Github Release](https://img.shields.io/github/release/CompuMasterGmbH/CompuMaster.Console.svg?maxAge=592000&label=GitHub%20Release)](https://github.com/CompuMasterGmbH/CompuMaster.Console/releases) 
 [![NuGet CompuMaster.Data](https://img.shields.io/nuget/v/CompuMaster.Console.svg?maxAge=2592000&label=NuGet%20CM.Console)](https://www.nuget.org/packages/CompuMaster.Console/) 
 
 ## Simple download/installation using NuGet
