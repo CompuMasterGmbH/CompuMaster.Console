@@ -27,12 +27,17 @@ Namespace ConsoleTest
             LogAndWarningsOutput(False)
         End Sub
 
-        <Test, Explicit("Must run in VS.NET/Win, otherwise wrong color system defaults")>
-        Public Sub LogAndWarningsOutput_VSOnly_With_HtmlComparison()
+        <Test>
+        Public Sub LogAndWarningsOutput_WithExactHtmlComparison()
             LogAndWarningsOutput(True)
         End Sub
 
         Public Sub LogAndWarningsOutput(compareHtml As Boolean)
+            CompuMaster.Console.ResetColor()
+            If compareHtml Then
+                CompuMaster.Console.SystemColorsInLogs = CompuMaster.Console.SystemColorModesInLogs.AlwaysApplySystemColorInLog
+            End If
+
             'Create some wonderful output to the console
             CompuMaster.Console.Write("Hello ")
             CompuMaster.Console.WriteLine("World!")
@@ -132,7 +137,7 @@ Namespace ConsoleTest
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
             Expected = System.Environment.NewLine &
                 "<body style=""background-color: Black;"">" & System.Environment.NewLine &
-                "<span style=""color: LightGray;""><span style=""color: White;"">Hello&nbsp;</span><span style=""color: White;"">World!<br /></span><span style=""background-color: Blue;""><span style=""color: White;"">This&nbsp;is&nbsp;white&nbsp;text&nbsp;on&nbsp;blue&nbsp;background.<br /></span></span><span style=""background-color: DarkGray;""><span style=""color: Yellow;"">This&nbsp;is&nbsp;another&nbsp;yellow&nbsp;text&nbsp;on&nbsp;gray&nbsp;background.<br /></span></span><br /><span style=""color: Red;"">WARNING:&nbsp;Now,&nbsp;let&#39;s&nbsp;see&nbsp;the&nbsp;indentation&nbsp;feature<br /></span>&nbsp;&nbsp;&nbsp;&nbsp;Okay,&nbsp;let&#39;s&nbsp;start&nbsp;indentation:&nbsp;This&nbsp;is&nbsp;a&nbsp;text&nbsp;with&nbsp;1&nbsp;levels&nbsp;of&nbsp;indentation<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It&#39;s&nbsp;time&nbsp;to&nbsp;continue:&nbsp;This&nbsp;is&nbsp;a&nbsp;text&nbsp;with&nbsp;2&nbsp;levels&nbsp;of&nbsp;indentation<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please&nbsp;note:&nbsp;This&nbsp;line&nbsp;will&nbsp;only&nbsp;appear&nbsp;in&nbsp;log,&nbsp;but&nbsp;with&nbsp;2&nbsp;levels&nbsp;of&nbsp;indentation<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yeah,&nbsp;get&nbsp;some&nbsp;more&nbsp;indentation:&nbsp;This&nbsp;is&nbsp;a&nbsp;text&nbsp;with&nbsp;3&nbsp;levels&nbsp;of&nbsp;indentation<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;1<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;2<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;3<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;1&nbsp;of&nbsp;paragraph&nbsp;2<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;2&nbsp;of&nbsp;paragraph&nbsp;2<br /><br /><span style=""color: Green;"">OKAY:&nbsp;This&nbsp;nice&nbsp;sample&nbsp;has&nbsp;completed!<br /></span></span>" & System.Environment.NewLine &
+                "<span style=""color: LightGray;""><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">Hello&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">World!<br /></span><span style=""background-color: Blue;""><span style=""color: White;"">This&nbsp;is&nbsp;white&nbsp;text&nbsp;on&nbsp;blue&nbsp;background.<br /></span></span><span style=""background-color: DarkGray;""><span style=""color: Yellow;"">This&nbsp;is&nbsp;another&nbsp;yellow&nbsp;text&nbsp;on&nbsp;gray&nbsp;background.<br /></span></span><br /><span style=""color: Red;"">WARNING:&nbsp;Now,&nbsp;let&#39;s&nbsp;see&nbsp;the&nbsp;indentation&nbsp;feature<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;Okay,&nbsp;let&#39;s&nbsp;start&nbsp;indentation:&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">This&nbsp;is&nbsp;a&nbsp;text&nbsp;with&nbsp;1&nbsp;levels&nbsp;of&nbsp;indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It&#39;s&nbsp;time&nbsp;to&nbsp;continue:&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">This&nbsp;is&nbsp;a&nbsp;text&nbsp;with&nbsp;2&nbsp;levels&nbsp;of&nbsp;indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please&nbsp;note:&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">This&nbsp;line&nbsp;will&nbsp;only&nbsp;appear&nbsp;in&nbsp;log,&nbsp;but&nbsp;with&nbsp;2&nbsp;levels&nbsp;of&nbsp;indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yeah,&nbsp;get&nbsp;some&nbsp;more&nbsp;indentation:&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">This&nbsp;is&nbsp;a&nbsp;text&nbsp;with&nbsp;3&nbsp;levels&nbsp;of&nbsp;indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;1<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;2<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;3<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;1&nbsp;of&nbsp;paragraph&nbsp;2<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;2&nbsp;of&nbsp;paragraph&nbsp;2<br /></span><br /><span style=""color: Green;"">OKAY:&nbsp;This&nbsp;nice&nbsp;sample&nbsp;has&nbsp;completed!<br /></span></span>" & System.Environment.NewLine &
                 "</body></html>"
             Console.WriteLine("EXPECTED: " & Expected)
             Console.WriteLine("RESULT:   " & Result)
@@ -140,7 +145,7 @@ Namespace ConsoleTest
             If compareHtml Then
                 Assert.AreEqual(Expected, Result)
             End If
-            Assert.Less(Expected.Length, Result.Length * 1.2)
+            Assert.Less(Expected.Length, Result.Length * 1.3)
         End Sub
 
         <Test>
@@ -148,12 +153,17 @@ Namespace ConsoleTest
             LogAndWarningsOutputDual(False)
         End Sub
 
-        <Test, Explicit("Must run in VS.NET/Win, otherwise wrong color system defaults")>
-        Public Sub LogAndWarningsOutputDual_VSOnly_With_HtmlComparison()
+        <Test>
+        Public Sub LogAndWarningsOutputDual_WithExactHtmlComparison()
             LogAndWarningsOutputDual(True)
         End Sub
 
         Private Sub LogAndWarningsOutputDual(compareHtml As Boolean)
+            CompuMaster.Console.ResetColor()
+            If compareHtml Then
+                CompuMaster.Console.SystemColorsInLogs = CompuMaster.Console.SystemColorModesInLogs.AlwaysApplySystemColorInLog
+            End If
+
             'Create some wonderful output to the console
             CompuMaster.Console.WriteDual("T:Hello ", "H:Hello ")
             CompuMaster.Console.WriteLineDual("T:World!", "H:World!")
@@ -254,7 +264,7 @@ Namespace ConsoleTest
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
             Expected = System.Environment.NewLine &
                 "<body style=""background-color: Black;"">" & System.Environment.NewLine &
-                "<span style=""color: LightGray;""><span style=""color: White;"">H:Hello </span><span style=""color: White;"">H:World!<br /></span><span style=""background-color: Blue;""><span style=""color: White;"">H:This is white text on blue background.<br /></span></span><span style=""background-color: DarkGray;""><span style=""color: Yellow;"">H:This is another yellow text on gray background.<br /></span></span><br /><span style=""color: Red;"">H:WARNING: Now, let's see the indentation feature<br /></span>&nbsp;&nbsp;&nbsp;&nbsp;H:Okay, let's start indentation: H:This is a text with 1 levels of indentation<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H:It's time to continue: H:This is a text with 2 levels of indentation<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H:Please note: H:This line will only appear in log, but with 2 levels of indentation<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H:Yeah, get some more indentation: H:This is a text with 3 levels of indentation<br />&nbsp;&nbsp;&nbsp;&nbsp;H:This is a multiline text, line 1<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 2<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 3<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 1 of paragraph 2<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 2 of paragraph 2<br /><br /><span style=""color: Green;"">H:OKAY: This nice sample has completed!<br /></span></span>" & System.Environment.NewLine &
+                "<span style=""color: LightGray;""><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:Hello </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:World!<br /></span><span style=""background-color: Blue;""><span style=""color: White;"">H:This is white text on blue background.<br /></span></span><span style=""background-color: DarkGray;""><span style=""color: Yellow;"">H:This is another yellow text on gray background.<br /></span></span><br /><span style=""color: Red;"">H:WARNING: Now, let's see the indentation feature<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;H:Okay, let's start indentation: </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:This is a text with 1 levels of indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H:It's time to continue: </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:This is a text with 2 levels of indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H:Please note: </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:This line will only appear in log, but with 2 levels of indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H:Yeah, get some more indentation: </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:This is a text with 3 levels of indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;H:This is a multiline text, line 1<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 2<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 3<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 1 of paragraph 2<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 2 of paragraph 2<br /></span><br /><span style=""color: Green;"">H:OKAY: This nice sample has completed!<br /></span></span>" & System.Environment.NewLine &
                 "</body></html>"
             Console.WriteLine("EXPECTED: " & Expected)
             Console.WriteLine("RESULT:   " & Result)
@@ -264,7 +274,7 @@ Namespace ConsoleTest
             If compareHtml Then
                 Assert.AreEqual(Expected, Result)
             End If
-            Assert.Less(Expected.Length, Result.Length * 1.2)
+            Assert.Less(Expected.Length, Result.Length * 1.3)
         End Sub
 
         <Test> Public Sub ConsoleColorsCurrentValues()
