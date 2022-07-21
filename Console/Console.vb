@@ -124,14 +124,6 @@ Namespace CompuMaster
         End Property
 
         ''' <summary>
-        ''' Write message with current color settings
-        ''' </summary>
-        ''' <param name="text"></param>
-        Public Shared Sub Write(text As String)
-            _Write(text, True)
-        End Sub
-
-        ''' <summary>
         ''' Log message without output to console
         ''' </summary>
         ''' <param name="text"></param>
@@ -143,8 +135,25 @@ Namespace CompuMaster
         ''' Log message without output to console
         ''' </summary>
         ''' <param name="text"></param>
+        Public Shared Sub LogDual(text As String, html As String)
+            _WriteDual(text, html, False)
+        End Sub
+
+        ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
+        ''' <param name="text"></param>
         Public Shared Sub LogLine(text As String)
             _Write(text & System.Environment.NewLine, False)
+        End Sub
+
+
+        ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub LogLineDual(text As String, html As String)
+            _WriteDual(text & System.Environment.NewLine, html & "<br />", False)
         End Sub
 
         Private Shared IsNewOutputLineAtConsole As Boolean = True
@@ -308,7 +317,166 @@ Namespace CompuMaster
         ''' Write message with current color settings
         ''' </summary>
         ''' <param name="text"></param>
+        ''' <param name="showConsoleOutput"></param>
+        Private Shared Sub _WriteDual(text As String, html As String, showConsoleOutput As Boolean)
+            If IsControlCKeyPressed AndAlso ThrowControlCKeyPressedExceptionOnNextConsoleCommand Then
+                Dim innerEx As ControlCKeyPressedException = ControlCKeyPressed
+                _ControlCKeyPressed = Nothing 'don't raise for a 2nd time!
+                Throw New ControlCKeyPressedException(innerEx)
+            End If
+            If text <> Nothing Then
+                If showConsoleOutput Then
+                    'System console
+                    System.Console.Write(IndentText(text, Not IsNewOutputLineAtConsole))
+                End If
+
+                'Plain text log
+                If text = System.Environment.NewLine Then
+                    _RawPlainTextLog.Append(System.Environment.NewLine)
+                Else
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                        _RawPlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                    End If
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                        _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                    End If
+                    _RawPlainTextLog.Append(IndentText(text, Not IsNewOutputLineAtLog))
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                        _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                    End If
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                        _RawPlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                    End If
+                End If
+            End If
+
+            'Html log
+            If html <> Nothing Then
+                If html = "<br />" Then
+                    _HtmlLog.Append("<br />")
+                Else
+                    Dim TextAsHtml As String = IndentTextInHtml(html, Not IsNewOutputLineAtLog)
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                        _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
+                    End If
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                        _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
+                    End If
+                    _HtmlLog.Append(TextAsHtml)
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                        _HtmlLog.Append("</span>")
+                    End If
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                        _HtmlLog.Append("</span>")
+                    End If
+                End If
+            End If
+
+            'Remember state of completed line for correct indentation on next line
+            If text.EndsWith(ControlChars.Cr) OrElse text.EndsWith(ControlChars.Lf) Then
+                'Line has been completed
+                If showConsoleOutput Then
+                    IsNewOutputLineAtConsole = True
+                    IsNewOutputLineAtLog = True
+                Else
+                    IsNewOutputLineAtLog = True
+                End If
+            Else
+                'Line is to be continued
+                If showConsoleOutput Then
+                    IsNewOutputLineAtConsole = False
+                    IsNewOutputLineAtLog = False
+                Else
+                    IsNewOutputLineAtLog = False
+                End If
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="showConsoleOutput"></param>
+        Private Shared Sub _WriteDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, showConsoleOutput As Boolean)
+            If IsControlCKeyPressed AndAlso ThrowControlCKeyPressedExceptionOnNextConsoleCommand Then
+                Dim innerEx As ControlCKeyPressedException = ControlCKeyPressed
+                _ControlCKeyPressed = Nothing 'don't raise for a 2nd time!
+                Throw New ControlCKeyPressedException(innerEx)
+            End If
+            If Not (text Is Nothing OrElse text.Length = 0) Then
+                If showConsoleOutput Then
+                    'System console
+                    System.Console.Write(IndentText(text.ToString, Not IsNewOutputLineAtConsole))
+                End If
+
+                'Plain text log
+                If text.Length < 3 AndAlso text.ToString = System.Environment.NewLine Then
+                    _RawPlainTextLog.Append(System.Environment.NewLine)
+                Else
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                        _RawPlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                    End If
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                        _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                    End If
+                    _RawPlainTextLog.Append(IndentText(text.ToString, Not IsNewOutputLineAtLog))
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                        _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
+                    End If
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                        _RawPlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
+                    End If
+                End If
+            End If
+
+            'Html log
+            If Not (html Is Nothing OrElse html.Length = 0) Then
+                If html.Length = 6 AndAlso html.ToString = "<br />" Then
+                    _HtmlLog.Append("<br />")
+                Else
+                    Dim TextAsHtml As String = IndentTextInHtml(html.ToString, Not IsNewOutputLineAtLog)
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                        _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
+                    End If
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                        _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
+                    End If
+                    _HtmlLog.Append(TextAsHtml)
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                        _HtmlLog.Append("</span>")
+                    End If
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                        _HtmlLog.Append("</span>")
+                    End If
+                End If
+            End If
+
+            'Remember state of completed line for correct indentation on next line
+            If text.Chars(text.Length - 1) = ControlChars.Cr OrElse text.Chars(text.Length - 1) = ControlChars.Lf Then
+                'Line has been completed
+                If showConsoleOutput Then
+                    IsNewOutputLineAtConsole = True
+                    IsNewOutputLineAtLog = True
+                Else
+                    IsNewOutputLineAtLog = True
+                End If
+            Else
+                'Line is to be continued
+                If showConsoleOutput Then
+                    IsNewOutputLineAtConsole = False
+                    IsNewOutputLineAtLog = False
+                Else
+                    IsNewOutputLineAtLog = False
+                End If
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
         Private Shared Sub WriteToWarningLog(text As String)
+            If text = Nothing Then Return
             _PlainTextWarningsLog.Append(text)
             Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(System.Environment.NewLine, "<br />")
             _HtmlWarningsLog.Append(TextAsHtml)
@@ -322,6 +490,36 @@ Namespace CompuMaster
             _PlainTextWarningsLog.Append(text)
             Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(System.Environment.NewLine, "<br />")
             _HtmlWarningsLog.Append(TextAsHtml)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Private Shared Sub WriteToWarningLogDual(text As String, html As String)
+            If text <> Nothing Then
+                _PlainTextWarningsLog.Append(text)
+            End If
+            If html <> Nothing Then
+                _HtmlWarningsLog.Append(html)
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Private Shared Sub WriteToWarningLogDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
+            _PlainTextWarningsLog.Append(text)
+            _HtmlWarningsLog.Append(html)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub Write(text As String)
+            _Write(text, True)
         End Sub
 
         ''' <summary>
@@ -395,6 +593,89 @@ Namespace CompuMaster
             ForegroundColor = colorForeground
             BackgroundColor = colorBackground
             Write(text)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteDual(text As String, html As String)
+            _WriteDual(text, html, True)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="arg0"></param>
+        Public Shared Sub WriteDual(text As String, html As String, arg0 As Object)
+            WriteDual(String.Format(text, arg0), String.Format(text, arg0))
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="args"></param>
+        Public Shared Sub WriteDual(text As String, html As String, ParamArray args As Object())
+            WriteDual(String.Format(text, args), String.Format(html, args))
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
+        Public Shared Sub WriteDual(text As String, html As String, colorForeground As System.ConsoleColor)
+            WriteDual(text, html, colorForeground, BackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
+            WriteDual(text, html, ForegroundColor, BackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor)
+            WriteDual(text, html, colorForeground, BackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Public Shared Sub WriteDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = colorForeground
+            BackgroundColor = colorBackground
+            _WriteDual(text, html, True)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Public Shared Sub WriteDual(text As String, html As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = colorForeground
+            BackgroundColor = colorBackground
+            WriteDual(text, html)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -483,6 +764,89 @@ Namespace CompuMaster
         End Sub
 
         ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        Public Shared Sub WriteLineDual()
+            WriteDual(System.Environment.NewLine, "<br />")
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteLineDual(text As String, html As String)
+            WriteDual(text & System.Environment.NewLine, html & "<br />")
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
+            WriteLineDual(text, html, ForegroundColor, BackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor)
+            WriteLineDual(text, html, colorForeground, BackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WriteLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = colorForeground
+            BackgroundColor = colorBackground
+            WriteDual(text, html)
+            Write(System.Environment.NewLine)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="arg0"></param>
+        Public Shared Sub WriteLineDual(text As String, html As String, arg0 As Object)
+            WriteLineDual(String.Format(text, arg0), String.Format(html, arg0))
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="args"></param>
+        Public Shared Sub WriteLineDual(text As String, html As String, ParamArray args As Object())
+            WriteLineDual(String.Format(text, args), String.Format(html, args))
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
+        Public Shared Sub WriteLineDual(text As String, html As String, colorForeground As System.ConsoleColor)
+            WriteDual(text & System.Environment.NewLine, html & "<br />", colorForeground)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with specified color settings
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Public Shared Sub WriteLineDual(text As String, html As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            WriteDual(text & System.Environment.NewLine, html & "<br />", colorForeground, colorBackground)
+        End Sub
+
+        ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
         ''' <param name="text"></param>
@@ -517,6 +881,38 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WarnDual(text As String, html As String)
+            HasWarnings = True
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = WarningForegroundColor
+            BackgroundColor = WarningBackgroundColor
+            WriteDual(text, html)
+            WriteToWarningLogDual(text, html)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WarnDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
+            HasWarnings = True
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = WarningForegroundColor
+            BackgroundColor = WarningBackgroundColor
+            WriteDual(text, html)
+            WriteToWarningLogDual(text, html)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
         Public Shared Sub WarnLine()
             HasWarnings = True
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
@@ -537,6 +933,32 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         Public Shared Sub WarnLine(text As System.Text.StringBuilder)
             Warn(text)
+            Warn(System.Environment.NewLine)
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
+        Public Shared Sub WarnLineDual()
+            HasWarnings = True
+            WriteLineDual("", "", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
+            WriteToWarningLog(System.Environment.NewLine)
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WarnLineDual(text As String, html As String)
+            WarnDual(text & System.Environment.NewLine, html & "<br />")
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status warning messages
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub WarnLine(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
+            WarnDual(text, html)
             Warn(System.Environment.NewLine)
         End Sub
 
@@ -571,6 +993,35 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub OkayDual(text As String, html As String)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = OkayMessageForegroundColor
+            BackgroundColor = OkayMessageBackgroundColor
+            WriteDual(text, html)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub OkayDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = OkayMessageForegroundColor
+            BackgroundColor = OkayMessageBackgroundColor
+            WriteDual(text, html)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
+        End Sub
+
+
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
         Public Shared Sub OkayLine()
             WriteLine("", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
         End Sub
@@ -589,6 +1040,32 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         Public Shared Sub OkayLine(text As System.Text.StringBuilder)
             Okay(text)
+            Okay(System.Environment.NewLine)
+        End Sub
+
+        '''''''''
+
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
+        Public Shared Sub OkayLineDual()
+            WriteLine("", "", SystemConsoleDefaultForegroundColor, SystemConsoleDefaultBackgroundColor)
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub OkayLineDual(text As String, html As String)
+            OkayDual(text & System.Environment.NewLine, html & "<br />")
+        End Sub
+
+        ''' <summary>
+        ''' Write with color setting for status okay messages
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub OkayLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
+            OkayDual(text, html)
             Okay(System.Environment.NewLine)
         End Sub
 
@@ -1188,6 +1665,40 @@ Namespace CompuMaster
             Dim Result As String
             Result = System.Text.RegularExpressions.Regex.Replace(text, "(?:\r\n|\r|\n)", System.Environment.NewLine & FullIndentationPrefix)
             Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape(System.Environment.NewLine & FullIndentationPrefix) & "$", System.Environment.NewLine)
+            If continueStartedLine = False Then
+                Result = FullIndentationPrefix & Result
+            End If
+            Return Result
+            'Return Replace(text, System.Environment.NewLine, System.Environment.NewLine & FullIndentationPrefix )
+        End Function
+
+        ''' <summary>
+        ''' Indent text based on the current number of indentation levels
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks>Only line breaks with HTML tag &lt;br /&gt; are considered (no paragraph tags, CSS or other types of line breaks)</remarks>
+        Public Shared Function IndentTextInHtml(text As String, continueStartedLine As Boolean) As String
+            Return IndentTextInHtml(text, _CurrentIndentationLevel, continueStartedLine)
+        End Function
+
+        ''' <summary>
+        ''' Indent text based on the current number of indentation levels
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <param name="indentLevel"></param>
+        ''' <returns></returns>
+        ''' <remarks>Only line breaks with HTML tag &lt;br /&gt; are considered (no paragraph tags, CSS or other types of line breaks)</remarks>
+        Public Shared Function IndentTextInHtml(text As String, indentLevel As Integer, continueStartedLine As Boolean) As String
+            Dim FullIndentationPrefix As String = IndentationStringForCurrentIndentLevel(indentLevel).Replace(" ", "&nbsp;")
+            Dim Result As String
+            Result = System.Text.RegularExpressions.Regex.Replace(text, System.Text.RegularExpressions.Regex.Escape("<br />"), "<br />" & FullIndentationPrefix)
+            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<br/>"), "<br />" & FullIndentationPrefix)
+            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<br>"), "<br />" & FullIndentationPrefix)
+            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<BR />"), "<br />" & FullIndentationPrefix)
+            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<BR/>"), "<br />" & FullIndentationPrefix)
+            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<BR>"), "<br />" & FullIndentationPrefix)
+            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<br />" & FullIndentationPrefix) & "$", "<br />")
             If continueStartedLine = False Then
                 Result = FullIndentationPrefix & Result
             End If
