@@ -246,7 +246,7 @@ Namespace CompuMaster
 
             If showConsoleOutput Then
                 'System console
-                System.Console.Write(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtConsole).ToString)
+                AppendToConsole(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtConsole))
             End If
 
             'Plain text log
@@ -259,7 +259,7 @@ Namespace CompuMaster
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
-                _RawPlainTextLog.Append(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtLog).ToString)
+                AppendToStringBuilder(_RawPlainTextLog, IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtLog))
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
@@ -272,14 +272,14 @@ Namespace CompuMaster
             If text = System.Environment.NewLine Then
                 _HtmlLog.Append("<br />")
             Else
-                Dim TextAsHtml As String = IndentText(New System.Text.StringBuilder(System.Net.WebUtility.HtmlEncode(text)), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />").ToString
+                Dim TextAsHtml As System.Text.StringBuilder = IndentText(New System.Text.StringBuilder(System.Net.WebUtility.HtmlEncode(text)), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />")
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                 End If
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
                 End If
-                _HtmlLog.Append(TextAsHtml)
+                AppendToStringBuilder(_HtmlLog, TextAsHtml)
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _HtmlLog.Append("</span>")
                 End If
@@ -323,7 +323,7 @@ Namespace CompuMaster
 
             If showConsoleOutput Then
                 'System console
-                System.Console.Write(IndentText(text, Not IsNewOutputLineAtConsole).ToString)
+                AppendToConsole(IndentText(text, Not IsNewOutputLineAtConsole))
             End If
 
             'Plain text log
@@ -336,7 +336,7 @@ Namespace CompuMaster
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
-                _RawPlainTextLog.Append(IndentText(text, Not IsNewOutputLineAtLog).ToString)
+                AppendToStringBuilder(_RawPlainTextLog, IndentText(text, Not IsNewOutputLineAtLog))
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
@@ -349,14 +349,14 @@ Namespace CompuMaster
             If text.Length < 3 AndAlso text.ToString = System.Environment.NewLine Then
                 _HtmlLog.Append("<br />")
             Else
-                Dim TextAsHtml As String = IndentText(New System.Text.StringBuilder(System.Net.WebUtility.HtmlEncode(text.ToString)), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />").ToString
+                Dim TextAsHtml As System.Text.StringBuilder = IndentText(New System.Text.StringBuilder(System.Net.WebUtility.HtmlEncode(text.ToString)), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />")
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                 End If
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
                 End If
-                _HtmlLog.Append(TextAsHtml)
+                AppendToStringBuilder(_HtmlLog, TextAsHtml)
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _HtmlLog.Append("</span>")
                 End If
@@ -399,7 +399,7 @@ Namespace CompuMaster
             If text <> Nothing Then
                 If showConsoleOutput Then
                     'System console
-                    System.Console.Write(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtConsole).ToString)
+                    AppendToConsole(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtConsole))
                 End If
 
                 'Plain text log
@@ -412,7 +412,7 @@ Namespace CompuMaster
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
-                    _RawPlainTextLog.Append(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtLog).ToString)
+                    AppendToStringBuilder(_RawPlainTextLog, IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtLog))
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
@@ -427,14 +427,14 @@ Namespace CompuMaster
                 If html = "<br />" Then
                     _HtmlLog.Append("<br />")
                 Else
-                    Dim TextAsHtml As String = IndentTextInHtml(New System.Text.StringBuilder(html), Not IsNewOutputLineAtLog).ToString
+                    Dim TextAsHtml As System.Text.StringBuilder = IndentTextInHtml(New System.Text.StringBuilder(html), Not IsNewOutputLineAtLog)
                     If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                         _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                     End If
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
                     End If
-                    _HtmlLog.Append(TextAsHtml)
+                    AppendToStringBuilder(_HtmlLog, TextAsHtml)
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _HtmlLog.Append("</span>")
                     End If
@@ -478,7 +478,7 @@ Namespace CompuMaster
             If Not (text Is Nothing OrElse text.Length = 0) Then
                 If showConsoleOutput Then
                     'System console
-                    System.Console.Write(IndentText(text, Not IsNewOutputLineAtConsole).ToString)
+                    AppendToConsole(IndentText(text, Not IsNewOutputLineAtConsole))
                 End If
 
                 'Plain text log
@@ -491,7 +491,7 @@ Namespace CompuMaster
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
-                    _RawPlainTextLog.Append(IndentText(text, Not IsNewOutputLineAtLog).ToString)
+                    AppendToStringBuilder(_RawPlainTextLog, IndentText(text, Not IsNewOutputLineAtLog))
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
@@ -506,14 +506,14 @@ Namespace CompuMaster
                 If html.Length = 6 AndAlso html.ToString = "<br />" Then
                     _HtmlLog.Append("<br />")
                 Else
-                    Dim TextAsHtml As String = IndentTextInHtml(html, Not IsNewOutputLineAtLog).ToString
+                    Dim TextAsHtml As System.Text.StringBuilder = IndentTextInHtml(html, Not IsNewOutputLineAtLog)
                     If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                         _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                     End If
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
                     End If
-                    _HtmlLog.Append(TextAsHtml)
+                    AppendToStringBuilder(_HtmlLog, TextAsHtml)
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _HtmlLog.Append("</span>")
                     End If
@@ -1806,20 +1806,47 @@ Namespace CompuMaster
         ''' <returns></returns>
         Friend Shared Function CloneStringBuilder(sb As System.Text.StringBuilder) As System.Text.StringBuilder
             Dim Result As New System.Text.StringBuilder
+            AppendToStringBuilder(Result, sb)
+            Return Result
+        End Function
+
+        ''' <summary>
+        ''' Clone a string builder while reducing required memory amount
+        ''' </summary>
+        ''' <param name="source"></param>
+        Friend Shared Sub AppendToStringBuilder(target As System.Text.StringBuilder, source As System.Text.StringBuilder)
             Dim MaxChunkSize As Integer = 100000 'for unit tests, use 20 instead
             Dim StartIndex As Integer = 0
             Dim ReadLength As Integer = MaxChunkSize
             Do
-                If StartIndex + ReadLength > sb.Length Then
-                    ReadLength = sb.Length - StartIndex
+                If StartIndex + ReadLength > source.Length Then
+                    ReadLength = source.Length - StartIndex
                 End If
                 If ReadLength <> 0 Then
-                    Result.Append(sb.ToString(StartIndex, ReadLength))
+                    target.Append(source.ToString(StartIndex, ReadLength))
                     StartIndex += ReadLength
                 End If
             Loop Until ReadLength = 0
-            Return Result
-        End Function
+        End Sub
+
+        ''' <summary>
+        ''' Console output for StringBuilder and low memory usage
+        ''' </summary>
+        ''' <param name="source"></param>
+        Friend Shared Sub AppendToConsole(source As System.Text.StringBuilder)
+            Dim MaxChunkSize As Integer = 100000 'for unit tests, use 20 instead
+            Dim StartIndex As Integer = 0
+            Dim ReadLength As Integer = MaxChunkSize
+            Do
+                If StartIndex + ReadLength > source.Length Then
+                    ReadLength = source.Length - StartIndex
+                End If
+                If ReadLength <> 0 Then
+                    System.Console.Write(source.ToString(StartIndex, ReadLength))
+                    StartIndex += ReadLength
+                End If
+            Loop Until ReadLength = 0
+        End Sub
 
     End Class
 
