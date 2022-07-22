@@ -246,7 +246,7 @@ Namespace CompuMaster
 
             If showConsoleOutput Then
                 'System console
-                System.Console.Write(IndentText(text, Not IsNewOutputLineAtConsole))
+                System.Console.Write(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtConsole).ToString)
             End If
 
             'Plain text log
@@ -259,7 +259,7 @@ Namespace CompuMaster
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
-                _RawPlainTextLog.Append(IndentText(text, Not IsNewOutputLineAtLog))
+                _RawPlainTextLog.Append(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtLog).ToString)
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
@@ -272,7 +272,7 @@ Namespace CompuMaster
             If text = System.Environment.NewLine Then
                 _HtmlLog.Append("<br />")
             Else
-                Dim TextAsHtml As String = IndentText(System.Net.WebUtility.HtmlEncode(text), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />")
+                Dim TextAsHtml As String = IndentText(New System.Text.StringBuilder(System.Net.WebUtility.HtmlEncode(text)), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />").ToString
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                 End If
@@ -323,7 +323,7 @@ Namespace CompuMaster
 
             If showConsoleOutput Then
                 'System console
-                System.Console.Write(IndentText(text.ToString, Not IsNewOutputLineAtConsole))
+                System.Console.Write(IndentText(text, Not IsNewOutputLineAtConsole).ToString)
             End If
 
             'Plain text log
@@ -336,7 +336,7 @@ Namespace CompuMaster
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
-                _RawPlainTextLog.Append(IndentText(text.ToString, Not IsNewOutputLineAtLog))
+                _RawPlainTextLog.Append(IndentText(text, Not IsNewOutputLineAtLog).ToString)
                 If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
@@ -349,7 +349,7 @@ Namespace CompuMaster
             If text.Length < 3 AndAlso text.ToString = System.Environment.NewLine Then
                 _HtmlLog.Append("<br />")
             Else
-                Dim TextAsHtml As String = IndentText(System.Net.WebUtility.HtmlEncode(text.ToString), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />")
+                Dim TextAsHtml As String = IndentText(New System.Text.StringBuilder(System.Net.WebUtility.HtmlEncode(text.ToString)), Not IsNewOutputLineAtLog).Replace(" ", "&nbsp;").Replace(System.Environment.NewLine, "<br />").ToString
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                 End If
@@ -399,7 +399,7 @@ Namespace CompuMaster
             If text <> Nothing Then
                 If showConsoleOutput Then
                     'System console
-                    System.Console.Write(IndentText(text, Not IsNewOutputLineAtConsole))
+                    System.Console.Write(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtConsole).ToString)
                 End If
 
                 'Plain text log
@@ -412,7 +412,7 @@ Namespace CompuMaster
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
-                    _RawPlainTextLog.Append(IndentText(text, Not IsNewOutputLineAtLog))
+                    _RawPlainTextLog.Append(IndentText(New System.Text.StringBuilder(text), Not IsNewOutputLineAtLog).ToString)
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
@@ -427,7 +427,7 @@ Namespace CompuMaster
                 If html = "<br />" Then
                     _HtmlLog.Append("<br />")
                 Else
-                    Dim TextAsHtml As String = IndentTextInHtml(html, Not IsNewOutputLineAtLog)
+                    Dim TextAsHtml As String = IndentTextInHtml(New System.Text.StringBuilder(html), Not IsNewOutputLineAtLog).ToString
                     If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                         _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                     End If
@@ -478,7 +478,7 @@ Namespace CompuMaster
             If Not (text Is Nothing OrElse text.Length = 0) Then
                 If showConsoleOutput Then
                     'System console
-                    System.Console.Write(IndentText(text.ToString, Not IsNewOutputLineAtConsole))
+                    System.Console.Write(IndentText(text, Not IsNewOutputLineAtConsole).ToString)
                 End If
 
                 'Plain text log
@@ -491,7 +491,7 @@ Namespace CompuMaster
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
-                    _RawPlainTextLog.Append(IndentText(text.ToString, Not IsNewOutputLineAtLog))
+                    _RawPlainTextLog.Append(IndentText(text, Not IsNewOutputLineAtLog).ToString)
                     If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
@@ -506,7 +506,7 @@ Namespace CompuMaster
                 If html.Length = 6 AndAlso html.ToString = "<br />" Then
                     _HtmlLog.Append("<br />")
                 Else
-                    Dim TextAsHtml As String = IndentTextInHtml(html.ToString, Not IsNewOutputLineAtLog)
+                    Dim TextAsHtml As String = IndentTextInHtml(html, Not IsNewOutputLineAtLog).ToString
                     If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                         _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                     End If
@@ -1722,7 +1722,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="text"></param>
         ''' <returns></returns>
-        Public Shared Function IndentText(text As String, continueStartedLine As Boolean) As String
+        Public Shared Function IndentText(text As System.Text.StringBuilder, continueStartedLine As Boolean) As System.Text.StringBuilder
             Return IndentText(text, _CurrentIndentationLevel, continueStartedLine)
         End Function
 
@@ -1732,13 +1732,19 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         ''' <param name="indentLevel"></param>
         ''' <returns></returns>
-        Public Shared Function IndentText(text As String, indentLevel As Integer, continueStartedLine As Boolean) As String
+        Public Shared Function IndentText(text As System.Text.StringBuilder, indentLevel As Integer, continueStartedLine As Boolean) As System.Text.StringBuilder
             Dim FullIndentationPrefix As String = IndentationStringForCurrentIndentLevel(indentLevel)
-            Dim Result As String
-            Result = System.Text.RegularExpressions.Regex.Replace(text, "(?:\r\n|\r|\n)", System.Environment.NewLine & FullIndentationPrefix)
-            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape(System.Environment.NewLine & FullIndentationPrefix) & "$", System.Environment.NewLine)
+            Dim Result As New System.Text.StringBuilder(text.ToString)
+            Result.Replace(ControlChars.CrLf, ControlChars.Lf)
+            Result.Replace(ControlChars.Cr, ControlChars.Lf)
+            Result.Replace(ControlChars.Lf, System.Environment.NewLine & FullIndentationPrefix)
+            If FullIndentationPrefix <> Nothing Then
+                If Result.Length >= FullIndentationPrefix.Length AndAlso Result.ToString(Result.Length - FullIndentationPrefix.Length, FullIndentationPrefix.Length) = FullIndentationPrefix Then
+                    Result.Remove(Result.Length - FullIndentationPrefix.Length, FullIndentationPrefix.Length)
+                End If
+            End If
             If continueStartedLine = False Then
-                Result = FullIndentationPrefix & Result
+                Result.Insert(0, FullIndentationPrefix)
             End If
             Return Result
             'Return Replace(text, System.Environment.NewLine, System.Environment.NewLine & FullIndentationPrefix )
@@ -1750,7 +1756,7 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         ''' <returns></returns>
         ''' <remarks>Only line breaks with HTML tag &lt;br /&gt; are considered (no paragraph tags, CSS or other types of line breaks)</remarks>
-        Public Shared Function IndentTextInHtml(text As String, continueStartedLine As Boolean) As String
+        Public Shared Function IndentTextInHtml(text As System.Text.StringBuilder, continueStartedLine As Boolean) As System.Text.StringBuilder
             Return IndentTextInHtml(text, _CurrentIndentationLevel, continueStartedLine)
         End Function
 
@@ -1761,21 +1767,24 @@ Namespace CompuMaster
         ''' <param name="indentLevel"></param>
         ''' <returns></returns>
         ''' <remarks>Only line breaks with HTML tag &lt;br /&gt; are considered (no paragraph tags, CSS or other types of line breaks)</remarks>
-        Public Shared Function IndentTextInHtml(text As String, indentLevel As Integer, continueStartedLine As Boolean) As String
+        Public Shared Function IndentTextInHtml(text As System.Text.StringBuilder, indentLevel As Integer, continueStartedLine As Boolean) As System.Text.StringBuilder
             Dim FullIndentationPrefix As String = IndentationStringForCurrentIndentLevel(indentLevel).Replace(" ", "&nbsp;")
-            Dim Result As String
-            Result = System.Text.RegularExpressions.Regex.Replace(text, System.Text.RegularExpressions.Regex.Escape("<br />"), "<br />" & FullIndentationPrefix)
-            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<br/>"), "<br />" & FullIndentationPrefix)
-            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<br>"), "<br />" & FullIndentationPrefix)
-            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<BR />"), "<br />" & FullIndentationPrefix)
-            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<BR/>"), "<br />" & FullIndentationPrefix)
-            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<BR>"), "<br />" & FullIndentationPrefix)
-            Result = System.Text.RegularExpressions.Regex.Replace(Result, System.Text.RegularExpressions.Regex.Escape("<br />" & FullIndentationPrefix) & "$", "<br />")
+            Dim Result As New System.Text.StringBuilder(text.ToString)
+            Result.Replace("<br />", "<br />" & FullIndentationPrefix)
+            Result.Replace("<br/>", "<br />" & FullIndentationPrefix)
+            Result.Replace("<br>", "<br />" & FullIndentationPrefix)
+            Result.Replace("<BR />", "<br />" & FullIndentationPrefix)
+            Result.Replace("<BR/>", "<br />" & FullIndentationPrefix)
+            Result.Replace("<BR>", "<br />" & FullIndentationPrefix)
+            If FullIndentationPrefix <> Nothing Then
+                If Result.Length >= FullIndentationPrefix.Length AndAlso Result.ToString(Result.Length - FullIndentationPrefix.Length, FullIndentationPrefix.Length) = FullIndentationPrefix Then
+                    Result.Remove(Result.Length - FullIndentationPrefix.Length, FullIndentationPrefix.Length)
+                End If
+            End If
             If continueStartedLine = False Then
-                Result = FullIndentationPrefix & Result
+                Result.Insert(0, FullIndentationPrefix)
             End If
             Return Result
-            'Return Replace(text, System.Environment.NewLine, System.Environment.NewLine & FullIndentationPrefix )
         End Function
 
         ''' <summary>
@@ -1787,6 +1796,28 @@ Namespace CompuMaster
             For MyCounter As Integer = 0 To indentLevel - 1
                 Result &= IndentationStringPerIndentLevel
             Next
+            Return Result
+        End Function
+
+        ''' <summary>
+        ''' Clone a string builder while reducing required memory amount
+        ''' </summary>
+        ''' <param name="sb"></param>
+        ''' <returns></returns>
+        Friend Shared Function CloneStringBuilder(sb As System.Text.StringBuilder) As System.Text.StringBuilder
+            Dim Result As New System.Text.StringBuilder
+            Dim MaxChunkSize As Integer = 100000 'for unit tests, use 20 instead
+            Dim StartIndex As Integer = 0
+            Dim ReadLength As Integer = MaxChunkSize
+            Do
+                If StartIndex + ReadLength > sb.Length Then
+                    ReadLength = sb.Length - StartIndex
+                End If
+                If ReadLength <> 0 Then
+                    Result.Append(sb.ToString(StartIndex, ReadLength))
+                    StartIndex += ReadLength
+                End If
+            Loop Until ReadLength = 0
             Return Result
         End Function
 

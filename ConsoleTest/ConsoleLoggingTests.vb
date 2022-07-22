@@ -80,17 +80,19 @@ Namespace ConsoleTest
 
             Console.WriteLine()
             Console.WriteLine("## Sample Warnings (Plain Text)")
-            Console.WriteLine()
             Result = System.IO.File.ReadAllText("sample-warnings.txt")
             Expected =
                 "WARNING: Now, let's see the indentation feature" & System.Environment.NewLine
-            Console.WriteLine("EXPECTED: " & Expected)
-            Console.WriteLine("RESULT:   " & Result)
+            Console.WriteLine()
+            Console.WriteLine("### EXPECTED: ")
+            Console.WriteLine(Expected)
+            Console.WriteLine()
+            Console.WriteLine("### RESULT:   ")
+            Console.WriteLine(Result)
             Assert.AreEqual(Expected, Result)
 
             Console.WriteLine()
             Console.WriteLine("## Sample Log (Plain Text)")
-            Console.WriteLine()
             Result = System.IO.File.ReadAllText("sample-log.txt")
             Expected =
                 "Hello World!" & System.Environment.NewLine &
@@ -110,14 +112,17 @@ Namespace ConsoleTest
                 "    This is a multiline text, line 2 of paragraph 2" & System.Environment.NewLine &
                 "" & System.Environment.NewLine &
                 "OKAY: This nice sample has completed!" & System.Environment.NewLine
-            Console.WriteLine("EXPECTED: " & Expected)
-            Console.WriteLine("RESULT:   " & Result)
+            Console.WriteLine()
+            Console.WriteLine("### EXPECTED: ")
+            Console.WriteLine(Expected)
+            Console.WriteLine()
+            Console.WriteLine("### RESULT:   ")
+            Console.WriteLine(Result)
             'WARNING: indentation might not work as expected right now --> TODO
             Assert.AreEqual(Expected, Result)
 
             Console.WriteLine()
             Console.WriteLine("## Sample Warnings (HTML)")
-            Console.WriteLine()
             Result = System.IO.File.ReadAllText("sample-warnings.html")
             Assert.IsTrue(Result.StartsWith("<html>" & System.Environment.NewLine & "<head><title>"))
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
@@ -125,13 +130,16 @@ Namespace ConsoleTest
                 "<body style=""background-color: Black; color: LightGray;"">" & System.Environment.NewLine &
                 "<span style=""color: LightGray;"">WARNING: Now, let&#39;s see the indentation feature<br /></span>" & System.Environment.NewLine &
                 "</body></html>"
-            Console.WriteLine("EXPECTED: " & Expected)
-            Console.WriteLine("RESULT:   " & Result)
+            Console.WriteLine()
+            Console.WriteLine("### EXPECTED: ")
+            Console.WriteLine(Expected)
+            Console.WriteLine()
+            Console.WriteLine("### RESULT:   ")
+            Console.WriteLine(Result)
             Assert.AreEqual(Expected, Result)
 
             Console.WriteLine()
             Console.WriteLine("## Sample Log (HTML)")
-            Console.WriteLine()
             Result = System.IO.File.ReadAllText("sample-log.html")
             Assert.IsTrue(Result.StartsWith("<html>" & System.Environment.NewLine & "<head><title>"))
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
@@ -139,8 +147,12 @@ Namespace ConsoleTest
                 "<body style=""background-color: Black; color: LightGray;"">" & System.Environment.NewLine &
                 "<span style=""color: LightGray;""><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">Hello&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">World!<br /></span><span style=""background-color: Blue;""><span style=""color: White;"">This&nbsp;is&nbsp;white&nbsp;text&nbsp;on&nbsp;blue&nbsp;background.<br /></span></span><span style=""background-color: DarkGray;""><span style=""color: Yellow;"">This&nbsp;is&nbsp;another&nbsp;yellow&nbsp;text&nbsp;on&nbsp;gray&nbsp;background.<br /></span></span><br /><span style=""color: Red;"">WARNING:&nbsp;Now,&nbsp;let&#39;s&nbsp;see&nbsp;the&nbsp;indentation&nbsp;feature<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;Okay,&nbsp;let&#39;s&nbsp;start&nbsp;indentation:&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">This&nbsp;is&nbsp;a&nbsp;text&nbsp;with&nbsp;1&nbsp;levels&nbsp;of&nbsp;indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It&#39;s&nbsp;time&nbsp;to&nbsp;continue:&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">This&nbsp;is&nbsp;a&nbsp;text&nbsp;with&nbsp;2&nbsp;levels&nbsp;of&nbsp;indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please&nbsp;note:&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">This&nbsp;line&nbsp;will&nbsp;only&nbsp;appear&nbsp;in&nbsp;log,&nbsp;but&nbsp;with&nbsp;2&nbsp;levels&nbsp;of&nbsp;indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yeah,&nbsp;get&nbsp;some&nbsp;more&nbsp;indentation:&nbsp;</span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">This&nbsp;is&nbsp;a&nbsp;text&nbsp;with&nbsp;3&nbsp;levels&nbsp;of&nbsp;indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;1<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;2<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;3<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;1&nbsp;of&nbsp;paragraph&nbsp;2<br />&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;multiline&nbsp;text,&nbsp;line&nbsp;2&nbsp;of&nbsp;paragraph&nbsp;2<br /></span><br /><span style=""color: Green;"">OKAY:&nbsp;This&nbsp;nice&nbsp;sample&nbsp;has&nbsp;completed!<br /></span></span>" & System.Environment.NewLine &
                 "</body></html>"
-            Console.WriteLine("EXPECTED: " & Expected)
-            Console.WriteLine("RESULT:   " & Result)
+            Console.WriteLine()
+            Console.WriteLine("### EXPECTED: ")
+            Console.WriteLine(Expected)
+            Console.WriteLine()
+            Console.WriteLine("### RESULT:   ")
+            Console.WriteLine(Result)
             'Result differs if tests are executed from commandline or from within VS.NET (console default colors might differ, resulting in different span tags for colors)
             If compareHtml Then
                 Assert.AreEqual(Expected, Result)
@@ -207,17 +219,19 @@ Namespace ConsoleTest
 
             Console.WriteLine()
             Console.WriteLine("## Sample Warnings (Plain Text)")
-            Console.WriteLine()
             Result = System.IO.File.ReadAllText("sample-warnings.txt")
             Expected =
                 "T:WARNING: Now, let's see the indentation feature" & System.Environment.NewLine
-            Console.WriteLine("EXPECTED: " & Expected)
-            Console.WriteLine("RESULT:   " & Result)
+            Console.WriteLine()
+            Console.WriteLine("### EXPECTED: ")
+            Console.WriteLine(Expected)
+            Console.WriteLine()
+            Console.WriteLine("### RESULT:   ")
+            Console.WriteLine(Result)
             Assert.AreEqual(Expected, Result)
 
             Console.WriteLine()
             Console.WriteLine("## Sample Log (Plain Text)")
-            Console.WriteLine()
             Result = System.IO.File.ReadAllText("sample-log.txt")
             Expected =
                 "T:Hello T:World!" & System.Environment.NewLine &
@@ -237,14 +251,17 @@ Namespace ConsoleTest
                 "    This is a multiline text, line 2 of paragraph 2" & System.Environment.NewLine &
                 "" & System.Environment.NewLine &
                 "T:OKAY: This nice sample has completed!" & System.Environment.NewLine
-            Console.WriteLine("EXPECTED: " & Expected)
-            Console.WriteLine("RESULT:   " & Result)
+            Console.WriteLine()
+            Console.WriteLine("### EXPECTED: ")
+            Console.WriteLine(Expected)
+            Console.WriteLine()
+            Console.WriteLine("### RESULT:   ")
+            Console.WriteLine(Result)
             'WARNING: indentation might not work as expected right now --> TODO
             Assert.AreEqual(Expected, Result)
 
             Console.WriteLine()
             Console.WriteLine("## Sample Warnings (HTML)")
-            Console.WriteLine()
             Result = System.IO.File.ReadAllText("sample-warnings.html")
             Assert.IsTrue(Result.StartsWith("<html>" & System.Environment.NewLine & "<head><title>"))
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
@@ -252,13 +269,16 @@ Namespace ConsoleTest
                 "<body style=""background-color: Black; color: LightGray;"">" & System.Environment.NewLine &
                 "<span style=""color: LightGray;"">H:WARNING: Now, let's see the indentation feature<br /></span>" & System.Environment.NewLine &
                 "</body></html>"
-            Console.WriteLine("EXPECTED: " & Expected)
-            Console.WriteLine("RESULT:   " & Result)
+            Console.WriteLine()
+            Console.WriteLine("### EXPECTED: ")
+            Console.WriteLine(Expected)
+            Console.WriteLine()
+            Console.WriteLine("### RESULT:   ")
+            Console.WriteLine(Result)
             Assert.AreEqual(Expected, Result)
 
             Console.WriteLine()
             Console.WriteLine("## Sample Log (HTML)")
-            Console.WriteLine()
             Result = System.IO.File.ReadAllText("sample-log.html")
             Assert.IsTrue(Result.StartsWith("<html>" & System.Environment.NewLine & "<head><title>"))
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
@@ -266,8 +286,12 @@ Namespace ConsoleTest
                 "<body style=""background-color: Black; color: LightGray;"">" & System.Environment.NewLine &
                 "<span style=""color: LightGray;""><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:Hello </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:World!<br /></span><span style=""background-color: Blue;""><span style=""color: White;"">H:This is white text on blue background.<br /></span></span><span style=""background-color: DarkGray;""><span style=""color: Yellow;"">H:This is another yellow text on gray background.<br /></span></span><br /><span style=""color: Red;"">H:WARNING: Now, let's see the indentation feature<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;H:Okay, let's start indentation: </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:This is a text with 1 levels of indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H:It's time to continue: </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:This is a text with 2 levels of indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H:Please note: </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:This line will only appear in log, but with 2 levels of indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H:Yeah, get some more indentation: </span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">H:This is a text with 3 levels of indentation<br /></span><span style=""color: " & CompuMaster.Console.ConsoleColorCssName(CompuMaster.Console.SystemConsoleDefaultForegroundColor) & ";"">&nbsp;&nbsp;&nbsp;&nbsp;H:This is a multiline text, line 1<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 2<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 3<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 1 of paragraph 2<br />&nbsp;&nbsp;&nbsp;&nbsp;This is a multiline text, line 2 of paragraph 2<br /></span><br /><span style=""color: Green;"">H:OKAY: This nice sample has completed!<br /></span></span>" & System.Environment.NewLine &
                 "</body></html>"
-            Console.WriteLine("EXPECTED: " & Expected)
-            Console.WriteLine("RESULT:   " & Result)
+            Console.WriteLine()
+            Console.WriteLine("### EXPECTED: ")
+            Console.WriteLine(Expected)
+            Console.WriteLine()
+            Console.WriteLine("### RESULT:   ")
+            Console.WriteLine(Result)
             Assert.True(Result.Contains("H:"))
             Assert.False(Result.Contains("T:"))
             'Result differs if tests are executed from commandline or from within VS.NET (console default colors might differ, resulting in different span tags for colors)
@@ -536,6 +560,33 @@ Namespace ConsoleTest
             Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.PlainTextLog.ToString)
             Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.RawPlainTextLog.ToString)
             Assert.AreEqual(ExpectedHtmlWithLineBreak.ToString, CompuMaster.Console.HtmlLog.ToString)
+        End Sub
+
+        <Test> Public Sub CloneStringBuilder()
+            Dim sb As New System.Text.StringBuilder
+
+            sb.Clear()
+            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+
+            sb.Clear()
+            sb.Append("kkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+
+            sb.Clear()
+            sb.Append("kkkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+
+            sb.Clear()
+            sb.Append("kkkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk".Substring(0, 40))
+            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+
+            sb.Clear()
+            sb.Append("kkkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk".Substring(0, 39))
+            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+
+            sb.Clear()
+            sb.Append("kkkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk".Substring(0, 41))
+            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
         End Sub
 
     End Class

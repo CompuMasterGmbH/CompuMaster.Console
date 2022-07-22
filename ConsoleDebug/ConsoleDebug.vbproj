@@ -10,7 +10,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1B5D8160-40A3-4028-BF81-1F7FAADE7759}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>ConsoleDebug.Module1</StartupObject>
+    <StartupObject>ConsoleDebug.MainModule</StartupObject>
     <RootNamespace>ConsoleDebug</RootNamespace>
     <AssemblyName>ConsoleDebug</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -97,7 +97,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Module1.vb" />
+    <Compile Include="MainModule.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
