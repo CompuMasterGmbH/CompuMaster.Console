@@ -183,6 +183,13 @@ Namespace CompuMaster
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
+        Public Shared Sub LogLine()
+            _Write(System.Environment.NewLine, False)
+        End Sub
+
+        ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
         ''' <param name="text"></param>
         Public Shared Sub LogLine(text As String)
             _Write(text & System.Environment.NewLine, False)
@@ -195,6 +202,13 @@ Namespace CompuMaster
         Public Shared Sub LogLine(text As System.Text.StringBuilder)
             _Write(text, False)
             _Write(System.Environment.NewLine, False)
+        End Sub
+
+        ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
+        Public Shared Sub LogLineDual()
+            _WriteDual(System.Environment.NewLine, "<br />", False)
         End Sub
 
         ''' <summary>
@@ -239,17 +253,17 @@ Namespace CompuMaster
             If text = System.Environment.NewLine Then
                 _RawPlainTextLog.Append(System.Environment.NewLine)
             Else
-                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
                 End If
-                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
                 _RawPlainTextLog.Append(IndentText(text, Not IsNewOutputLineAtLog))
-                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                 End If
-                If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                If BackgroundColor <> SystemConsoleDefaultBackgroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _RawPlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
                 End If
             End If
@@ -339,11 +353,11 @@ Namespace CompuMaster
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                     _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                 End If
-                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
                 End If
                 _HtmlLog.Append(TextAsHtml)
-                If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                     _HtmlLog.Append("</span>")
                 End If
                 If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
@@ -471,17 +485,17 @@ Namespace CompuMaster
                 If text.Length < 3 AndAlso text.ToString = System.Environment.NewLine Then
                     _RawPlainTextLog.Append(System.Environment.NewLine)
                 Else
-                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("<BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
                     End If
-                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("<FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
                     _RawPlainTextLog.Append(IndentText(text.ToString, Not IsNewOutputLineAtLog))
-                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("</FORECOLOR:" & ConsoleColorSystemName(ForegroundColor) & ">")
                     End If
-                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
+                    If BackgroundColor <> SystemConsoleDefaultBackgroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _RawPlainTextLog.Append("</BACKCOLOR:" & ConsoleColorSystemName(BackgroundColor) & ">")
                     End If
                 End If
@@ -496,11 +510,11 @@ Namespace CompuMaster
                     If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then
                         _HtmlLog.Append("<span style=""background-color: " & ConsoleColorCssName(BackgroundColor) & ";"">")
                     End If
-                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _HtmlLog.Append("<span style=""color: " & ConsoleColorCssName(ForegroundColor) & ";"">")
                     End If
                     _HtmlLog.Append(TextAsHtml)
-                    If ForegroundColor <> SystemConsoleDefaultForegroundColor Then
+                    If ForegroundColor <> SystemConsoleDefaultForegroundColor OrElse SystemColorsInLogs = SystemColorModesInLogs.AlwaysApplySystemColorInLog Then
                         _HtmlLog.Append("</span>")
                     End If
                     If BackgroundColor <> SystemConsoleDefaultBackgroundColor Then

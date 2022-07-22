@@ -407,29 +407,135 @@ Namespace ConsoleTest
         <Test> Public Sub DualFeatureStringArgsCompletionTest()
             Dim Text As String = "Plain Text"
             Dim Html As String = "<h2>HTML code</h2>"
+            Dim ExpectedTextWithLineBreak As String = Text & System.Environment.NewLine
+            Dim ExpectedHtmlWithLineBreak As String = Html & "<br />"
 
+            CompuMaster.Console.Clear(True, True, True, True)
+            CompuMaster.Console.WriteLineDual()
+            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<br />", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
+            CompuMaster.Console.LogLineDual()
+            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<br />", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteDual(Text, Html)
+            Assert.AreEqual(Text, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(Text, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual(Html, CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteLineDual(Text, Html)
+            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual(ExpectedHtmlWithLineBreak, CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WarnDual(Text, Html)
+            Assert.AreEqual(Text, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual("<FORECOLOR:Red>" & Text & "</FORECOLOR:Red>", CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<span style=""color: Red;"">" & Html & "</span>", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WarnLineDual(Text, Html)
+            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual("<FORECOLOR:Red>" & ExpectedTextWithLineBreak & "</FORECOLOR:Red>", CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<span style=""color: Red;"">" & ExpectedHtmlWithLineBreak.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.OkayDual(Text, Html)
+            Assert.AreEqual(Text, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual("<FORECOLOR:Green>" & Text & "</FORECOLOR:Green>", CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<span style=""color: Green;"">" & Html.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.OkayLineDual(Text, Html)
+            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual("<FORECOLOR:Green>" & ExpectedTextWithLineBreak & "</FORECOLOR:Green>", CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<span style=""color: Green;"">" & ExpectedHtmlWithLineBreak.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogDual(Text, Html)
+            Assert.AreEqual(Text, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(Text, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual(Html, CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogLineDual(Text, Html)
+            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual(ExpectedHtmlWithLineBreak, CompuMaster.Console.HtmlLog.ToString)
         End Sub
 
         <Test> Public Sub DualFeatureStringBuilderArgsCompletionTest()
             Dim Text As New System.Text.StringBuilder("Plain Text")
             Dim Html As New System.Text.StringBuilder("<h2>HTML code</h2>")
+            Dim ExpectedTextWithLineBreak As String = Text.ToString & System.Environment.NewLine
+            Dim ExpectedHtmlWithLineBreak As String = Html.ToString & "<br />"
 
+            CompuMaster.Console.Clear(True, True, True, True)
+            CompuMaster.Console.WriteLineDual()
+            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<br />", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
+            CompuMaster.Console.LogLineDual()
+            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<br />", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteDual(Text, Html)
+            Assert.AreEqual(Text.ToString, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(Text.ToString, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual(Html.ToString, CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteLineDual(Text, Html)
+            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual(ExpectedHtmlWithLineBreak.ToString, CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WarnDual(Text, Html)
+            Assert.AreEqual(Text.ToString, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual("<FORECOLOR:Red>" & Text.ToString & "</FORECOLOR:Red>", CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<span style=""color: Red;"">" & Html.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WarnLineDual(Text, Html)
+            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual("<FORECOLOR:Red>" & ExpectedTextWithLineBreak.ToString.Replace(System.Environment.NewLine, "</FORECOLOR:Red>" & System.Environment.NewLine), CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<span style=""color: Red;"">" & ExpectedHtmlWithLineBreak.ToString.Replace("<br />", "</span><br />"), CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.OkayDual(Text, Html)
+            Assert.AreEqual(Text.ToString, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual("<FORECOLOR:Green>" & Text.ToString & "</FORECOLOR:Green>", CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<span style=""color: Green;"">" & Html.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.OkayLineDual(Text, Html)
+            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual("<FORECOLOR:Green>" & ExpectedTextWithLineBreak.ToString.Replace(System.Environment.NewLine, "</FORECOLOR:Green>" & System.Environment.NewLine), CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual("<span style=""color: Green;"">" & ExpectedHtmlWithLineBreak.ToString.Replace("<br />", "</span><br />"), CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogDual(Text, Html)
+            Assert.AreEqual(Text.ToString, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(Text.ToString, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual(Html.ToString, CompuMaster.Console.HtmlLog.ToString)
+
+            CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogLineDual(Text, Html)
+            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.PlainTextLog.ToString)
+            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.RawPlainTextLog.ToString)
+            Assert.AreEqual(ExpectedHtmlWithLineBreak.ToString, CompuMaster.Console.HtmlLog.ToString)
         End Sub
 
     End Class
