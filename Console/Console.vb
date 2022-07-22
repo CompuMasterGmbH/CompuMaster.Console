@@ -160,7 +160,23 @@ Namespace CompuMaster
         ''' Log message without output to console
         ''' </summary>
         ''' <param name="text"></param>
+        Public Shared Sub Log(text As System.Text.StringBuilder)
+            _Write(text, False)
+        End Sub
+
+        ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
+        ''' <param name="text"></param>
         Public Shared Sub LogDual(text As String, html As String)
+            _WriteDual(text, html, False)
+        End Sub
+
+        ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub LogDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
             _WriteDual(text, html, False)
         End Sub
 
@@ -172,6 +188,14 @@ Namespace CompuMaster
             _Write(text & System.Environment.NewLine, False)
         End Sub
 
+        ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub LogLine(text As System.Text.StringBuilder)
+            _Write(text, False)
+            _Write(System.Environment.NewLine, False)
+        End Sub
 
         ''' <summary>
         ''' Log message without output to console
@@ -179,6 +203,15 @@ Namespace CompuMaster
         ''' <param name="text"></param>
         Public Shared Sub LogLineDual(text As String, html As String)
             _WriteDual(text & System.Environment.NewLine, html & "<br />", False)
+        End Sub
+
+        ''' <summary>
+        ''' Log message without output to console
+        ''' </summary>
+        ''' <param name="text"></param>
+        Public Shared Sub LogLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
+            _WriteDual(text, html, False)
+            _WriteDual(System.Environment.NewLine, "<br />", False)
         End Sub
 
         Private Shared IsNewOutputLineAtConsole As Boolean = True
@@ -982,7 +1015,7 @@ Namespace CompuMaster
         ''' Write with color setting for status warning messages
         ''' </summary>
         ''' <param name="text"></param>
-        Public Shared Sub WarnLine(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
+        Public Shared Sub WarnLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
             WarnDual(text, html)
             Warn(System.Environment.NewLine)
         End Sub

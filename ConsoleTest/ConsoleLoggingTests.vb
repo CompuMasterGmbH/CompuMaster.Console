@@ -404,6 +404,34 @@ Namespace ConsoleTest
             Next
         End Sub
 
+        <Test> Public Sub DualFeatureStringArgsCompletionTest()
+            Dim Text As String = "Plain Text"
+            Dim Html As String = "<h2>HTML code</h2>"
+
+            CompuMaster.Console.WriteDual(Text, Html)
+            CompuMaster.Console.WriteLineDual(Text, Html)
+            CompuMaster.Console.WarnDual(Text, Html)
+            CompuMaster.Console.WarnLineDual(Text, Html)
+            CompuMaster.Console.OkayDual(Text, Html)
+            CompuMaster.Console.OkayLineDual(Text, Html)
+            CompuMaster.Console.LogDual(Text, Html)
+            CompuMaster.Console.LogLineDual(Text, Html)
+        End Sub
+
+        <Test> Public Sub DualFeatureStringBuilderArgsCompletionTest()
+            Dim Text As New System.Text.StringBuilder("Plain Text")
+            Dim Html As New System.Text.StringBuilder("<h2>HTML code</h2>")
+
+            CompuMaster.Console.WriteDual(Text, Html)
+            CompuMaster.Console.WriteLineDual(Text, Html)
+            CompuMaster.Console.WarnDual(Text, Html)
+            CompuMaster.Console.WarnLineDual(Text, Html)
+            CompuMaster.Console.OkayDual(Text, Html)
+            CompuMaster.Console.OkayLineDual(Text, Html)
+            CompuMaster.Console.LogDual(Text, Html)
+            CompuMaster.Console.LogLineDual(Text, Html)
+        End Sub
+
     End Class
 
 End Namespace
