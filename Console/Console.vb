@@ -1261,7 +1261,7 @@ Namespace CompuMaster
                 If headContent <> Nothing Then
                     FileContent.Append("<head>" & headContent & "</head>" & System.Environment.NewLine)
                 End If
-                FileContent.Append("<body style=""background-color: " & BackColorname & ";"">" & System.Environment.NewLine)
+                FileContent.Append("<body style=""background-color: " & BackColorname & "; color: " & ForeColorname & ";"">" & System.Environment.NewLine)
                 FileContent.Append(bodyPreContent)
                 FileContent.Append("<span style=""color: " & ForeColorname & ";"">" + log.ToString + "</span>" & System.Environment.NewLine)
                 FileContent.Append(bodyPostContent)
