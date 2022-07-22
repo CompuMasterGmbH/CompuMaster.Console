@@ -1146,7 +1146,7 @@ Namespace CompuMaster
         ''' </summary>
         ''' <returns></returns>
         Public Shared Function PlainTextLog() As System.Text.StringBuilder
-            Dim FileContent As New System.Text.StringBuilder(_RawPlainTextLog.ToString)
+            Dim FileContent As System.Text.StringBuilder = CloneStringBuilder(_RawPlainTextLog)
             Dim Colors As Array = [Enum].GetValues(GetType(System.ConsoleColor))
             For Each Color In Colors
                 Dim ColorName As String = ConsoleColorSystemName(CType(Color, System.ConsoleColor))
@@ -1734,7 +1734,7 @@ Namespace CompuMaster
         ''' <returns></returns>
         Public Shared Function IndentText(text As System.Text.StringBuilder, indentLevel As Integer, continueStartedLine As Boolean) As System.Text.StringBuilder
             Dim FullIndentationPrefix As String = IndentationStringForCurrentIndentLevel(indentLevel)
-            Dim Result As New System.Text.StringBuilder(text.ToString)
+            Dim Result As System.Text.StringBuilder = CloneStringBuilder(text)
             Result.Replace(ControlChars.CrLf, ControlChars.Lf)
             Result.Replace(ControlChars.Cr, ControlChars.Lf)
             Result.Replace(ControlChars.Lf, System.Environment.NewLine & FullIndentationPrefix)
@@ -1769,7 +1769,7 @@ Namespace CompuMaster
         ''' <remarks>Only line breaks with HTML tag &lt;br /&gt; are considered (no paragraph tags, CSS or other types of line breaks)</remarks>
         Public Shared Function IndentTextInHtml(text As System.Text.StringBuilder, indentLevel As Integer, continueStartedLine As Boolean) As System.Text.StringBuilder
             Dim FullIndentationPrefix As String = IndentationStringForCurrentIndentLevel(indentLevel).Replace(" ", "&nbsp;")
-            Dim Result As New System.Text.StringBuilder(text.ToString)
+            Dim Result As System.Text.StringBuilder = CloneStringBuilder(text)
             Result.Replace("<br />", "<br />" & FullIndentationPrefix)
             Result.Replace("<br/>", "<br />" & FullIndentationPrefix)
             Result.Replace("<br>", "<br />" & FullIndentationPrefix)
