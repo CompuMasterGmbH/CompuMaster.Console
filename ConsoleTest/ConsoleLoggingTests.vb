@@ -589,6 +589,45 @@ Namespace ConsoleTest
             Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
         End Sub
 
+        <Test> Public Sub SavedEncodings()
+            CompuMaster.Console.WriteLine("TEST ÄÖÜß")
+            Dim TempFile As String = System.IO.Path.GetTempFileName()
+            System.Console.WriteLine("Test-File: " & TempFile)
+
+            CompuMaster.Console.SaveHtmlLog(TempFile, "TestTitle")
+            SavedEncodings_TestUtf8BOM(System.IO.File.ReadAllBytes(TempFile))
+
+            CompuMaster.Console.SaveHtmlLog(TempFile, "TestTitle", New System.Text.UTF8Encoding(True))
+            SavedEncodings_TestUtf8BOM(System.IO.File.ReadAllBytes(TempFile))
+
+            CompuMaster.Console.SaveHtmlLog(TempFile, "<head-item />", "<pre>", "</pre>")
+            SavedEncodings_TestUtf8BOM(System.IO.File.ReadAllBytes(TempFile))
+
+            CompuMaster.Console.SaveHtmlLog(TempFile, "<head-item />", "<pre>", "</pre>", New System.Text.UTF8Encoding(True))
+            SavedEncodings_TestUtf8BOM(System.IO.File.ReadAllBytes(TempFile))
+
+            CompuMaster.Console.SavePlainTextLog(TempFile)
+            SavedEncodings_TestUtf8BOM(System.IO.File.ReadAllBytes(TempFile))
+
+            CompuMaster.Console.SavePlainTextLog(TempFile, New System.Text.UTF8Encoding(True))
+            SavedEncodings_TestUtf8BOM(System.IO.File.ReadAllBytes(TempFile))
+
+            CompuMaster.Console.SavePlainTextLog(TempFile, New System.Text.UTF8Encoding(False))
+            SavedEncodings_TestNoUtf8BOM(System.IO.File.ReadAllBytes(TempFile))
+        End Sub
+
+        Private Sub SavedEncodings_TestUtf8BOM(value As Byte())
+            Assert.AreEqual(239, CType(value(0), Integer))
+            Assert.AreEqual(187, CType(value(1), Integer))
+            Assert.AreEqual(191, CType(value(2), Integer))
+        End Sub
+        Private Sub SavedEncodings_TestNoUtf8BOM(value As Byte())
+            Assert.AreNotEqual(239, CType(value(0), Integer))
+            Assert.AreNotEqual(187, CType(value(1), Integer))
+            Assert.AreNotEqual(191, CType(value(2), Integer))
+        End Sub
+
+
     End Class
 
 End Namespace

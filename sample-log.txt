@@ -1,0 +1,17 @@
+﻿T:Hello T:World!
+T:This is white text on blue background.
+T:This is another yellow text on gray background.
+
+T:WARNING: Now, let's see the indentation feature
+    T:Okay, let's start indentation: T:This is a text with 1 levels of indentation
+        T:It's time to continue: T:This is a text with 2 levels of indentation
+        T:Please note: T:This line will only appear in log, but with 2 levels of indentation
+            T:Yeah, get some more indentation: T:This is a text with 3 levels of indentation
+    T:This is a multiline text, line 1
+    This is a multiline text, line 2
+    This is a multiline text, line 3
+    
+    This is a multiline text, line 1 of paragraph 2
+    This is a multiline text, line 2 of paragraph 2
+
+T:OKAY: This nice sample has completed!

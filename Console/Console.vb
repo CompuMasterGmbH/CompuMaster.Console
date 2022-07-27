@@ -1282,7 +1282,15 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="path"></param>
         Public Shared Sub SavePlainTextLog(path As String)
-            System.IO.File.WriteAllText(path, PlainTextLog.ToString)
+            SavePlainTextLog(path, DefaultSaveFileEncoding)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as plain text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        Public Shared Sub SavePlainTextLog(path As String, encoding As System.Text.Encoding)
+            System.IO.File.WriteAllText(path, PlainTextLog.ToString, encoding)
         End Sub
 
         ''' <summary>
@@ -1290,7 +1298,15 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="path"></param>
         Public Shared Sub SaveRawPlainTextLog(path As String)
-            System.IO.File.WriteAllText(path, RawPlainTextLog.ToString)
+            SaveRawPlainTextLog(path, DefaultSaveFileEncoding)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as raw text (contains internal tags for e.g. color output) to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        Public Shared Sub SaveRawPlainTextLog(path As String, encoding As System.Text.Encoding)
+            System.IO.File.WriteAllText(path, RawPlainTextLog.ToString, encoding)
         End Sub
 
         ''' <summary>
@@ -1307,7 +1323,16 @@ Namespace CompuMaster
         ''' <param name="path"></param>
         ''' <param name="pageTitle"></param>
         Public Shared Sub SaveHtmlLog(path As String, pageTitle As String)
-            System.IO.File.WriteAllText(path, HtmlLog(pageTitle).ToString)
+            SaveHtmlLog(path, pageTitle, DefaultSaveFileEncoding)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as HTML text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        ''' <param name="pageTitle"></param>
+        Public Shared Sub SaveHtmlLog(path As String, pageTitle As String, encoding As System.Text.Encoding)
+            System.IO.File.WriteAllText(path, HtmlLog(pageTitle).ToString, encoding)
         End Sub
 
         ''' <summary>
@@ -1318,10 +1343,21 @@ Namespace CompuMaster
         ''' <param name="bodyPreContent">HTML code for inside BODY tag before the log data</param>
         ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
         Public Shared Sub SaveHtmlLog(path As String, headContent As String, bodyPreContent As String, bodyPostContent As String)
+            SaveHtmlLog(path, headContent, bodyPreContent, bodyPostContent, DefaultSaveFileEncoding)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as HTML text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        ''' <param name="headContent">HTML code for inside HEAD tag</param>
+        ''' <param name="bodyPreContent">HTML code for inside BODY tag before the log data</param>
+        ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
+        Public Shared Sub SaveHtmlLog(path As String, headContent As String, bodyPreContent As String, bodyPostContent As String, encoding As System.Text.Encoding)
             If headContent <> Nothing OrElse bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
-                System.IO.File.WriteAllText(path, HtmlLog(_HtmlLog, True, headContent, bodyPreContent, bodyPostContent).ToString)
+                System.IO.File.WriteAllText(path, HtmlLog(_HtmlLog, True, headContent, bodyPreContent, bodyPostContent).ToString, encoding)
             Else
-                System.IO.File.WriteAllText(path, HtmlLog(_HtmlLog, False).ToString)
+                System.IO.File.WriteAllText(path, HtmlLog(_HtmlLog, False).ToString, encoding)
             End If
         End Sub
 
@@ -1330,7 +1366,15 @@ Namespace CompuMaster
         ''' </summary>
         ''' <param name="path"></param>
         Public Shared Sub SaveWarningsPlainTextLog(path As String)
-            System.IO.File.WriteAllText(path, WarningsPlainTextLog.ToString)
+            SaveWarningsPlainTextLog(path, DefaultSaveFileEncoding)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as plain text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        Public Shared Sub SaveWarningsPlainTextLog(path As String, encoding As System.Text.Encoding)
+            System.IO.File.WriteAllText(path, WarningsPlainTextLog.ToString, encoding)
         End Sub
 
         ''' <summary>
@@ -1347,7 +1391,16 @@ Namespace CompuMaster
         ''' <param name="path"></param>
         ''' <param name="pageTitle"></param>
         Public Shared Sub SaveWarningsHtmlLog(path As String, pageTitle As String)
-            System.IO.File.WriteAllText(path, HtmlLog(_HtmlWarningsLog, pageTitle).ToString)
+            SaveWarningsHtmlLog(path, pageTitle, DefaultSaveFileEncoding)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as HTML text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        ''' <param name="pageTitle"></param>
+        Public Shared Sub SaveWarningsHtmlLog(path As String, pageTitle As String, encoding As System.Text.Encoding)
+            System.IO.File.WriteAllText(path, HtmlLog(_HtmlWarningsLog, pageTitle).ToString, encoding)
         End Sub
 
         ''' <summary>
@@ -1358,12 +1411,25 @@ Namespace CompuMaster
         ''' <param name="bodyPreContent">HTML code for inside BODY tag before the log data</param>
         ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
         Public Shared Sub SaveWarningsHtmlLog(path As String, headContent As String, bodyPreContent As String, bodyPostContent As String)
+            SaveWarningsHtmlLog(path, headContent, bodyPreContent, bodyPostContent, DefaultSaveFileEncoding)
+        End Sub
+
+        ''' <summary>
+        ''' Save the log data as HTML text to a file
+        ''' </summary>
+        ''' <param name="path"></param>
+        ''' <param name="headContent">HTML code for inside HEAD tag</param>
+        ''' <param name="bodyPreContent">HTML code for inside BODY tag before the log data</param>
+        ''' <param name="bodyPostContent">HTML code for inside BODY tag after the log data</param>
+        Public Shared Sub SaveWarningsHtmlLog(path As String, headContent As String, bodyPreContent As String, bodyPostContent As String, encoding As System.Text.Encoding)
             If headContent <> Nothing OrElse bodyPreContent <> Nothing OrElse bodyPostContent <> Nothing Then
-                System.IO.File.WriteAllText(path, HtmlLog(WarningsHtmlLog, True, headContent, bodyPreContent, bodyPostContent).ToString)
+                System.IO.File.WriteAllText(path, HtmlLog(WarningsHtmlLog, True, headContent, bodyPreContent, bodyPostContent).ToString, encoding)
             Else
-                System.IO.File.WriteAllText(path, HtmlLog(WarningsHtmlLog, False).ToString)
+                System.IO.File.WriteAllText(path, HtmlLog(WarningsHtmlLog, False).ToString, encoding)
             End If
         End Sub
+
+        Private Shared ReadOnly Property DefaultSaveFileEncoding As System.Text.Encoding = New System.Text.UTF8Encoding(True)
 
         ''' <summary>
         ''' The color name as used in .NET
