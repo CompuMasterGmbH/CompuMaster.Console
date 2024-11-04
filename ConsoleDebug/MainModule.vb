@@ -1,12 +1,25 @@
-﻿Module MainModule
+﻿Imports System.Data
+Imports System.Runtime.InteropServices
+
+Module MainModule
 
     Sub Main()
+        ShowCurrentEnvironmentArchitecture()
+
         'Demo mode
         'RunDemo()
 
         'Try to (not) get an OutOfMemoryException
         TestForOutOfMemoryExceptionWithHugeLogData_StringBuilderArguments()
         TestForOutOfMemoryExceptionWithHugeLogData_StringArguments()
+    End Sub
+
+    Private Sub ShowCurrentEnvironmentArchitecture()
+        System.Console.WriteLine("Aktuelle .NET Plattform: " & RuntimeInformation.FrameworkDescription.ToString)
+
+        ' Prüfen, ob die Anwendung als 32- oder 64-Bit-Anwendung läuft
+        Dim architecture As String = If(Environment.Is64BitProcess, "64-Bit", "32-Bit")
+        Console.WriteLine($"Architektur: {architecture}")
     End Sub
 
     Private Sub RunDemo()
@@ -101,10 +114,14 @@
 
         CompuMaster.Console.WriteLineDual(PreviewTextTable, PreviewHtmlTable)
 
-        Dim LogFile As String = System.IO.Path.Combine(My.Application.Info.DirectoryPath, "export-log-" & Now.ToString("yyyyMMdd-HHmm") & ".html")
+        Dim LogFile As String = System.IO.Path.Combine(AppDirPath, "export-log-" & Now.ToString("yyyyMMdd-HHmm") & ".html")
         CompuMaster.Console.SaveHtmlLog(LogFile)
         System.Diagnostics.Process.Start(New System.Diagnostics.ProcessStartInfo(LogFile) With {.UseShellExecute = True})
     End Sub
+
+    Private Function AppDirPath() As String
+        Return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)
+    End Function
 
     Private Sub TestForOutOfMemoryExceptionWithHugeLogData_StringArguments()
         Dim PreviewTextTable As String = VeryLargePlainTextTable.ToString
@@ -112,7 +129,7 @@
 
         CompuMaster.Console.WriteLineDual(PreviewTextTable, PreviewHtmlTable)
 
-        Dim LogFile As String = System.IO.Path.Combine(My.Application.Info.DirectoryPath, "export-log-" & Now.ToString("yyyyMMdd-HHmm") & ".html")
+        Dim LogFile As String = System.IO.Path.Combine(AppDirPath, "export-log-" & Now.ToString("yyyyMMdd-HHmm") & ".html")
         CompuMaster.Console.SaveHtmlLog(LogFile)
         System.Diagnostics.Process.Start(New System.Diagnostics.ProcessStartInfo(LogFile) With {.UseShellExecute = True})
     End Sub
