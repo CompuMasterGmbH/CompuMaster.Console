@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<RootNamespace></RootNamespace>
-		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0;net48;net45</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net6.0;net48;net45</TargetFrameworks>
 		<Description>Adds additional logging capabilities to the System.Console</Description>
 		<Company>CompuMaster GmbH</Company>
 		<Product>CompuMaster.Console</Product>
@@ -85,7 +85,7 @@
 	    <Version>1.0.2</Version>
 	  </PackageReference>
 	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
 	  <PackageReference Include="CompuMaster.VisualBasicCompatibility">
 	    <Version>1.0.2</Version>
 	  </PackageReference>
