@@ -15,11 +15,11 @@ Namespace ConsoleTest
 
         '<Test>
         'Public Sub ConsoleColorToCssColor()
-        '    Assert.AreEqual("rgb(0,0,0)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Black))
-        '    Assert.AreEqual("rgb(255,255,255)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.White))
-        '    Assert.AreEqual("rgb(255,0,0)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Red))
-        '    Assert.AreEqual("rgb(0,255,0)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Green))
-        '    Assert.AreEqual("rgb(0,0,255)", CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Blue))
+        '    Assert.That(CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Black), [Is].EqualTo("rgb(0,0,0)"))
+        '    Assert.That(CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.White), [Is].EqualTo("rgb(255,255,255)"))
+        '    Assert.That(CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Red), [Is].EqualTo("rgb(255,0,0)"))
+        '    Assert.That(CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Green), [Is].EqualTo("rgb(0,255,0)"))
+        '    Assert.That(CompuMaster.Console.ConsoleColorToCssColor(ConsoleColor.Blue), [Is].EqualTo("rgb(0,0,255)"))
         'End Sub
 
         <Test>
@@ -89,7 +89,7 @@ Namespace ConsoleTest
             Console.WriteLine()
             Console.WriteLine("### RESULT:   ")
             Console.WriteLine(Result)
-            Assert.AreEqual(Expected, Result)
+            Assert.That(Result, [Is].EqualTo(Expected))
 
             Console.WriteLine()
             Console.WriteLine("## Sample Log (Plain Text)")
@@ -119,12 +119,12 @@ Namespace ConsoleTest
             Console.WriteLine("### RESULT:   ")
             Console.WriteLine(Result)
             'WARNING: indentation might not work as expected right now --> TODO
-            Assert.AreEqual(Expected, Result)
+            Assert.That(Result, [Is].EqualTo(Expected))
 
             Console.WriteLine()
             Console.WriteLine("## Sample Warnings (HTML)")
             Result = System.IO.File.ReadAllText("sample-warnings.html")
-            Assert.IsTrue(Result.StartsWith("<html>" & System.Environment.NewLine & "<head><title>"))
+            Assert.That(Result, Does.StartWith("<html>" & System.Environment.NewLine & "<head><title>"))
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
             Expected = System.Environment.NewLine &
                 "<body style=""background-color: Black; color: LightGray;"">" & System.Environment.NewLine &
@@ -136,12 +136,12 @@ Namespace ConsoleTest
             Console.WriteLine()
             Console.WriteLine("### RESULT:   ")
             Console.WriteLine(Result)
-            Assert.AreEqual(Expected, Result)
+            Assert.That(Result, [Is].EqualTo(Expected))
 
             Console.WriteLine()
             Console.WriteLine("## Sample Log (HTML)")
             Result = System.IO.File.ReadAllText("sample-log.html")
-            Assert.IsTrue(Result.StartsWith("<html>" & System.Environment.NewLine & "<head><title>"))
+            Assert.That(Result, Does.StartWith("<html>" & System.Environment.NewLine & "<head><title>"))
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
             Expected = System.Environment.NewLine &
                 "<body style=""background-color: Black; color: LightGray;"">" & System.Environment.NewLine &
@@ -155,9 +155,9 @@ Namespace ConsoleTest
             Console.WriteLine(Result)
             'Result differs if tests are executed from commandline or from within VS.NET (console default colors might differ, resulting in different span tags for colors)
             If compareHtml Then
-                Assert.AreEqual(Expected, Result)
+                Assert.That(Result, [Is].EqualTo(Expected))
             End If
-            Assert.Less(Expected.Length, Result.Length * 1.3)
+            Assert.That(Expected.Length, [Is].LessThan(Result.Length * 1.3))
         End Sub
 
         <Test>
@@ -228,7 +228,7 @@ Namespace ConsoleTest
             Console.WriteLine()
             Console.WriteLine("### RESULT:   ")
             Console.WriteLine(Result)
-            Assert.AreEqual(Expected, Result)
+            Assert.That(Result, [Is].EqualTo(Expected))
 
             Console.WriteLine()
             Console.WriteLine("## Sample Log (Plain Text)")
@@ -258,12 +258,12 @@ Namespace ConsoleTest
             Console.WriteLine("### RESULT:   ")
             Console.WriteLine(Result)
             'WARNING: indentation might not work as expected right now --> TODO
-            Assert.AreEqual(Expected, Result)
+            Assert.That(Result, [Is].EqualTo(Expected))
 
             Console.WriteLine()
             Console.WriteLine("## Sample Warnings (HTML)")
             Result = System.IO.File.ReadAllText("sample-warnings.html")
-            Assert.IsTrue(Result.StartsWith("<html>" & System.Environment.NewLine & "<head><title>"))
+            Assert.That(Result, Does.StartWith("<html>" & System.Environment.NewLine & "<head><title>"))
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
             Expected = System.Environment.NewLine &
                 "<body style=""background-color: Black; color: LightGray;"">" & System.Environment.NewLine &
@@ -275,12 +275,12 @@ Namespace ConsoleTest
             Console.WriteLine()
             Console.WriteLine("### RESULT:   ")
             Console.WriteLine(Result)
-            Assert.AreEqual(Expected, Result)
+            Assert.That(Result, [Is].EqualTo(Expected))
 
             Console.WriteLine()
             Console.WriteLine("## Sample Log (HTML)")
             Result = System.IO.File.ReadAllText("sample-log.html")
-            Assert.IsTrue(Result.StartsWith("<html>" & System.Environment.NewLine & "<head><title>"))
+            Assert.That(Result, Does.StartWith("<html>" & System.Environment.NewLine & "<head><title>"))
             Result = Result.Substring(Result.IndexOf("</head>") + "</head>".Length)
             Expected = System.Environment.NewLine &
                 "<body style=""background-color: Black; color: LightGray;"">" & System.Environment.NewLine &
@@ -292,13 +292,13 @@ Namespace ConsoleTest
             Console.WriteLine()
             Console.WriteLine("### RESULT:   ")
             Console.WriteLine(Result)
-            Assert.True(Result.Contains("H:"))
-            Assert.False(Result.Contains("T:"))
+            Assert.That(Result.Contains("H:"), [Is].True)
+            Assert.That(Result.Contains("T:"), [Is].False)
             'Result differs if tests are executed from commandline or from within VS.NET (console default colors might differ, resulting in different span tags for colors)
             If compareHtml Then
-                Assert.AreEqual(Expected, Result)
+                Assert.That(Result, [Is].EqualTo(Expected))
             End If
-            Assert.Less(Expected.Length, Result.Length * 1.3)
+            Assert.That(Expected.Length, [Is].LessThan(Result.Length * 1.3))
         End Sub
 
         <Test> Public Sub ConsoleColorsCurrentValues()
@@ -309,22 +309,22 @@ Namespace ConsoleTest
 
             Select Case System.Environment.OSVersion.Platform
                 Case PlatformID.Win32NT
-                    Assert.AreEqual("Black", System.Console.BackgroundColor.ToString("g"))
+                    Assert.That(System.Console.BackgroundColor.ToString("g"), [Is].EqualTo("Black"))
                 Case Else
-                    Assert.AreEqual("-1", System.Console.BackgroundColor.ToString("g"))
+                    Assert.That(System.Console.BackgroundColor.ToString("g"), [Is].EqualTo("-1"))
             End Select
-            Assert.AreEqual("Black", CompuMaster.Console.BackgroundColor.ToString("g"))
+            Assert.That(CompuMaster.Console.BackgroundColor.ToString("g"), [Is].EqualTo("Black"))
             Select Case System.Environment.OSVersion.Platform
                 Case PlatformID.Win32NT
-                    Assert.AreEqual("Gray", System.Console.ForegroundColor.ToString("g"))
+                    Assert.That(System.Console.ForegroundColor.ToString("g"), [Is].EqualTo("Gray"))
                     If CompuMaster.Console.NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
-                        Assert.AreEqual("White", CompuMaster.Console.ForegroundColor.ToString("g"))
+                        Assert.That(CompuMaster.Console.ForegroundColor.ToString("g"), [Is].EqualTo("White"))
                     Else
-                        Assert.AreEqual("Gray", CompuMaster.Console.ForegroundColor.ToString("g"))
+                        Assert.That(CompuMaster.Console.ForegroundColor.ToString("g"), [Is].EqualTo("Gray"))
                     End If
                 Case Else
-                    Assert.AreEqual("-1", System.Console.ForegroundColor.ToString("g"))
-                    Assert.AreEqual("White", CompuMaster.Console.ForegroundColor.ToString("g"))
+                    Assert.That(System.Console.ForegroundColor.ToString("g"), [Is].EqualTo("-1"))
+                    Assert.That(CompuMaster.Console.ForegroundColor.ToString("g"), [Is].EqualTo("White"))
             End Select
 
             CompuMaster.Console.BackgroundColor = ConsoleColor.DarkGray
@@ -335,8 +335,8 @@ Namespace ConsoleTest
             System.Console.WriteLine("CompuMaster.Console.BackgroundColor=" & CompuMaster.Console.BackgroundColor.ToString("d") & "=" & CompuMaster.Console.BackgroundColor.ToString("g"))
             System.Console.WriteLine("CompuMaster.Console.ForegroundColor=" & CompuMaster.Console.ForegroundColor.ToString("d") & "=" & CompuMaster.Console.ForegroundColor.ToString("g"))
 
-            Assert.AreEqual("DarkGray", CompuMaster.Console.BackgroundColor.ToString("g"))
-            Assert.AreEqual("Yellow", CompuMaster.Console.ForegroundColor.ToString("g"))
+            Assert.That(CompuMaster.Console.BackgroundColor.ToString("g"), [Is].EqualTo("DarkGray"))
+            Assert.That(CompuMaster.Console.ForegroundColor.ToString("g"), [Is].EqualTo("Yellow"))
 
             CompuMaster.Console.ResetColor()
 
@@ -345,22 +345,21 @@ Namespace ConsoleTest
             System.Console.WriteLine("CompuMaster.Console.BackgroundColor=" & CompuMaster.Console.BackgroundColor.ToString("d") & "=" & CompuMaster.Console.BackgroundColor.ToString("g"))
             System.Console.WriteLine("CompuMaster.Console.ForegroundColor=" & CompuMaster.Console.ForegroundColor.ToString("d") & "=" & CompuMaster.Console.ForegroundColor.ToString("g"))
 
-            Assert.AreEqual("Black", System.Console.BackgroundColor.ToString("g"))
-            Assert.AreEqual("Black", CompuMaster.Console.BackgroundColor.ToString("g"))
+            Assert.That(System.Console.BackgroundColor.ToString("g"), [Is].EqualTo("Black"))
+            Assert.That(CompuMaster.Console.BackgroundColor.ToString("g"), [Is].EqualTo("Black"))
             Select Case System.Environment.OSVersion.Platform
                 Case PlatformID.Win32NT
-                    Assert.AreEqual("Gray", System.Console.ForegroundColor.ToString("g"))
+                    Assert.That(System.Console.ForegroundColor.ToString("g"), [Is].EqualTo("Gray"))
                     If CompuMaster.Console.NoSystemConsoleConnectedOrConsoleIsRedirected_BufferColorChangesByOurself Then
-                        Assert.AreEqual("Gray", CompuMaster.Console.ForegroundColor.ToString("g"))
-                        'Assert.AreEqual("White", CompuMaster.Console.ForegroundColor.ToString("g"))
+                        Assert.That(CompuMaster.Console.ForegroundColor.ToString("g"), [Is].EqualTo("Gray"))
+                        'Assert.That(CompuMaster.Console.ForegroundColor.ToString("g"), [Is].EqualTo("White"))
                     Else
-                        Assert.AreEqual("Gray", CompuMaster.Console.ForegroundColor.ToString("g"))
+                        Assert.That(CompuMaster.Console.ForegroundColor.ToString("g"), [Is].EqualTo("Gray"))
                     End If
                 Case Else
-                    Assert.AreEqual("Gray", System.Console.ForegroundColor.ToString("g"))
-                    Assert.AreEqual("Gray", CompuMaster.Console.ForegroundColor.ToString("g"))
+                    Assert.That(System.Console.ForegroundColor.ToString("g"), [Is].EqualTo("Gray"))
+                    Assert.That(CompuMaster.Console.ForegroundColor.ToString("g"), [Is].EqualTo("Gray"))
             End Select
-
 
         End Sub
 
@@ -391,9 +390,9 @@ Namespace ConsoleTest
                     Case Else
                         Throw New NotImplementedException
                 End Select
-                Assert.AreEqual(MyCounter.ToString, Color.ToString("d"))
-                Assert.AreEqual(ExpectedColorName, Color.ToString("g"))
-                Assert.AreEqual(ExpectedColorName, ColorName)
+                Assert.That(Color.ToString("d"), [Is].EqualTo(MyCounter.ToString))
+                Assert.That(Color.ToString("g"), [Is].EqualTo(ExpectedColorName))
+                Assert.That(ColorName, [Is].EqualTo(ExpectedColorName))
             Next
         End Sub
 
@@ -423,8 +422,8 @@ Namespace ConsoleTest
                     Case Else
                         Throw New NotImplementedException
                 End Select
-                Assert.AreEqual(MyCounter.ToString, Color.ToString("d"))
-                Assert.AreEqual(ExpectedColorName, ColorName)
+                Assert.That(Color.ToString("d"), [Is].EqualTo(MyCounter.ToString))
+                Assert.That(ColorName, [Is].EqualTo(ExpectedColorName))
             Next
         End Sub
 
@@ -436,63 +435,63 @@ Namespace ConsoleTest
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteLineDual()
-            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<br />", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(System.Environment.NewLine))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(System.Environment.NewLine))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<br />"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogLineDual()
-            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<br />", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(System.Environment.NewLine))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(System.Environment.NewLine))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<br />"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteDual(Text, Html)
-            Assert.AreEqual(Text, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(Text, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual(Html, CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(Text))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(Text))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo(Html))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteLineDual(Text, Html)
-            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual(ExpectedHtmlWithLineBreak, CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo(ExpectedHtmlWithLineBreak))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WarnDual(Text, Html)
-            Assert.AreEqual(Text, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual("<FORECOLOR:Red>" & Text & "</FORECOLOR:Red>", CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<span style=""color: Red;"">" & Html & "</span>", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(Text))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo("<FORECOLOR:Red>" & Text & "</FORECOLOR:Red>"))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<span style=""color: Red;"">" & Html & "</span>"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WarnLineDual(Text, Html)
-            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual("<FORECOLOR:Red>" & ExpectedTextWithLineBreak & "</FORECOLOR:Red>", CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<span style=""color: Red;"">" & ExpectedHtmlWithLineBreak.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo("<FORECOLOR:Red>" & ExpectedTextWithLineBreak & "</FORECOLOR:Red>"))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<span style=""color: Red;"">" & ExpectedHtmlWithLineBreak.ToString & "</span>"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.OkayDual(Text, Html)
-            Assert.AreEqual(Text, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual("<FORECOLOR:Green>" & Text & "</FORECOLOR:Green>", CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<span style=""color: Green;"">" & Html.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(Text))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo("<FORECOLOR:Green>" & Text & "</FORECOLOR:Green>"))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<span style=""color: Green;"">" & Html.ToString & "</span>"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.OkayLineDual(Text, Html)
-            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual("<FORECOLOR:Green>" & ExpectedTextWithLineBreak & "</FORECOLOR:Green>", CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<span style=""color: Green;"">" & ExpectedHtmlWithLineBreak.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo("<FORECOLOR:Green>" & ExpectedTextWithLineBreak & "</FORECOLOR:Green>"))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<span style=""color: Green;"">" & ExpectedHtmlWithLineBreak.ToString & "</span>"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogDual(Text, Html)
-            Assert.AreEqual(Text, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(Text, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual(Html, CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(Text))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(Text))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo(Html))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogLineDual(Text, Html)
-            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(ExpectedTextWithLineBreak, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual(ExpectedHtmlWithLineBreak, CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo(ExpectedHtmlWithLineBreak))
         End Sub
 
         <Test> Public Sub DualFeatureStringBuilderArgsCompletionTest()
@@ -503,90 +502,90 @@ Namespace ConsoleTest
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteLineDual()
-            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<br />", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(System.Environment.NewLine))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(System.Environment.NewLine))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<br />"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogLineDual()
-            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(System.Environment.NewLine, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<br />", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(System.Environment.NewLine))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(System.Environment.NewLine))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<br />"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteDual(Text, Html)
-            Assert.AreEqual(Text.ToString, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(Text.ToString, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual(Html.ToString, CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(Text.ToString))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(Text.ToString))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo(Html.ToString))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WriteLineDual(Text, Html)
-            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual(ExpectedHtmlWithLineBreak.ToString, CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak.ToString))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak.ToString))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo(ExpectedHtmlWithLineBreak.ToString))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WarnDual(Text, Html)
-            Assert.AreEqual(Text.ToString, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual("<FORECOLOR:Red>" & Text.ToString & "</FORECOLOR:Red>", CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<span style=""color: Red;"">" & Html.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(Text.ToString))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo("<FORECOLOR:Red>" & Text.ToString & "</FORECOLOR:Red>"))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<span style=""color: Red;"">" & Html.ToString & "</span>"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.WarnLineDual(Text, Html)
-            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual("<FORECOLOR:Red>" & ExpectedTextWithLineBreak.ToString.Replace(System.Environment.NewLine, "</FORECOLOR:Red>" & System.Environment.NewLine), CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<span style=""color: Red;"">" & ExpectedHtmlWithLineBreak.ToString.Replace("<br />", "</span><br />"), CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak.ToString))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo("<FORECOLOR:Red>" & ExpectedTextWithLineBreak.ToString.Replace(System.Environment.NewLine, "</FORECOLOR:Red>" & System.Environment.NewLine)))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<span style=""color: Red;"">" & ExpectedHtmlWithLineBreak.ToString.Replace("<br />", "</span><br />")))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.OkayDual(Text, Html)
-            Assert.AreEqual(Text.ToString, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual("<FORECOLOR:Green>" & Text.ToString & "</FORECOLOR:Green>", CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<span style=""color: Green;"">" & Html.ToString & "</span>", CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(Text.ToString))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo("<FORECOLOR:Green>" & Text.ToString & "</FORECOLOR:Green>"))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<span style=""color: Green;"">" & Html.ToString & "</span>"))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.OkayLineDual(Text, Html)
-            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual("<FORECOLOR:Green>" & ExpectedTextWithLineBreak.ToString.Replace(System.Environment.NewLine, "</FORECOLOR:Green>" & System.Environment.NewLine), CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual("<span style=""color: Green;"">" & ExpectedHtmlWithLineBreak.ToString.Replace("<br />", "</span><br />"), CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak.ToString))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo("<FORECOLOR:Green>" & ExpectedTextWithLineBreak.ToString.Replace(System.Environment.NewLine, "</FORECOLOR:Green>" & System.Environment.NewLine)))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo("<span style=""color: Green;"">" & ExpectedHtmlWithLineBreak.ToString.Replace("<br />", "</span><br />")))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogDual(Text, Html)
-            Assert.AreEqual(Text.ToString, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(Text.ToString, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual(Html.ToString, CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(Text.ToString))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(Text.ToString))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo(Html.ToString))
 
             CompuMaster.Console.Clear(True, True, True, True)
             CompuMaster.Console.LogLineDual(Text, Html)
-            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.PlainTextLog.ToString)
-            Assert.AreEqual(ExpectedTextWithLineBreak.ToString, CompuMaster.Console.RawPlainTextLog.ToString)
-            Assert.AreEqual(ExpectedHtmlWithLineBreak.ToString, CompuMaster.Console.HtmlLog.ToString)
+            Assert.That(CompuMaster.Console.PlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak.ToString))
+            Assert.That(CompuMaster.Console.RawPlainTextLog.ToString, [Is].EqualTo(ExpectedTextWithLineBreak.ToString))
+            Assert.That(CompuMaster.Console.HtmlLog.ToString, [Is].EqualTo(ExpectedHtmlWithLineBreak.ToString))
         End Sub
 
         <Test> Public Sub CloneStringBuilder()
             Dim sb As New System.Text.StringBuilder
 
             sb.Clear()
-            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+            Assert.That(CompuMaster.Console.CloneStringBuilder(sb).ToString, [Is].EqualTo(sb.ToString))
 
             sb.Clear()
             sb.Append("kkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+            Assert.That(CompuMaster.Console.CloneStringBuilder(sb).ToString, [Is].EqualTo(sb.ToString))
 
             sb.Clear()
             sb.Append("kkkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+            Assert.That(CompuMaster.Console.CloneStringBuilder(sb).ToString, [Is].EqualTo(sb.ToString))
 
             sb.Clear()
             sb.Append("kkkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk".Substring(0, 40))
-            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+            Assert.That(CompuMaster.Console.CloneStringBuilder(sb).ToString, [Is].EqualTo(sb.ToString))
 
             sb.Clear()
             sb.Append("kkkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk".Substring(0, 39))
-            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+            Assert.That(CompuMaster.Console.CloneStringBuilder(sb).ToString, [Is].EqualTo(sb.ToString))
 
             sb.Clear()
             sb.Append("kkkkkkaaakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk".Substring(0, 41))
-            Assert.AreEqual(sb.ToString, CompuMaster.Console.CloneStringBuilder(sb).ToString)
+            Assert.That(CompuMaster.Console.CloneStringBuilder(sb).ToString, [Is].EqualTo(sb.ToString))
         End Sub
 
         <Test> Public Sub SavedEncodings()
@@ -617,16 +616,15 @@ Namespace ConsoleTest
         End Sub
 
         Private Sub SavedEncodings_TestUtf8BOM(value As Byte())
-            Assert.AreEqual(239, CType(value(0), Integer))
-            Assert.AreEqual(187, CType(value(1), Integer))
-            Assert.AreEqual(191, CType(value(2), Integer))
+            Assert.That(CType(value(0), Integer), [Is].EqualTo(239))
+            Assert.That(CType(value(1), Integer), [Is].EqualTo(187))
+            Assert.That(CType(value(2), Integer), [Is].EqualTo(191))
         End Sub
         Private Sub SavedEncodings_TestNoUtf8BOM(value As Byte())
-            Assert.AreNotEqual(239, CType(value(0), Integer))
-            Assert.AreNotEqual(187, CType(value(1), Integer))
-            Assert.AreNotEqual(191, CType(value(2), Integer))
+            Assert.That(CType(value(0), Integer), [Is].Not.EqualTo(239))
+            Assert.That(CType(value(1), Integer), [Is].Not.EqualTo(187))
+            Assert.That(CType(value(2), Integer), [Is].Not.EqualTo(191))
         End Sub
-
 
     End Class
 

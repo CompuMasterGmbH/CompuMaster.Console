@@ -1736,9 +1736,10 @@ Namespace CompuMaster
         ''' <summary>
         ''' Clear the content of console window and/or logs
         ''' </summary>
-        ''' <param name="consoleWindow"></param>
-        ''' <param name="plainTextLog"></param>
-        ''' <param name="htmlLog"></param>
+        ''' <param name="warningStatus">Clears all warning logs (plain + HTML) and warning status</param>
+        ''' <param name="consoleWindow">Clears the system's console buffer and corresponding console window of display information</param>
+        ''' <param name="plainTextLog">Clears the log for plain text output</param>
+        ''' <param name="htmlLog">Clears the log for HTML output</param>
         Public Shared Sub Clear(warningStatus As Boolean, consoleWindow As Boolean, plainTextLog As Boolean, htmlLog As Boolean)
             If warningStatus Then
                 HasWarnings = False

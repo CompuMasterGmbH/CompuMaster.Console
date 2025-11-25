@@ -23,7 +23,7 @@
     <ProjectReference Include="..\Console\CompuMaster.Console.vbproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CompuMaster.Data" Version="3.0.2024.815" />
+    <PackageReference Include="CompuMaster.Data" Version="3.0.2025.903" />
     <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
   </ItemGroup>
 </Project>
