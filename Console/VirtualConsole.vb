@@ -1,4 +1,4 @@
-Option Explicit On
+﻿Option Explicit On
 Option Strict On
 
 Imports CompuMaster.VisualBasicCompatibility
@@ -19,23 +19,68 @@ Namespace CompuMaster
         ''' Creates a new instance of VirtualConsole
         ''' </summary>
         Public Sub New()
-            'Default constructor
+            'Read initial console colors in a thread-safe manner while no other thread has changed them
+            SyncLock ConsoleColorsAccessSyncRoot
+                If _SystemConsoleDefaultForegroundColor.HasValue = False Then
+                    _SystemConsoleDefaultForegroundColor = InitialForegroundColor()
+                End If
+                If _SystemConsoleDefaultBackgroundColor.HasValue = False Then
+                    _SystemConsoleDefaultBackgroundColor = InitialBackgroundColor()
+                End If
+            End SyncLock
         End Sub
+
+        ''' <summary>
+        ''' Creates a new instance of VirtualConsole
+        ''' </summary>
+        ''' <param name="consoleOutputPrefix">A prefix that is added to every line output to the system console</param>
+        Public Sub New(consoleOutputPrefix As String)
+            Me.New
+            Me.ConsoleOutputPrefix = consoleOutputPrefix
+        End Sub
+
+        ''' <summary>
+        ''' Shared Lock-Objekt for ALL instances of VirtualConsole to synchronize system console access to avoid mixed color output from parallel threads
+        ''' </summary>
+        Private Shared ReadOnly ConsoleColorsAccessSyncRoot As New Object()
+
+        ''' <summary>
+        ''' All console output is disabled by default, but can be forced by explicitly configuring arguments in Write/WriteLine/Okay/OkayLine/Warn/WarnLine methods to use console output
+        ''' </summary>
+        Public Property ConsoleOutputDisabledByDefault As Boolean = True
+
+        ''' <summary>
+        ''' A prefix that is added to every line output to the system console
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property ConsoleOutputPrefix As String
 
         Private ReadOnly _PlainTextWarningsLog As New System.Text.StringBuilder
         Private ReadOnly _HtmlWarningsLog As New System.Text.StringBuilder
         Private ReadOnly _RawPlainTextLog As New System.Text.StringBuilder
         Private ReadOnly _HtmlLog As New System.Text.StringBuilder
 
+        Private Shared _SystemConsoleDefaultForegroundColor As System.ConsoleColor?
+
         ''' <summary>
         ''' The initial foreground color on first access by this class
         ''' </summary>
-        Public ReadOnly SystemConsoleDefaultForegroundColor As System.ConsoleColor = InitialForegroundColor()
+        Public ReadOnly Property SystemConsoleDefaultForegroundColor As System.ConsoleColor
+            Get
+                Return _SystemConsoleDefaultForegroundColor.Value
+            End Get
+        End Property
+
+        Private Shared _SystemConsoleDefaultBackgroundColor As System.ConsoleColor?
 
         ''' <summary>
         ''' The initial background color on first access by this class
         ''' </summary>
-        Public ReadOnly SystemConsoleDefaultBackgroundColor As System.ConsoleColor = InitialBackgroundColor()
+        Public ReadOnly Property SystemConsoleDefaultBackgroundColor As System.ConsoleColor
+            Get
+                Return _SystemConsoleDefaultBackgroundColor.Value
+            End Get
+        End Property
 
         ''' <summary>
         ''' Indicates if System.Console has been redirected or by other reason not able to initialize valid ConsoleColors
@@ -162,91 +207,143 @@ Namespace CompuMaster
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub Log(text As String)
-            _Write(text, False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text, False)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub Log(text As System.Text.StringBuilder)
-            _Write(text, False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text, False)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub LogDual(text As String, html As String)
-            _WriteDual(text, html, False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(text, html, False)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub LogDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
-            _WriteDual(text, html, False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(text, html, False)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
         Public Sub LogLine()
-            _Write(System.Environment.NewLine, False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(System.Environment.NewLine, False)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub LogLine(text As String)
-            _Write(text & System.Environment.NewLine, False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text & System.Environment.NewLine, False)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub LogLine(text As System.Text.StringBuilder)
-            _Write(text, False)
-            _Write(System.Environment.NewLine, False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text, False)
+                _Write(System.Environment.NewLine, False)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
         Public Sub LogLineDual()
-            _WriteDual(System.Environment.NewLine, "<br />", False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(System.Environment.NewLine, "<br />", False)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub LogLineDual(text As String, html As String)
-            _WriteDual(text & System.Environment.NewLine, html & "<br />", False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(text & System.Environment.NewLine, html & "<br />", False)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Log message without output to console
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub LogLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
-            _WriteDual(text, html, False)
-            _WriteDual(System.Environment.NewLine, "<br />", False)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(text, html, False)
+                _WriteDual(System.Environment.NewLine, "<br />", False)
+            End SyncLock
         End Sub
 
-        Private IsNewOutputLineAtConsole As Boolean = True
+        Private Shared _IsNewOutputLineAtConsole As Boolean = True
+        Private Property IsNewOutputLineAtConsole As Boolean
+            Get
+                SyncLock ConsoleColorsAccessSyncRoot
+                    Return _IsNewOutputLineAtConsole
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock ConsoleColorsAccessSyncRoot
+                    _IsNewOutputLineAtConsole = value
+                End SyncLock
+            End Set
+        End Property
         Private IsNewOutputLineAtLog As Boolean = True
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
-        ''' <param name="showConsoleOutput"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        Private Sub _Write(text As String)
+            Me._Write(text, Not Me.ConsoleOutputDisabledByDefault)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text">Plain text to be logged</param>
+        Private Sub _Write(text As System.Text.StringBuilder)
+            Me._Write(text, Not Me.ConsoleOutputDisabledByDefault)
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text">Plain text to be logged and (optionally) printed to system's console</param>
+        ''' <param name="showConsoleOutput">True to print plain text to system's console, False to log only</param>
         Private Sub _Write(text As String, showConsoleOutput As Boolean)
             If text = Nothing Then Return 'Empty content - nothing to do
 
@@ -317,8 +414,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
-        ''' <param name="showConsoleOutput"></param>
+        ''' <param name="text">Plain text to be logged and (optionally) printed to system's console</param>
+        ''' <param name="showConsoleOutput">True to print plain text to system's console, False to log only</param>
         Private Sub _Write(text As System.Text.StringBuilder, showConsoleOutput As Boolean)
             If text Is Nothing OrElse text.Length = 0 Then Return 'Empty content - nothing to do
 
@@ -389,8 +486,9 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
-        ''' <param name="showConsoleOutput"></param>
+        ''' <param name="text">Plain text to be logged and (optionally) printed to system's console</param>
+        ''' <param name="html">HTML code to be logged</param>
+        ''' <param name="showConsoleOutput">True to print plain text to system's console, False to log only</param>
         Private Sub _WriteDual(text As String, html As String, showConsoleOutput As Boolean)
             If text <> Nothing Then
                 If showConsoleOutput Then
@@ -463,8 +561,9 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
-        ''' <param name="showConsoleOutput"></param>
+        ''' <param name="text">Plain text to be logged and (optionally) printed to system's console</param>
+        ''' <param name="html">HTML code to be logged</param>
+        ''' <param name="showConsoleOutput">True to print plain text to system's console, False to log only</param>
         Private Sub _WriteDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, showConsoleOutput As Boolean)
             If Not (text Is Nothing OrElse text.Length = 0) Then
                 If showConsoleOutput Then
@@ -537,7 +636,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Private Sub WriteToWarningLog(text As String)
             If text = Nothing Then Return
             _PlainTextWarningsLog.Append(text)
@@ -548,7 +647,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Private Sub WriteToWarningLog(text As System.Text.StringBuilder)
             _PlainTextWarningsLog.Append(text)
             Dim TextAsHtml As String = System.Net.WebUtility.HtmlEncode(text.ToString).Replace(System.Environment.NewLine, "<br />")
@@ -558,7 +657,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Private Sub WriteToWarningLogDual(text As String, html As String)
             If text <> Nothing Then
                 _PlainTextWarningsLog.Append(text)
@@ -571,7 +671,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Private Sub WriteToWarningLogDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
             _PlainTextWarningsLog.Append(text)
             _HtmlWarningsLog.Append(html)
@@ -580,15 +681,17 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub Write(text As String)
-            _Write(text, True)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text, Not Me.ConsoleOutputDisabledByDefault)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         ''' <param name="arg0"></param>
         Public Sub Write(text As String, arg0 As Object)
             Write(String.Format(text, arg0))
@@ -597,7 +700,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         ''' <param name="args"></param>
         Public Sub Write(text As String, ParamArray args As Object())
             Write(String.Format(text, args))
@@ -606,56 +709,71 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         ''' <param name="colorForeground"></param>
         Public Sub Write(text As String, colorForeground As System.ConsoleColor)
-            Write(text, colorForeground, BackgroundColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text, colorForeground, BackgroundColor)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub Write(text As System.Text.StringBuilder)
-            Write(text, ForegroundColor, BackgroundColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text, ForegroundColor, BackgroundColor)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="colorForeground"></param>
         Public Sub Write(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor)
-            Write(text, colorForeground, BackgroundColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text, colorForeground, BackgroundColor)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         ''' <param name="colorForeground"></param>
         ''' <param name="colorBackground"></param>
         Public Sub Write(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
-            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
-            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
-            ForegroundColor = colorForeground
-            BackgroundColor = colorBackground
-            _Write(text, True)
-            ForegroundColor = CurrentForeColor
-            BackgroundColor = CurrentBackColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text, colorForeground, colorBackground)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         ''' <param name="colorForeground"></param>
         ''' <param name="colorBackground"></param>
         Public Sub Write(text As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text, colorForeground, colorBackground)
+            End SyncLock
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Private Sub _Write(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = colorForeground
             BackgroundColor = colorBackground
-            Write(text)
+            _Write(text, Not Me.ConsoleOutputDisabledByDefault)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -663,15 +781,35 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
-        Public Sub WriteDual(text As String, html As String)
-            _WriteDual(text, html, True)
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Private Sub _Write(text As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+            ForegroundColor = colorForeground
+            BackgroundColor = colorBackground
+            _Write(text)
+            ForegroundColor = CurrentForeColor
+            BackgroundColor = CurrentBackColor
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
+        Public Sub WriteDual(text As String, html As String)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(text, html, Not Me.ConsoleOutputDisabledByDefault)
+            End SyncLock
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         ''' <param name="arg0"></param>
         Public Sub WriteDual(text As String, html As String, arg0 As Object)
             WriteDual(String.Format(text, arg0), String.Format(text, arg0))
@@ -680,7 +818,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         ''' <param name="args"></param>
         Public Sub WriteDual(text As String, html As String, ParamArray args As Object())
             WriteDual(String.Format(text, args), String.Format(html, args))
@@ -689,16 +828,20 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         ''' <param name="colorForeground"></param>
         Public Sub WriteDual(text As String, html As String, colorForeground As System.ConsoleColor)
-            WriteDual(text, html, colorForeground, BackgroundColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(text, html, colorForeground, BackgroundColor)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub WriteDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
             WriteDual(text, html, ForegroundColor, BackgroundColor)
         End Sub
@@ -706,23 +849,54 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
+        ''' <param name="colorForeground"></param>
         Public Sub WriteDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor)
-            WriteDual(text, html, colorForeground, BackgroundColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(text, html, colorForeground, BackgroundColor)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         ''' <param name="colorForeground"></param>
         ''' <param name="colorBackground"></param>
         Public Sub WriteDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(text, html, colorForeground, colorBackground)
+            End SyncLock
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Public Sub WriteDual(text As String, html As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteDual(text, html, colorForeground, colorBackground)
+            End SyncLock
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Private Sub _WriteDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = colorForeground
             BackgroundColor = colorBackground
-            _WriteDual(text, html, True)
+            _WriteDual(text, html, Not Me.ConsoleOutputDisabledByDefault)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -730,10 +904,11 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         ''' <param name="colorForeground"></param>
         ''' <param name="colorBackground"></param>
-        Public Sub WriteDual(text As String, html As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+        Private Sub _WriteDual(text As String, html As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = colorForeground
@@ -753,7 +928,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub WriteLine(text As String)
             Write(text & System.Environment.NewLine)
         End Sub
@@ -761,7 +936,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub WriteLine(text As System.Text.StringBuilder)
             WriteLine(text, ForegroundColor, BackgroundColor)
         End Sub
@@ -769,7 +944,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="colorForeground"></param>
         Public Sub WriteLine(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor)
             WriteLine(text, colorForeground, BackgroundColor)
         End Sub
@@ -777,14 +953,27 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
         Public Sub WriteLine(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteLine(text, colorForeground, colorBackground)
+            End SyncLock
+        End Sub
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Private Sub _WriteLine(text As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = colorForeground
             BackgroundColor = colorBackground
-            Write(text)
-            Write(System.Environment.NewLine)
+            _Write(text)
+            _Write(System.Environment.NewLine)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
@@ -792,7 +981,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         ''' <param name="arg0"></param>
         Public Sub WriteLine(text As String, arg0 As Object)
             WriteLine(String.Format(text, arg0))
@@ -801,7 +990,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         ''' <param name="args"></param>
         Public Sub WriteLine(text As String, ParamArray args As Object())
             WriteLine(String.Format(text, args))
@@ -810,7 +999,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         ''' <param name="colorForeground"></param>
         Public Sub WriteLine(text As String, colorForeground As System.ConsoleColor)
             Write(text & System.Environment.NewLine, colorForeground)
@@ -819,11 +1008,13 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with specified color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         ''' <param name="colorForeground"></param>
         ''' <param name="colorBackground"></param>
         Public Sub WriteLine(text As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
-            Write(text & System.Environment.NewLine, colorForeground, colorBackground)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _Write(text & System.Environment.NewLine, colorForeground, colorBackground)
+            End SyncLock
         End Sub
 
         ''' <summary>
@@ -836,7 +1027,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub WriteLineDual(text As String, html As String)
             WriteDual(text & System.Environment.NewLine, html & "<br />")
         End Sub
@@ -844,38 +1036,61 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub WriteLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
-            WriteLineDual(text, html, ForegroundColor, BackgroundColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteLineDual(text, html, ForegroundColor, BackgroundColor)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
+        ''' <param name="colorForeground"></param>
         Public Sub WriteLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor)
-            WriteLineDual(text, html, colorForeground, BackgroundColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteLineDual(text, html, colorForeground, BackgroundColor)
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
         Public Sub WriteLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
+            SyncLock ConsoleColorsAccessSyncRoot
+                _WriteLineDual(text, html, colorForeground, colorBackground)
+            End SyncLock
+        End Sub
+
+        ''' <summary>
+        ''' Write message with current color settings
+        ''' </summary>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
+        ''' <param name="colorForeground"></param>
+        ''' <param name="colorBackground"></param>
+        Private Sub _WriteLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
             Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
             Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
             ForegroundColor = colorForeground
             BackgroundColor = colorBackground
-            WriteDual(text, html)
-            Write(System.Environment.NewLine)
+            _WriteDual(text, html, Not Me.ConsoleOutputDisabledByDefault)
+            _Write(System.Environment.NewLine)
             ForegroundColor = CurrentForeColor
             BackgroundColor = CurrentBackColor
         End Sub
-
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         ''' <param name="arg0"></param>
         Public Sub WriteLineDual(text As String, html As String, arg0 As Object)
             WriteLineDual(String.Format(text, arg0), String.Format(html, arg0))
@@ -884,7 +1099,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         ''' <param name="args"></param>
         Public Sub WriteLineDual(text As String, html As String, ParamArray args As Object())
             WriteLineDual(String.Format(text, args), String.Format(html, args))
@@ -893,7 +1109,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with current color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         ''' <param name="colorForeground"></param>
         Public Sub WriteLineDual(text As String, html As String, colorForeground As System.ConsoleColor)
             WriteDual(text & System.Environment.NewLine, html & "<br />", colorForeground)
@@ -902,7 +1119,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write message with specified color settings
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         ''' <param name="colorForeground"></param>
         ''' <param name="colorBackground"></param>
         Public Sub WriteLineDual(text As String, html As String, colorForeground As System.ConsoleColor, colorBackground As System.ConsoleColor)
@@ -912,65 +1130,75 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub Warn(text As String)
-            HasWarnings = True
-            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
-            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
-            ForegroundColor = WarningForegroundColor
-            BackgroundColor = WarningBackgroundColor
-            Write(text)
-            WriteToWarningLog(text)
-            ForegroundColor = CurrentForeColor
-            BackgroundColor = CurrentBackColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                HasWarnings = True
+                Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+                Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+                ForegroundColor = WarningForegroundColor
+                BackgroundColor = WarningBackgroundColor
+                _Write(text)
+                WriteToWarningLog(text)
+                ForegroundColor = CurrentForeColor
+                BackgroundColor = CurrentBackColor
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub Warn(text As System.Text.StringBuilder)
-            HasWarnings = True
-            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
-            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
-            ForegroundColor = WarningForegroundColor
-            BackgroundColor = WarningBackgroundColor
-            Write(text)
-            WriteToWarningLog(text)
-            ForegroundColor = CurrentForeColor
-            BackgroundColor = CurrentBackColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                HasWarnings = True
+                Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+                Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+                ForegroundColor = WarningForegroundColor
+                BackgroundColor = WarningBackgroundColor
+                _Write(text)
+                WriteToWarningLog(text)
+                ForegroundColor = CurrentForeColor
+                BackgroundColor = CurrentBackColor
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub WarnDual(text As String, html As String)
-            HasWarnings = True
-            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
-            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
-            ForegroundColor = WarningForegroundColor
-            BackgroundColor = WarningBackgroundColor
-            WriteDual(text, html)
-            WriteToWarningLogDual(text, html)
-            ForegroundColor = CurrentForeColor
-            BackgroundColor = CurrentBackColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                HasWarnings = True
+                Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+                Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+                ForegroundColor = WarningForegroundColor
+                BackgroundColor = WarningBackgroundColor
+                _WriteDual(text, html, Not Me.ConsoleOutputDisabledByDefault)
+                WriteToWarningLogDual(text, html)
+                ForegroundColor = CurrentForeColor
+                BackgroundColor = CurrentBackColor
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub WarnDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
-            HasWarnings = True
-            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
-            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
-            ForegroundColor = WarningForegroundColor
-            BackgroundColor = WarningBackgroundColor
-            WriteDual(text, html)
-            WriteToWarningLogDual(text, html)
-            ForegroundColor = CurrentForeColor
-            BackgroundColor = CurrentBackColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                HasWarnings = True
+                Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+                Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+                ForegroundColor = WarningForegroundColor
+                BackgroundColor = WarningBackgroundColor
+                _WriteDual(text, html, Not Me.ConsoleOutputDisabledByDefault)
+                WriteToWarningLogDual(text, html)
+                ForegroundColor = CurrentForeColor
+                BackgroundColor = CurrentBackColor
+            End SyncLock
         End Sub
 
         ''' <summary>
@@ -985,7 +1213,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub WarnLine(text As String)
             Warn(text & System.Environment.NewLine)
         End Sub
@@ -993,7 +1221,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub WarnLine(text As System.Text.StringBuilder)
             Warn(text)
             Warn(System.Environment.NewLine)
@@ -1011,7 +1239,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub WarnLineDual(text As String, html As String)
             WarnDual(text & System.Environment.NewLine, html & "<br />")
         End Sub
@@ -1019,7 +1248,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status warning messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub WarnLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
             WarnDual(text, html)
             Warn(System.Environment.NewLine)
@@ -1028,59 +1258,68 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub Okay(text As String)
-            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
-            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
-            ForegroundColor = OkayMessageForegroundColor
-            BackgroundColor = OkayMessageBackgroundColor
-            Write(text)
-            ForegroundColor = CurrentForeColor
-            BackgroundColor = CurrentBackColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+                Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+                ForegroundColor = OkayMessageForegroundColor
+                BackgroundColor = OkayMessageBackgroundColor
+                _Write(text)
+                ForegroundColor = CurrentForeColor
+                BackgroundColor = CurrentBackColor
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub Okay(text As System.Text.StringBuilder)
-            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
-            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
-            ForegroundColor = OkayMessageForegroundColor
-            BackgroundColor = OkayMessageBackgroundColor
-            Write(text)
-            ForegroundColor = CurrentForeColor
-            BackgroundColor = CurrentBackColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+                Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+                ForegroundColor = OkayMessageForegroundColor
+                BackgroundColor = OkayMessageBackgroundColor
+                _Write(text)
+                ForegroundColor = CurrentForeColor
+                BackgroundColor = CurrentBackColor
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub OkayDual(text As String, html As String)
-            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
-            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
-            ForegroundColor = OkayMessageForegroundColor
-            BackgroundColor = OkayMessageBackgroundColor
-            WriteDual(text, html)
-            ForegroundColor = CurrentForeColor
-            BackgroundColor = CurrentBackColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+                Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+                ForegroundColor = OkayMessageForegroundColor
+                BackgroundColor = OkayMessageBackgroundColor
+                _WriteDual(text, html, Not Me.ConsoleOutputDisabledByDefault)
+                ForegroundColor = CurrentForeColor
+                BackgroundColor = CurrentBackColor
+            End SyncLock
         End Sub
 
         ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub OkayDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
-            Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
-            Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
-            ForegroundColor = OkayMessageForegroundColor
-            BackgroundColor = OkayMessageBackgroundColor
-            WriteDual(text, html)
-            ForegroundColor = CurrentForeColor
-            BackgroundColor = CurrentBackColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                Dim CurrentForeColor As System.ConsoleColor = ForegroundColor
+                Dim CurrentBackColor As System.ConsoleColor = BackgroundColor
+                ForegroundColor = OkayMessageForegroundColor
+                BackgroundColor = OkayMessageBackgroundColor
+                _WriteDual(text, html, Not Me.ConsoleOutputDisabledByDefault)
+                ForegroundColor = CurrentForeColor
+                BackgroundColor = CurrentBackColor
+            End SyncLock
         End Sub
-
 
         ''' <summary>
         ''' Write with color setting for status okay messages
@@ -1092,7 +1331,7 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub OkayLine(text As String)
             Okay(text & System.Environment.NewLine)
         End Sub
@@ -1100,13 +1339,11 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
         Public Sub OkayLine(text As System.Text.StringBuilder)
             Okay(text)
             Okay(System.Environment.NewLine)
         End Sub
-
-        '''''''''
 
         ''' <summary>
         ''' Write with color setting for status okay messages
@@ -1118,7 +1355,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub OkayLineDual(text As String, html As String)
             OkayDual(text & System.Environment.NewLine, html & "<br />")
         End Sub
@@ -1126,7 +1364,8 @@ Namespace CompuMaster
         ''' <summary>
         ''' Write with color setting for status okay messages
         ''' </summary>
-        ''' <param name="text"></param>
+        ''' <param name="text">Plain text to be logged</param>
+        ''' <param name="html">HTML code to be logged</param>
         Public Sub OkayLineDual(text As System.Text.StringBuilder, html As System.Text.StringBuilder)
             OkayDual(text, html)
             Okay(System.Environment.NewLine)
@@ -1477,8 +1716,10 @@ Namespace CompuMaster
         ''' </summary>
         Public Sub ResetColor()
             'following statements typically should lead to the very same result as just executing System.Console.ResetColor()
-            ForegroundColor = SystemConsoleDefaultForegroundColor
-            BackgroundColor = SystemConsoleDefaultBackgroundColor
+            SyncLock ConsoleColorsAccessSyncRoot
+                ForegroundColor = SystemConsoleDefaultForegroundColor
+                BackgroundColor = SystemConsoleDefaultBackgroundColor
+            End SyncLock
         End Sub
 
         ''' <summary>
@@ -1620,7 +1861,7 @@ Namespace CompuMaster
             If consoleWindow Then
                 Try
                     System.Console.Clear()
-                Catch ex As System.IO.IOException 'Das Handle ist ung�ltig
+                Catch ex As System.IO.IOException 'Das Handle ist ungültig
                     'ignore if console handle is invalid
                 End Try
             End If
@@ -1767,23 +2008,90 @@ Namespace CompuMaster
             Loop Until ReadLength = 0
         End Sub
 
+        Private Shared ReadOnly SyncLockConsoleOutput As New Object()
+
         ''' <summary>
         ''' Console output for StringBuilder and low memory usage
         ''' </summary>
         ''' <param name="source"></param>
         Friend Sub AppendToConsole(source As System.Text.StringBuilder)
-            Dim MaxChunkSize As Integer = 100000 'for unit tests, use 20 instead
-            Dim StartIndex As Integer = 0
-            Dim ReadLength As Integer = MaxChunkSize
-            Do
-                If StartIndex + ReadLength > source.Length Then
-                    ReadLength = source.Length - StartIndex
+            Dim sb As System.Text.StringBuilder
+            If String.IsNullOrEmpty(Me.ConsoleOutputPrefix) Then
+                sb = source
+                'Use chunked output without prefix handling to reduce memory usage
+                Dim MaxChunkSize As Integer = 100000 'for unit tests, use 20 instead
+                Dim StartIndex As Integer = 0
+                Dim ReadLength As Integer = MaxChunkSize
+                Do
+                    If StartIndex + ReadLength > sb.Length Then
+                        ReadLength = sb.Length - StartIndex
+                    End If
+                    If ReadLength <> 0 Then
+                        System.Console.Write(sb.ToString(StartIndex, ReadLength))
+                        StartIndex += ReadLength
+                    End If
+                Loop Until ReadLength = 0
+            Else
+                sb = New System.Text.StringBuilder()
+                SyncLock SyncLockConsoleOutput
+                    If Me.IsNewOutputLineAtConsole Then
+                        sb.Append(Me.ConsoleOutputPrefix & ": ")
+                    End If
+                    sb.Append(source)
+
+                ' --- Prefix für alle Zeilen hinzufügen ---
+                Dim nl As String = Environment.NewLine
+                Dim prefix As String = Me.ConsoleOutputPrefix & ": "
+                sb.Replace(nl, nl & prefix)
+
+                ' --- Letztes Prefix nach einem End-NewLine entfernen ---
+                If sb.Length >= nl.Length + prefix.Length Then
+                    If sb.ToString(sb.Length - (nl.Length + prefix.Length), nl.Length + prefix.Length) = nl & prefix Then
+                        ' Prefix entfernen → nur den Teil nach dem NewLine
+                        sb.Remove(sb.Length - prefix.Length, prefix.Length)
+                    End If
                 End If
-                If ReadLength <> 0 Then
-                    System.Console.Write(source.ToString(StartIndex, ReadLength))
-                    StartIndex += ReadLength
-                End If
-            Loop Until ReadLength = 0
+
+                ' Ab hier: Ausgabe mit farblich hervorgehobenem Prefix
+                Dim text As String = sb.ToString()
+                Dim prefixText As String = Me.ConsoleOutputPrefix & ": "
+                Dim idx As Integer = 0
+                Dim CachedCurrentForegroundColor = Me.ForegroundColor
+                Dim CachedCurrentBackgroundColor = Me.BackgroundColor
+                    Do
+                        Dim pos As Integer = text.IndexOf(prefixText, idx, StringComparison.Ordinal)
+                        If pos = -1 Then
+                            ' Kein weiteres Prefix → Rest normal ausgeben
+                            If idx < text.Length Then
+                                System.Console.ForegroundColor = CachedCurrentForegroundColor
+                                System.Console.BackgroundColor = CachedCurrentBackgroundColor
+                                System.Console.Write(text.Substring(idx))
+                            End If
+                            Exit Do
+                        End If
+
+                        ' Text VOR dem Prefix in Normalfarbe
+                        If pos > idx Then
+                            System.Console.ForegroundColor = CachedCurrentForegroundColor
+                            System.Console.BackgroundColor = CachedCurrentBackgroundColor
+                            System.Console.Write(text.Substring(idx, pos - idx))
+                        End If
+
+                        ' Prefix in Sonderfarbe ausgeben
+                        System.Console.ForegroundColor = Me.SystemConsoleDefaultForegroundColor
+                        System.Console.BackgroundColor = Me.SystemConsoleDefaultBackgroundColor
+                        System.Console.Write(prefixText)
+
+                        ' Weiter hinter dem Prefix
+                        idx = pos + prefixText.Length
+                    Loop
+
+                    'alles wieder auf die ursprünglichen Farben zurücksetzen
+                    System.Console.ForegroundColor = CachedCurrentForegroundColor
+                    System.Console.BackgroundColor = CachedCurrentBackgroundColor
+                End SyncLock
+            End If
+
         End Sub
 
     End Class

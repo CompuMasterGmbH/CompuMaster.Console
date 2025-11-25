@@ -9,9 +9,14 @@ Module MainModule
         'Demo mode
         'RunDemo()
 
+        'Parallel demo mode
+        RunParallelVirtualConsoleDemo()
+
         'Try to (not) get an OutOfMemoryException
-        TestForOutOfMemoryExceptionWithHugeLogData_StringBuilderArguments()
-        TestForOutOfMemoryExceptionWithHugeLogData_StringArguments()
+        'TestForOutOfMemoryExceptionWithHugeLogData_StringBuilderArguments()
+        'TestForOutOfMemoryExceptionWithHugeLogData_StringArguments()
+
+
     End Sub
 
     Private Sub ShowCurrentEnvironmentArchitecture()
@@ -22,6 +27,44 @@ Module MainModule
         Console.WriteLine($"Architektur: {architecture}")
     End Sub
 
+    Private Sub RunParallelVirtualConsoleDemo()
+        Dim Tasks As New List(Of System.Threading.Tasks.Task)
+        For i As Integer = 1 To 100
+            Dim TaskNo As Integer = i
+            Dim Task As System.Threading.Tasks.Task = System.Threading.Tasks.Task.Run(
+                Sub()
+                    Dim vc As New CompuMaster.VirtualConsole("Async console output of task #" & TaskNo.ToString("000"))
+                    vc.ConsoleOutputDisabledByDefault = False
+                    For MyCounter As Integer = 1 To 5
+                        vc.Write("A", ConsoleColor.Blue)
+                        vc.Write("B", ConsoleColor.Cyan)
+                        vc.Write("C", ConsoleColor.DarkBlue)
+                        vc.Write("D", ConsoleColor.DarkCyan)
+                        vc.Write("E", ConsoleColor.DarkGray)
+                        vc.Write("F", ConsoleColor.DarkGreen)
+                        vc.Write("G", ConsoleColor.DarkMagenta)
+                        vc.Write("H", ConsoleColor.DarkRed)
+                        vc.Write("I", ConsoleColor.DarkYellow)
+                        vc.Write("J", ConsoleColor.Gray)
+                        vc.Write("K", ConsoleColor.Green)
+                        vc.Write("L", ConsoleColor.Magenta)
+                        vc.Write("M", ConsoleColor.Red)
+                        vc.Write("N", ConsoleColor.White)
+                        vc.WriteLine("O", ConsoleColor.Yellow)
+                    Next
+                    For j As Integer = 1 To 15
+                        Dim SleepTime As Integer = 50 + TaskNo + System.Random.Shared.Next(150)
+                        vc.WriteLine("Task " & TaskNo.ToString & " - Line " & j.ToString & " => Sleeping for " & SleepTime & " ms.")
+                        System.Threading.Thread.Sleep(SleepTime)
+                    Next
+                    vc.OkayLine("Task " & TaskNo.ToString & " completed successfully.")
+                    vc.SaveHtmlLog("C:\Temp\VirtualConsoleLog_Task" & TaskNo.ToString("000") & ".html")
+                End Sub)
+            Tasks.Add(Task)
+        Next
+        System.Threading.Tasks.Task.WaitAll(Tasks.ToArray())
+    End Sub
+
     Private Sub RunDemo()
         'Create some wonderful output to the console
         CompuMaster.Console.Write("Hello ")
@@ -29,8 +72,8 @@ Module MainModule
 
         CompuMaster.Console.ForegroundColor = System.ConsoleColor.White
         CompuMaster.Console.BackgroundColor = System.ConsoleColor.Blue
-        CompuMaster.Console.WriteLine("This is white text on blue background.")
-        CompuMaster.Console.WriteLine("This is another yellow text on gray background.", System.ConsoleColor.Yellow, System.ConsoleColor.DarkGray)
+        CompuMaster.Console.WriteLine("This Is white text On blue background.")
+        CompuMaster.Console.WriteLine("This Is another yellow text On gray background.", System.ConsoleColor.Yellow, System.ConsoleColor.DarkGray)
         CompuMaster.Console.WriteLine()
         CompuMaster.Console.ResetColor()
 
