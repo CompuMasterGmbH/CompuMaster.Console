@@ -5,9 +5,9 @@
 		<Description>Adds additional logging capabilities to the System.Console</Description>
 		<Company>CompuMaster GmbH</Company>
 		<Product>CompuMaster.Console</Product>
-		<Copyright>2016-2017,2019,2021,2022,2024 CompuMaster GmbH</Copyright>	
+		<Copyright>2016-2017,2019,2021,2022,2024,2025 CompuMaster GmbH</Copyright>	
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>2025.11.25.0</Version>
+		<Version>2025.12.29.0</Version>
 		<VBRuntime>Embed</VBRuntime>
 		<IsPackable>true</IsPackable>
 		<Configurations>Debug;Release;CI_CD</Configurations>
@@ -68,7 +68,14 @@
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net45'">
 		<Reference Include="System" />
 	</ItemGroup>
-	<ItemGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="/"/>
+  </ItemGroup>
+  <ItemGroup>
 	  <None Include="..\logo_64x64.png">
 	    <Pack>True</Pack>
 	    <PackagePath></PackagePath>
