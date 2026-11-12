@@ -5,9 +5,9 @@
 		<Description>Adds additional logging capabilities to the System.Console</Description>
 		<Company>CompuMaster GmbH</Company>
 		<Product>CompuMaster.Console</Product>
-		<Copyright>2016-2017,2019,2021,2022,2024,2025 CompuMaster GmbH</Copyright>	
+		<Copyright>2016-2017,2019,2021,2022,2024,2025,2026 CompuMaster GmbH</Copyright>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>2025.12.29.0</Version>
+		<Version>2026.11.12.0</Version>
 		<VBRuntime>Embed</VBRuntime>
 		<IsPackable>true</IsPackable>
 		<Configurations>Debug;Release;CI_CD</Configurations>
